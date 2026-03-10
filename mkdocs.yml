@@ -40,15 +40,15 @@ theme:
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: custom
-      accent: custom
+      primary: slate
+      accent: indigo
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: custom
-      accent: custom
+      primary: slate
+      accent: indigo
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -114,26 +114,27 @@ extra_css:
 copyright: Copyright &copy; 2024-2026 ZRishu
 
 nav:
-  - Home: index.md
-  - Guide:
-      - Overview: guide/index.md
+  - Welcome: index.md
+  - Getting Started:
+      - Quick Start: guide/index.md
       - Prerequisites: guide/prerequisites.md
-      - Running: guide/running.md
-      - Testing: guide/testing.md
-      - Building: guide/building.md
-      - Deploying: guide/deploying.md
-      - CI/CD: guide/cicd.md
-  - API Reference:
-      - Overview: api/index.md
-      - Projects: api/projects.md
-      - Contact: api/contact.md
-      - AI Chat: api/chat.md
-      - Ingestion: api/ingestion.md
-      - Admin: api/admin.md
-      - Webhooks: api/webhooks.md
+      - Running Locally: guide/running.md
+      - Frontend Integration: frontend.md
   - Architecture:
-      - Overview: architecture/index.md
+      - System Design: architecture/index.md
       - Backend: architecture/backend.md
       - Modules: architecture/modules.md
       - Database: architecture/database.md
-  - Frontend Integration: frontend.md
+  - Deployment & CI/CD:
+      - Testing: guide/testing.md
+      - Building: guide/building.md
+      - Deployment: guide/deploying.md
+      - CI/CD Pipelines: guide/cicd.md
+  - API Reference:
+      - Overview: api/index.md
+      - AI Chat: api/chat.md
+      - Projects: api/projects.md
+      - Contact: api/contact.md
+      - Ingestion: api/ingestion.md
+      - Admin: api/admin.md
+      - Webhooks: api/webhooks.md
