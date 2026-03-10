@@ -1,0 +1,133 @@
+/* =============================================================================
+   Smart Portfolio — MkDocs Material Custom Styles
+   ============================================================================= */
+
+/* Slightly tighter max-width for better readability */
+.md-grid {
+    max-width: 1200px;
+}
+
+/* Code block styling */
+.highlight code {
+    font-size: 0.82rem;
+    line-height: 1.6;
+}
+
+/* Inline code styling */
+.md-typeset code {
+    padding: 0.1em 0.4em;
+    border-radius: 4px;
+}
+
+/* Table improvements */
+.md-typeset table:not([class]) {
+    font-size: 0.82rem;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.md-typeset table:not([class]) th {
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.md-typeset table:not([class]) td,
+.md-typeset table:not([class]) th {
+    padding: 0.6rem 1rem;
+}
+
+/* Admonition tweaks */
+.md-typeset .admonition,
+.md-typeset details {
+    font-size: 0.82rem;
+}
+
+/* Navigation tab bar */
+.md-tabs {
+    font-size: 0.78rem;
+}
+
+/* Hero section for landing page */
+.hero {
+    text-align: center;
+    padding: 2rem 1rem 3rem;
+}
+
+.hero h1 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.hero p {
+    font-size: 1.1rem;
+    opacity: 0.85;
+    max-width: 640px;
+    margin: 0 auto 1.5rem;
+}
+
+.hero .md-button {
+    margin: 0.3rem;
+}
+
+/* Feature grid on landing page */
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.2rem;
+    margin: 2rem 0;
+}
+
+.feature-card {
+    border: 1px solid var(--md-default-fg-color--lightest);
+    border-radius: 8px;
+    padding: 1.4rem;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.feature-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+.feature-card h3 {
+    margin-top: 0;
+    font-size: 1rem;
+}
+
+.feature-card p {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    margin-bottom: 0;
+}
+
+/* Mermaid diagram centering */
+.mermaid {
+    text-align: center;
+    margin: 1.5rem 0;
+}
+
+/* Footer tweaks */
+.md-footer-meta {
+    font-size: 0.75rem;
+}
+
+/* Smooth scroll */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Responsive: collapse feature grid on small screens */
+@media screen and (max-width: 600px) {
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+
+    .hero p {
+        font-size: 0.95rem;
+    }
+}
