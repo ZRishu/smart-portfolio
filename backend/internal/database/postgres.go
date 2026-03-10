@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/ZRishu/smart-portfolio/internal/config"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog/log"
-	"github.com/ZRishu/smart-portfolio/internal/config"
 )
 
 // Postgres wraps a pgxpool.Pool and provides helpers for the application.
