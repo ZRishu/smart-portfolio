@@ -26,22 +26,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: 3.x
 
       - name: Setup cache
-        run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
+        id: cache-setup
+        run: echo "cache_id=$(date --utc '+%V')" >> "$GITHUB_OUTPUT"
 
       - name: Cache MkDocs
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
-          key: mkdocs-material-${{ env.cache_id }}
+          key: mkdocs-material-${{ steps.cache-setup.outputs.cache_id }}
           path: .cache
           restore-keys: |
             mkdocs-material-
@@ -56,7 +57,7 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: 'site'
 
