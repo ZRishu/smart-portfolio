@@ -1,7 +1,7 @@
 # =============================================================================
 # Smart Portfolio — CD Pipeline
 # =============================================================================
-# Triggers on version tags (v*) pushed to main.
+# Triggers on version tags (v* or plain semver like 1.0.0) pushed to the repo.
 #
 # Jobs:
 #   1. test     — run full test suite before deploying anything
@@ -14,6 +14,7 @@ on:
   push:
     tags:
       - "v*"
+      - "[0-9]*.[0-9]*.[0-9]*"
 
 permissions:
   contents: write
