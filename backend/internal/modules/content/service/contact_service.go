@@ -4,12 +4,12 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/rs/zerolog/log"
 	"github.com/ZRishu/smart-portfolio/internal/httputil"
 	"github.com/ZRishu/smart-portfolio/internal/modules/content/dto"
 	"github.com/ZRishu/smart-portfolio/internal/modules/content/model"
 	"github.com/ZRishu/smart-portfolio/internal/modules/content/repository"
 	notifservice "github.com/ZRishu/smart-portfolio/internal/modules/notification/service"
+	"github.com/rs/zerolog/log"
 )
 
 // ContactMessageService defines the interface for contact message business logic.

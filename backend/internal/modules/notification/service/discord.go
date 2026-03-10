@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/rs/zerolog/log"
 	"github.com/ZRishu/smart-portfolio/internal/config"
+	"github.com/rs/zerolog/log"
 )
 
 // NotificationService defines the interface for sending notifications.

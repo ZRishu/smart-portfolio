@@ -6,10 +6,6 @@ import (
 	pdf "github.com/ledongthuc/pdf"
 )
 
-// pdfLib is a type alias for the external PDF reader so the rest of the
-// ingestion code can reference it without importing the library directly.
-type pdfLib = pdf.Reader
-
 // pdfBytesReader wraps a *pdf.Reader that was opened from an in-memory byte
 // slice. It exposes the same API surface needed by the ingestion pipeline.
 type pdfBytesReader struct {

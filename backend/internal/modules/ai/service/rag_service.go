@@ -12,10 +12,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/rs/zerolog/log"
 	"github.com/ZRishu/smart-portfolio/internal/config"
 	"github.com/ZRishu/smart-portfolio/internal/modules/ai/dto"
 	"github.com/ZRishu/smart-portfolio/internal/modules/ai/repository"
+	"github.com/rs/zerolog/log"
 )
 
 // RAGService implements the Hybrid RAG (Retrieval-Augmented Generation) pipeline.

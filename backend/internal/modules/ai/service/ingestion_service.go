@@ -9,9 +9,9 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/rs/zerolog/log"
 	"github.com/ZRishu/smart-portfolio/internal/modules/ai/dto"
 	"github.com/ZRishu/smart-portfolio/internal/modules/ai/repository"
+	"github.com/rs/zerolog/log"
 )
 
 // ---------------------------------------------------------------------------
@@ -419,19 +419,6 @@ func extractTextFromPDF(reader io.Reader) (string, int, error) {
 
 	return sb.String(), pageCount, nil
 }
-
-// ---------------------------------------------------------------------------
-// PDF reader wrapper (ledongthuc/pdf)
-// ---------------------------------------------------------------------------
-
-// pdfReaderWrapper wraps the ledongthuc/pdf Reader so we can construct one
-// from an in-memory byte slice.
-type pdfReaderWrapper struct {
-	reader *pdfLib
-}
-
-// We import the library under a type alias to keep the import tidy.
-// The actual import is at the top of the file; we reference the type below.
 
 func openPDFFromBytes(data []byte) (*pdfBytesReader, error) {
 	r := &bytesReaderAt{data: data}

@@ -3,10 +3,10 @@ package handler
 import (
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/ZRishu/smart-portfolio/internal/httputil"
 	"github.com/ZRishu/smart-portfolio/internal/modules/content/dto"
 	"github.com/ZRishu/smart-portfolio/internal/modules/content/service"
+	"github.com/go-chi/chi/v5"
 )
 
 // ProjectHandler handles HTTP requests for the /api/projects endpoints.

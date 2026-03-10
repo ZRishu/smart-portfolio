@@ -7,11 +7,11 @@ import (
 	"runtime/debug"
 	"time"
 
+	"github.com/ZRishu/smart-portfolio/internal/httputil"
 	"github.com/go-chi/httprate"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"github.com/ZRishu/smart-portfolio/internal/httputil"
 )
 
 // contextKey is an unexported type used for context value keys in this package.

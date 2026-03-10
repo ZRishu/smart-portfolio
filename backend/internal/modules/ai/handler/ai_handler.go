@@ -6,11 +6,11 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/rs/zerolog/log"
 	"github.com/ZRishu/smart-portfolio/internal/httputil"
 	"github.com/ZRishu/smart-portfolio/internal/modules/ai/dto"
 	"github.com/ZRishu/smart-portfolio/internal/modules/ai/service"
+	"github.com/go-chi/chi/v5"
+	"github.com/rs/zerolog/log"
 )
 
 // AIHandler handles HTTP requests for the /api/chat and /api/ingest endpoints.

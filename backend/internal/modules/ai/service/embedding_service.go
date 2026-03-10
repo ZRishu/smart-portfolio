@@ -10,8 +10,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/rs/zerolog/log"
 	"github.com/ZRishu/smart-portfolio/internal/config"
+	"github.com/rs/zerolog/log"
 )
 
 // EmbeddingService handles communication with the Jina Embeddings API (which

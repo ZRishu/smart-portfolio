@@ -41,7 +41,6 @@ coverage.html
 README.md
 LICENSE
 CHANGELOG.md
-docs/
 
 # Docker files (avoid recursive builds)
 Dockerfile
