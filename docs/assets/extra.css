@@ -1,139 +1,269 @@
 /* =============================================================================
-   Smart Portfolio — Vibrant M3 Expressive UI
-   Primary:  Saffron/Orange (#FF6D00 → #FF9800 → #FFAB40)
-   Surface:  Pure White / Deep Black
-   Accents:  Emerald #00C853, Electric Blue #2979FF, Vivid Indigo #651FFF
+   Smart Portfolio — Vibrant Rainbow UI
+   A multi-color, eye-candy design with vivid gradients and animations.
+   Colors: Coral, Rose, Fuchsia, Violet, Indigo, Blue, Cyan, Teal,
+           Emerald, Lime, Amber, Orange — used generously everywhere.
    ============================================================================= */
 
 /* ---------- CSS Custom Properties (Light) ---------- */
 :root {
-  --m3-primary: #FF6D00;
-  --m3-primary-bright: #FF9800;
-  --m3-primary-light: #FFAB40;
-  --m3-primary-container: #FFF3E0;
-  --m3-primary-container-bright: #FFE0B2;
-  --m3-on-primary: #FFFFFF;
-  --m3-on-primary-container: #BF360C;
-  --m3-secondary: #FF8F00;
-  --m3-surface: #FFFFFF;
-  --m3-surface-dim: #FFF8F0;
-  --m3-surface-variant: #FFF3E0;
-  --m3-on-surface: #0D0D0D;
-  --m3-on-surface-variant: #37474F;
-  --m3-outline: #FFCC80;
-  --m3-outline-variant: #FFE0B2;
-  --m3-green: #00C853;
-  --m3-green-bg: #E8F5E9;
-  --m3-blue: #2979FF;
-  --m3-blue-bg: #E3F2FD;
-  --m3-indigo: #651FFF;
-  --m3-indigo-bg: #EDE7F6;
-  --m3-red: #FF1744;
-  --m3-shadow-colored: rgba(255, 109, 0, 0.25);
-  --m3-shadow-soft: rgba(255, 109, 0, 0.10);
-  --m3-shadow-dark: rgba(0, 0, 0, 0.08);
-  --m3-glow: rgba(255, 109, 0, 0.4);
-  --m3-radius-sm: 8px;
-  --m3-radius-md: 16px;
-  --m3-radius-lg: 24px;
-  --m3-radius-xl: 28px;
-  --m3-radius-full: 9999px;
-  --m3-motion-std: cubic-bezier(0.2, 0, 0, 1);
-  --m3-motion-pop: cubic-bezier(0.05, 0.7, 0.1, 1);
-  --m3-gradient-hero: linear-gradient(135deg, #FF6D00, #FF9800, #FFAB40);
-  --m3-gradient-warm: linear-gradient(135deg, #FF6D00 0%, #FF9800 50%, #FFD54F 100%);
-  --m3-gradient-accent: linear-gradient(135deg, #FF6D00, #651FFF);
+  /* ---- Rainbow Palette ---- */
+  --v-coral: #ff6b6b;
+  --v-rose: #ff4081;
+  --v-fuchsia: #e040fb;
+  --v-violet: #7c4dff;
+  --v-indigo: #536dfe;
+  --v-blue: #448aff;
+  --v-cyan: #18ffff;
+  --v-teal: #1de9b6;
+  --v-emerald: #00e676;
+  --v-lime: #c6ff00;
+  --v-amber: #ffd740;
+  --v-orange: #ff6d00;
+  --v-peach: #ff8a65;
+
+  /* ---- Functional Tokens ---- */
+  --v-surface: #ffffff;
+  --v-surface-dim: #fafbff;
+  --v-surface-variant: #f0f4ff;
+  --v-on-surface: #1a1a2e;
+  --v-on-surface-variant: #4a4a68;
+  --v-outline: #e0e4f0;
+  --v-outline-variant: #e8ecf8;
+  --v-shadow-soft: rgba(100, 100, 200, 0.08);
+  --v-shadow-dark: rgba(0, 0, 0, 0.06);
+
+  /* ---- Gradients ---- */
+  --v-gradient-rainbow: linear-gradient(
+    135deg,
+    #ff6b6b,
+    #e040fb,
+    #7c4dff,
+    #448aff,
+    #1de9b6,
+    #ffd740
+  );
+  --v-gradient-header: linear-gradient(
+    135deg,
+    #7c4dff 0%,
+    #e040fb 35%,
+    #ff4081 65%,
+    #ff6b6b 100%
+  );
+  --v-gradient-hero: linear-gradient(
+    135deg,
+    #ff6b6b,
+    #e040fb,
+    #7c4dff,
+    #448aff
+  );
+  --v-gradient-warm: linear-gradient(135deg, #ff6b6b, #ffd740);
+  --v-gradient-cool: linear-gradient(135deg, #448aff, #1de9b6);
+  --v-gradient-sunset: linear-gradient(135deg, #ff4081, #ff6d00, #ffd740);
+  --v-gradient-aurora: linear-gradient(135deg, #7c4dff, #18ffff, #1de9b6);
+  --v-gradient-candy: linear-gradient(135deg, #ff4081, #e040fb, #7c4dff);
+
+  /* ---- Sizing / Motion ---- */
+  --v-radius-sm: 8px;
+  --v-radius-md: 16px;
+  --v-radius-lg: 24px;
+  --v-radius-xl: 28px;
+  --v-radius-full: 9999px;
+  --v-motion-std: cubic-bezier(0.2, 0, 0, 1);
+  --v-motion-pop: cubic-bezier(0.05, 0.7, 0.1, 1);
 }
 
 /* ---------- Dark Mode Tokens ---------- */
 [data-md-color-scheme="slate"] {
-  --m3-primary: #FFAB40;
-  --m3-primary-bright: #FFD54F;
-  --m3-primary-light: #FFE082;
-  --m3-primary-container: #4E2600;
-  --m3-primary-container-bright: #6D3500;
-  --m3-on-primary: #000000;
-  --m3-on-primary-container: #FFE0B2;
-  --m3-secondary: #FFD54F;
-  --m3-surface: #0D0D0D;
-  --m3-surface-dim: #1A1A1A;
-  --m3-surface-variant: #1E1108;
-  --m3-on-surface: #FAFAFA;
-  --m3-on-surface-variant: #B0BEC5;
-  --m3-outline: #6D3500;
-  --m3-outline-variant: #3E2000;
-  --m3-green: #69F0AE;
-  --m3-green-bg: rgba(105, 240, 174, 0.1);
-  --m3-blue: #82B1FF;
-  --m3-blue-bg: rgba(130, 177, 255, 0.1);
-  --m3-indigo: #B388FF;
-  --m3-indigo-bg: rgba(179, 136, 255, 0.1);
-  --m3-red: #FF8A80;
-  --m3-shadow-colored: rgba(255, 171, 64, 0.2);
-  --m3-shadow-soft: rgba(255, 171, 64, 0.08);
-  --m3-shadow-dark: rgba(0, 0, 0, 0.3);
-  --m3-glow: rgba(255, 171, 64, 0.35);
-  --m3-gradient-hero: linear-gradient(135deg, #FFAB40, #FFD54F, #FFE082);
-  --m3-gradient-warm: linear-gradient(135deg, #FFAB40 0%, #FFD54F 50%, #FFE082 100%);
-  --m3-gradient-accent: linear-gradient(135deg, #FFAB40, #B388FF);
+  --v-coral: #ff8a80;
+  --v-rose: #ff80ab;
+  --v-fuchsia: #ea80fc;
+  --v-violet: #b388ff;
+  --v-indigo: #8c9eff;
+  --v-blue: #82b1ff;
+  --v-cyan: #84ffff;
+  --v-teal: #a7ffeb;
+  --v-emerald: #b9f6ca;
+  --v-lime: #f4ff81;
+  --v-amber: #ffe57f;
+  --v-orange: #ffab40;
+  --v-peach: #ffab91;
+
+  --v-surface: #0f0f1a;
+  --v-surface-dim: #161625;
+  --v-surface-variant: #1e1e32;
+  --v-on-surface: #f0f0ff;
+  --v-on-surface-variant: #b0b0cc;
+  --v-outline: #2a2a44;
+  --v-outline-variant: #222238;
+  --v-shadow-soft: rgba(100, 100, 255, 0.06);
+  --v-shadow-dark: rgba(0, 0, 0, 0.25);
+
+  --v-gradient-header: linear-gradient(
+    135deg,
+    #7c4dff 0%,
+    #e040fb 35%,
+    #ff4081 65%,
+    #ff6b6b 100%
+  );
+  --v-gradient-hero: linear-gradient(
+    135deg,
+    #ff8a80,
+    #ea80fc,
+    #b388ff,
+    #82b1ff
+  );
+  --v-gradient-warm: linear-gradient(135deg, #ff8a80, #ffe57f);
+  --v-gradient-cool: linear-gradient(135deg, #82b1ff, #a7ffeb);
+  --v-gradient-sunset: linear-gradient(135deg, #ff80ab, #ffab40, #ffe57f);
+  --v-gradient-aurora: linear-gradient(135deg, #b388ff, #84ffff, #a7ffeb);
+  --v-gradient-candy: linear-gradient(135deg, #ff80ab, #ea80fc, #b388ff);
 }
 
 /* ---------- MkDocs Material Color Overrides (Light) ---------- */
 [data-md-color-scheme="default"] {
-  --md-primary-fg-color: #FF6D00;
-  --md-primary-fg-color--light: #FF9800;
-  --md-primary-fg-color--dark: #E65100;
-  --md-primary-bg-color: #FFFFFF;
-  --md-primary-bg-color--light: #FFFFFF;
-  --md-accent-fg-color: #FF9800;
-  --md-accent-fg-color--transparent: rgba(255, 152, 0, 0.15);
-  --md-accent-bg-color: #FFF3E0;
-  --md-default-bg-color: #FFFFFF;
-  --md-default-bg-color--light: #FFFFFF;
-  --md-default-bg-color--lighter: #FFFFFF;
-  --md-default-bg-color--lightest: #FFF8F0;
-  --md-default-fg-color: #0D0D0D;
-  --md-default-fg-color--light: #37474F;
-  --md-default-fg-color--lighter: #607D8B;
-  --md-default-fg-color--lightest: rgba(13, 13, 13, 0.07);
-  --md-typeset-a-color: #E65100;
-  --md-code-bg-color: #FFF3E0;
-  --md-code-fg-color: #651FFF;
-  --md-code-hl-color: rgba(255, 109, 0, 0.15);
-  --md-footer-bg-color: #0D0D0D;
-  --md-footer-bg-color--dark: #000000;
-  --md-footer-fg-color: #FFFFFF;
+  --md-primary-fg-color: #7c4dff;
+  --md-primary-fg-color--light: #b388ff;
+  --md-primary-fg-color--dark: #6200ea;
+  --md-primary-bg-color: #ffffff;
+  --md-primary-bg-color--light: #ffffff;
+  --md-accent-fg-color: #e040fb;
+  --md-accent-fg-color--transparent: rgba(224, 64, 251, 0.12);
+  --md-accent-bg-color: #f3e5f5;
+  --md-default-bg-color: #ffffff;
+  --md-default-bg-color--light: #ffffff;
+  --md-default-bg-color--lighter: #ffffff;
+  --md-default-bg-color--lightest: #fafbff;
+  --md-default-fg-color: #1a1a2e;
+  --md-default-fg-color--light: #4a4a68;
+  --md-default-fg-color--lighter: #6a6a88;
+  --md-default-fg-color--lightest: rgba(26, 26, 46, 0.07);
+  --md-typeset-a-color: #6200ea;
+  --md-code-bg-color: #f5f0ff;
+  --md-code-fg-color: #e040fb;
+  --md-code-hl-color: rgba(124, 77, 255, 0.12);
+  --md-footer-bg-color: #0f0f1a;
+  --md-footer-bg-color--dark: #0a0a14;
+  --md-footer-fg-color: #ffffff;
   --md-footer-fg-color--light: rgba(255, 255, 255, 0.7);
   --md-footer-fg-color--lighter: rgba(255, 255, 255, 0.5);
 }
 
 /* ---------- MkDocs Material Color Overrides (Dark) ---------- */
 [data-md-color-scheme="slate"] {
-  --md-primary-fg-color: #FFAB40;
-  --md-primary-fg-color--light: #FFD54F;
-  --md-primary-fg-color--dark: #FF8F00;
-  --md-primary-bg-color: #0D0D0D;
-  --md-primary-bg-color--light: #1A1A1A;
-  --md-accent-fg-color: #FFD54F;
-  --md-accent-fg-color--transparent: rgba(255, 213, 79, 0.15);
-  --md-accent-bg-color: #4E2600;
-  --md-default-bg-color: #0D0D0D;
-  --md-default-bg-color--light: #141414;
-  --md-default-bg-color--lighter: #1E1E1E;
-  --md-default-bg-color--lightest: #282828;
-  --md-default-fg-color: #FAFAFA;
-  --md-default-fg-color--light: #B0BEC5;
-  --md-default-fg-color--lighter: #78909C;
-  --md-default-fg-color--lightest: rgba(250, 250, 250, 0.07);
-  --md-typeset-a-color: #FFAB40;
-  --md-code-bg-color: #1A1208;
-  --md-code-fg-color: #B388FF;
-  --md-code-hl-color: rgba(255, 171, 64, 0.18);
-  --md-footer-bg-color: #000000;
-  --md-footer-bg-color--dark: #000000;
-  --md-footer-fg-color: #FAFAFA;
-  --md-footer-fg-color--light: rgba(250, 250, 250, 0.7);
-  --md-footer-fg-color--lighter: rgba(250, 250, 250, 0.5);
+  --md-primary-fg-color: #b388ff;
+  --md-primary-fg-color--light: #d1c4e9;
+  --md-primary-fg-color--dark: #7c4dff;
+  --md-primary-bg-color: #0f0f1a;
+  --md-primary-bg-color--light: #161625;
+  --md-accent-fg-color: #ea80fc;
+  --md-accent-fg-color--transparent: rgba(234, 128, 252, 0.12);
+  --md-accent-bg-color: #2a1a3a;
+  --md-default-bg-color: #0f0f1a;
+  --md-default-bg-color--light: #141424;
+  --md-default-bg-color--lighter: #1c1c30;
+  --md-default-bg-color--lightest: #242440;
+  --md-default-fg-color: #f0f0ff;
+  --md-default-fg-color--light: #b0b0cc;
+  --md-default-fg-color--lighter: #8888aa;
+  --md-default-fg-color--lightest: rgba(240, 240, 255, 0.07);
+  --md-typeset-a-color: #b388ff;
+  --md-code-bg-color: #1a1430;
+  --md-code-fg-color: #ea80fc;
+  --md-code-hl-color: rgba(179, 136, 255, 0.15);
+  --md-footer-bg-color: #0a0a14;
+  --md-footer-bg-color--dark: #050508;
+  --md-footer-fg-color: #f0f0ff;
+  --md-footer-fg-color--light: rgba(240, 240, 255, 0.7);
+  --md-footer-fg-color--lighter: rgba(240, 240, 255, 0.5);
+}
+
+/* ==========================================================================
+   Animations — Eye-Candy Keyframes
+   ========================================================================== */
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes heroGlow {
+  0% {
+    opacity: 0.7;
+    transform: translateX(-50%) scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.1) rotate(2deg);
+  }
+  100% {
+    opacity: 0.7;
+    transform: translateX(-50%) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes pulseRing {
+  0% {
+    box-shadow: 0 0 0 0 rgba(124, 77, 255, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 14px rgba(124, 77, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(124, 77, 255, 0);
+  }
+}
+
+@keyframes rainbowBorder {
+  0% {
+    border-color: var(--v-coral);
+  }
+  16% {
+    border-color: var(--v-fuchsia);
+  }
+  33% {
+    border-color: var(--v-violet);
+  }
+  50% {
+    border-color: var(--v-blue);
+  }
+  66% {
+    border-color: var(--v-teal);
+  }
+  83% {
+    border-color: var(--v-amber);
+  }
+  100% {
+    border-color: var(--v-coral);
+  }
 }
 
 /* ==========================================================================
@@ -149,21 +279,25 @@ html {
 }
 
 ::selection {
-  background: rgba(255, 109, 0, 0.3);
-  color: var(--m3-on-surface);
+  background: rgba(124, 77, 255, 0.25);
+  color: var(--v-on-surface);
 }
 
 [data-md-color-scheme="slate"] ::selection {
-  background: rgba(255, 171, 64, 0.35);
+  background: rgba(179, 136, 255, 0.3);
 }
 
 /* ==========================================================================
-   Header — Gradient App Bar
+   Header — Animated Rainbow Gradient Bar
    ========================================================================== */
 
 .md-header {
-  background: var(--m3-gradient-hero) !important;
-  box-shadow: 0 4px 20px var(--m3-shadow-colored);
+  background: var(--v-gradient-header) !important;
+  background-size: 200% 200% !important;
+  animation: gradientShift 8s ease infinite;
+  box-shadow:
+    0 4px 20px rgba(124, 77, 255, 0.3),
+    0 1px 3px rgba(224, 64, 251, 0.2);
 }
 
 .md-header__title {
@@ -172,10 +306,12 @@ html {
 }
 
 .md-header[data-md-state="shadow"] {
-  box-shadow: 0 6px 30px var(--m3-shadow-colored);
+  box-shadow:
+    0 6px 30px rgba(124, 77, 255, 0.35),
+    0 2px 8px rgba(224, 64, 251, 0.25);
 }
 
-/* ---------- Navigation Tabs (On Gradient) ---------- */
+/* ---------- Navigation Tabs ---------- */
 .md-tabs {
   font-size: 0.82rem;
   font-weight: 600;
@@ -185,51 +321,51 @@ html {
 }
 
 .md-tabs__link {
-  border-radius: var(--m3-radius-full) !important;
+  border-radius: var(--v-radius-full) !important;
   margin: 4px 3px;
   padding: 7px 18px !important;
-  transition: all 0.25s var(--m3-motion-std);
+  transition: all 0.25s var(--v-motion-std);
   opacity: 0.85;
 }
 
 .md-tabs__link:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.22);
   opacity: 1;
 }
 
 .md-tabs__link--active {
-  background: rgba(255, 255, 255, 0.25) !important;
+  background: rgba(255, 255, 255, 0.28) !important;
   font-weight: 700;
   opacity: 1;
 }
 
 /* ==========================================================================
-   Sidebar Navigation
+   Sidebar Navigation — Colorful Active States
    ========================================================================== */
 
 .md-sidebar__scrollwrap {
   scrollbar-width: thin;
-  scrollbar-color: var(--m3-outline) transparent;
+  scrollbar-color: var(--v-outline) transparent;
 }
 
 .md-nav__link {
-  border-radius: var(--m3-radius-sm);
+  border-radius: var(--v-radius-sm);
   padding: 7px 12px;
   margin: 2px 8px;
-  transition: all 0.2s var(--m3-motion-std);
+  transition: all 0.2s var(--v-motion-std);
   font-size: 0.82rem;
 }
 
 .md-nav__link:hover {
-  background: var(--m3-primary-container);
-  color: var(--m3-on-primary-container);
+  background: rgba(124, 77, 255, 0.08);
+  color: var(--v-violet);
 }
 
 .md-nav__item--active > .md-nav__link {
   position: relative;
-  color: var(--m3-primary);
+  color: var(--v-violet);
   font-weight: 700;
-  background: var(--m3-primary-container-bright);
+  background: rgba(124, 77, 255, 0.1);
 }
 
 .md-nav__item--active > .md-nav__link::before {
@@ -239,77 +375,105 @@ html {
   top: 20%;
   width: 3px;
   height: 60%;
-  background: var(--m3-gradient-hero);
-  border-radius: var(--m3-radius-full);
+  background: var(--v-gradient-candy);
+  border-radius: var(--v-radius-full);
 }
 
 /* ==========================================================================
-   Typography
+   Typography — Colorful Headings
    ========================================================================== */
 
 .md-typeset {
   font-size: 0.83rem;
   line-height: 1.72;
-  color: var(--m3-on-surface);
+  color: var(--v-on-surface);
 }
 
 .md-typeset h1 {
   font-weight: 800;
-  color: var(--m3-on-surface);
   letter-spacing: -0.03em;
+  background: var(--v-gradient-hero);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
 }
 
 .md-typeset h2 {
   font-weight: 700;
-  color: var(--m3-on-surface);
   letter-spacing: -0.02em;
   padding-bottom: 0.4em;
-  border-bottom: 3px solid var(--m3-outline);
+  border-bottom: 3px solid transparent;
+  border-image: var(--v-gradient-rainbow) 1;
+  color: var(--v-on-surface);
 }
 
 .md-typeset h3 {
   font-weight: 600;
-  color: var(--m3-on-surface);
+  color: var(--v-violet);
 }
 
 .md-typeset a {
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.2s var(--m3-motion-std);
+  background: linear-gradient(135deg, var(--v-violet), var(--v-fuchsia));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: all 0.2s var(--v-motion-std);
 }
 
 .md-typeset a:hover {
+  background: linear-gradient(135deg, var(--v-rose), var(--v-orange));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
   text-decoration: underline;
   text-underline-offset: 3px;
-  color: var(--m3-primary) !important;
+  text-decoration-color: var(--v-rose);
+}
+
+/* Fix: Don't gradient-clip icon links or nav links */
+.md-nav__link,
+.md-footer a,
+.md-header a,
+.md-tabs__link,
+.md-source,
+.md-typeset .md-button,
+.md-typeset .headerlink {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  -webkit-text-fill-color: unset !important;
 }
 
 /* ==========================================================================
-   Inline Code — Vibrant Indigo Chips
+   Inline Code — Vibrant Fuchsia Chips
    ========================================================================== */
 
 .md-typeset code {
   padding: 0.15em 0.55em;
   border-radius: 6px;
   font-size: 0.82em;
-  background: var(--m3-indigo-bg);
-  color: var(--m3-indigo);
-  border: 1px solid rgba(101, 31, 255, 0.15);
+  background: rgba(224, 64, 251, 0.08);
+  color: var(--v-fuchsia);
+  border: 1px solid rgba(224, 64, 251, 0.18);
   font-weight: 600;
 }
 
 [data-md-color-scheme="slate"] .md-typeset code {
-  border-color: rgba(179, 136, 255, 0.2);
+  background: rgba(234, 128, 252, 0.1);
+  border-color: rgba(234, 128, 252, 0.2);
 }
 
 /* ==========================================================================
-   Code Blocks
+   Code Blocks — Colorful Gradient Title Bars
    ========================================================================== */
 
 .md-typeset pre {
-  border-radius: var(--m3-radius-md) !important;
-  border: 1px solid var(--m3-outline-variant);
-  box-shadow: 0 2px 12px var(--m3-shadow-dark);
+  border-radius: var(--v-radius-md) !important;
+  border: 1px solid var(--v-outline-variant);
+  box-shadow: 0 2px 16px var(--v-shadow-dark);
   overflow: hidden;
 }
 
@@ -321,27 +485,27 @@ html {
 }
 
 .md-typeset .highlight .filename {
-  background: var(--m3-gradient-hero);
-  color: #FFFFFF;
+  background: var(--v-gradient-candy);
+  color: #ffffff;
   font-weight: 700;
   font-size: 0.75rem;
   letter-spacing: 0.04em;
-  border-radius: var(--m3-radius-md) var(--m3-radius-md) 0 0;
+  border-radius: var(--v-radius-md) var(--v-radius-md) 0 0;
   padding: 8px 16px;
 }
 
 .md-clipboard {
-  color: var(--m3-on-surface-variant) !important;
-  transition: all 0.2s var(--m3-motion-std);
+  color: var(--v-on-surface-variant) !important;
+  transition: all 0.2s var(--v-motion-std);
 }
 
 .md-clipboard:hover {
-  color: var(--m3-primary) !important;
-  transform: scale(1.1);
+  color: var(--v-violet) !important;
+  transform: scale(1.15);
 }
 
 /* ==========================================================================
-   Tables — Vibrant Header with Gradient
+   Tables — Rainbow Header Gradient
    ========================================================================== */
 
 .md-typeset table:not([class]) {
@@ -349,17 +513,19 @@ html {
   border-collapse: separate;
   border-spacing: 0;
   width: 100%;
-  border-radius: var(--m3-radius-md);
+  border-radius: var(--v-radius-md);
   overflow: hidden;
-  border: 1px solid var(--m3-outline);
-  box-shadow: 0 2px 12px var(--m3-shadow-dark);
+  border: 1px solid var(--v-outline);
+  box-shadow: 0 4px 20px var(--v-shadow-dark);
 }
 
 .md-typeset table:not([class]) th {
   font-weight: 700;
   white-space: nowrap;
-  background: var(--m3-gradient-hero);
-  color: #FFFFFF;
+  background: var(--v-gradient-header);
+  background-size: 200% 200%;
+  animation: gradientShift 8s ease infinite;
+  color: #ffffff;
   font-size: 0.78rem;
   letter-spacing: 0.03em;
   text-transform: uppercase;
@@ -368,15 +534,15 @@ html {
 .md-typeset table:not([class]) td,
 .md-typeset table:not([class]) th {
   padding: 0.75rem 1.2rem;
-  border-bottom: 1px solid var(--m3-outline-variant);
+  border-bottom: 1px solid var(--v-outline-variant);
 }
 
 .md-typeset table:not([class]) tbody tr {
-  transition: all 0.2s var(--m3-motion-std);
+  transition: all 0.25s var(--v-motion-std);
 }
 
 .md-typeset table:not([class]) tbody tr:hover {
-  background: var(--m3-primary-container);
+  background: rgba(124, 77, 255, 0.05);
   transform: scale(1.005);
 }
 
@@ -385,23 +551,23 @@ html {
 }
 
 .md-typeset table:not([class]) td strong {
-  color: var(--m3-primary);
+  color: var(--v-violet);
   font-weight: 800;
 }
 
 /* ==========================================================================
-   Admonitions — Colorful Left Bar with Tinted Background
+   Admonitions — Rainbow Left Bars with Vivid Tinted Backgrounds
    ========================================================================== */
 
 .md-typeset .admonition,
 .md-typeset details {
   font-size: 0.83rem;
-  border-radius: var(--m3-radius-md) !important;
+  border-radius: var(--v-radius-md) !important;
   border: none !important;
-  border-left: 5px solid var(--m3-primary) !important;
-  box-shadow: 0 2px 12px var(--m3-shadow-dark);
+  border-left: 5px solid var(--v-violet) !important;
+  box-shadow: 0 2px 16px var(--v-shadow-dark);
   overflow: hidden;
-  background: var(--m3-primary-container);
+  background: rgba(124, 77, 255, 0.06);
 }
 
 .md-typeset .admonition-title,
@@ -410,83 +576,134 @@ html {
   letter-spacing: 0.01em;
 }
 
+/* Tip → Emerald */
 .md-typeset .admonition.tip,
 .md-typeset details.tip {
-  border-left-color: var(--m3-green) !important;
-  background: var(--m3-green-bg);
+  border-left-color: var(--v-emerald) !important;
+  background: rgba(0, 230, 118, 0.06);
 }
 
+/* Note → Blue */
 .md-typeset .admonition.note,
 .md-typeset details.note {
-  border-left-color: var(--m3-blue) !important;
-  background: var(--m3-blue-bg);
+  border-left-color: var(--v-blue) !important;
+  background: rgba(68, 138, 255, 0.06);
 }
 
+/* Warning → Amber */
 .md-typeset .admonition.warning,
 .md-typeset details.warning {
-  border-left-color: #FF6D00 !important;
-  background: var(--m3-primary-container);
+  border-left-color: var(--v-amber) !important;
+  background: rgba(255, 215, 64, 0.08);
 }
 
+/* Danger → Coral */
 .md-typeset .admonition.danger,
 .md-typeset details.danger {
-  border-left-color: var(--m3-red) !important;
+  border-left-color: var(--v-coral) !important;
+  background: rgba(255, 107, 107, 0.06);
 }
 
+/* Info → Cyan */
 .md-typeset .admonition.info,
 .md-typeset details.info {
-  border-left-color: var(--m3-indigo) !important;
-  background: var(--m3-indigo-bg);
+  border-left-color: var(--v-cyan) !important;
+  background: rgba(24, 255, 255, 0.05);
 }
 
+/* Example → Fuchsia */
 .md-typeset .admonition.example,
 .md-typeset details.example {
-  border-left-color: var(--m3-indigo) !important;
-  background: var(--m3-indigo-bg);
+  border-left-color: var(--v-fuchsia) !important;
+  background: rgba(224, 64, 251, 0.05);
+}
+
+/* Abstract → Teal */
+.md-typeset .admonition.abstract,
+.md-typeset details.abstract {
+  border-left-color: var(--v-teal) !important;
+  background: rgba(29, 233, 182, 0.06);
+}
+
+/* Question → Lime */
+.md-typeset .admonition.question,
+.md-typeset details.question {
+  border-left-color: var(--v-lime) !important;
+  background: rgba(198, 255, 0, 0.06);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .admonition.tip,
+[data-md-color-scheme="slate"] .md-typeset details.tip {
+  background: rgba(0, 230, 118, 0.08);
+}
+[data-md-color-scheme="slate"] .md-typeset .admonition.note,
+[data-md-color-scheme="slate"] .md-typeset details.note {
+  background: rgba(68, 138, 255, 0.08);
+}
+[data-md-color-scheme="slate"] .md-typeset .admonition.warning,
+[data-md-color-scheme="slate"] .md-typeset details.warning {
+  background: rgba(255, 215, 64, 0.08);
+}
+[data-md-color-scheme="slate"] .md-typeset .admonition.danger,
+[data-md-color-scheme="slate"] .md-typeset details.danger {
+  background: rgba(255, 107, 107, 0.08);
+}
+[data-md-color-scheme="slate"] .md-typeset .admonition.info,
+[data-md-color-scheme="slate"] .md-typeset details.info {
+  background: rgba(24, 255, 255, 0.06);
+}
+[data-md-color-scheme="slate"] .md-typeset .admonition.example,
+[data-md-color-scheme="slate"] .md-typeset details.example {
+  background: rgba(224, 64, 251, 0.06);
 }
 
 /* ==========================================================================
-   Buttons — Bold Pill Buttons with Glow
+   Buttons — Gradient Pills with Rainbow Hover Glow
    ========================================================================== */
 
 .md-typeset .md-button {
-  border-radius: var(--m3-radius-full) !important;
+  border-radius: var(--v-radius-full) !important;
   font-weight: 700;
   font-size: 0.85rem;
   letter-spacing: 0.02em;
   padding: 11px 30px;
-  transition: all 0.3s var(--m3-motion-pop);
+  transition: all 0.3s var(--v-motion-pop);
   text-transform: none;
 }
 
 .md-typeset .md-button--primary {
-  background: var(--m3-gradient-hero) !important;
-  color: #FFFFFF !important;
+  background: var(--v-gradient-candy) !important;
+  background-size: 200% 200% !important;
+  animation: gradientShift 5s ease infinite;
+  color: #ffffff !important;
   border: none !important;
-  box-shadow: 0 4px 15px var(--m3-shadow-colored);
+  box-shadow: 0 4px 18px rgba(124, 77, 255, 0.35);
 }
 
 .md-typeset .md-button--primary:hover {
-  box-shadow: 0 6px 25px var(--m3-glow);
+  box-shadow:
+    0 6px 30px rgba(124, 77, 255, 0.45),
+    0 0 60px rgba(224, 64, 251, 0.2);
   transform: translateY(-3px);
 }
 
 .md-typeset .md-button--primary:active {
   transform: translateY(-1px);
-  box-shadow: 0 3px 12px var(--m3-shadow-colored);
+  box-shadow: 0 3px 12px rgba(124, 77, 255, 0.3);
 }
 
 .md-typeset .md-button:not(.md-button--primary) {
   background: transparent !important;
-  color: var(--m3-primary) !important;
-  border: 2px solid var(--m3-primary) !important;
+  color: var(--v-violet) !important;
+  border: 2px solid var(--v-violet) !important;
   box-shadow: none;
 }
 
 .md-typeset .md-button:not(.md-button--primary):hover {
-  background: var(--m3-primary) !important;
-  color: var(--m3-on-primary) !important;
-  box-shadow: 0 4px 15px var(--m3-shadow-colored);
+  background: var(--v-gradient-candy) !important;
+  color: #ffffff !important;
+  border-color: transparent !important;
+  box-shadow: 0 4px 18px rgba(124, 77, 255, 0.35);
   transform: translateY(-3px);
 }
 
@@ -495,13 +712,13 @@ html {
 }
 
 /* ==========================================================================
-   Search — Rounded + Glass
+   Search — Frosted Glass with Violet Glow
    ========================================================================== */
 
 .md-search__input {
-  border-radius: var(--m3-radius-full) !important;
+  border-radius: var(--v-radius-full) !important;
   background: rgba(255, 255, 255, 0.18) !important;
-  transition: all 0.3s var(--m3-motion-std);
+  transition: all 0.3s var(--v-motion-std);
   font-weight: 500;
 }
 
@@ -510,47 +727,50 @@ html {
 }
 
 .md-search__input:focus {
-  background: rgba(255, 255, 255, 0.3) !important;
+  background: rgba(255, 255, 255, 0.32) !important;
+  box-shadow: 0 0 20px rgba(179, 136, 255, 0.3);
 }
 
 .md-search-result__meta {
-  background: var(--m3-primary-container-bright);
-  color: var(--m3-on-primary-container);
+  background: rgba(124, 77, 255, 0.1);
+  color: var(--v-violet);
   font-weight: 600;
 }
 
 .md-search-result__teaser mark {
-  background: rgba(255, 109, 0, 0.25);
+  background: rgba(224, 64, 251, 0.2);
   color: inherit;
   border-radius: 2px;
   padding: 0 2px;
 }
 
 /* ==========================================================================
-   Content Tabs — Pill Segments
+   Content Tabs — Colorful Pill Segments
    ========================================================================== */
 
 .md-typeset .tabbed-labels > label {
-  border-radius: var(--m3-radius-full);
+  border-radius: var(--v-radius-full);
   font-weight: 600;
   font-size: 0.82rem;
   padding: 8px 22px;
-  transition: all 0.25s var(--m3-motion-std);
+  transition: all 0.25s var(--v-motion-std);
 }
 
 .md-typeset .tabbed-labels > label:hover {
-  background: var(--m3-primary-container-bright);
-  color: var(--m3-on-primary-container);
+  background: rgba(124, 77, 255, 0.08);
+  color: var(--v-violet);
 }
 
 .md-typeset .tabbed-labels > .tabbed-labels__active {
-  color: var(--m3-primary) !important;
+  color: var(--v-violet) !important;
 }
 
 .md-typeset .tabbed-content {
-  border-radius: 0 0 var(--m3-radius-md) var(--m3-radius-md);
-  border: 1px solid var(--m3-outline);
-  border-top: 3px solid var(--m3-primary);
+  border-radius: 0 0 var(--v-radius-md) var(--v-radius-md);
+  border: 1px solid var(--v-outline);
+  border-top: 3px solid transparent;
+  border-image: var(--v-gradient-candy) 1;
+  border-image-slice: 1 1 0 1;
 }
 
 /* ==========================================================================
@@ -558,30 +778,33 @@ html {
    ========================================================================== */
 
 .md-typeset .task-list-indicator::before {
-  background-color: var(--m3-green) !important;
+  background-color: var(--v-emerald) !important;
 }
 
 /* ==========================================================================
-   Mermaid Diagrams — Subtle Card
+   Mermaid Diagrams — Glass Card with Rainbow Border
    ========================================================================== */
 
 .mermaid {
   text-align: center;
   margin: 2rem 0;
   padding: 2rem;
-  background: var(--m3-surface-dim);
-  border-radius: var(--m3-radius-lg);
-  border: 1px solid var(--m3-outline);
-  box-shadow: 0 2px 12px var(--m3-shadow-dark);
+  background: var(--v-surface-dim);
+  border-radius: var(--v-radius-lg);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  box-shadow:
+    0 4px 20px var(--v-shadow-dark),
+    inset 0 0 0 1px var(--v-outline);
 }
 
 /* ==========================================================================
-   Footer — Bold Dark + Orange Accent
+   Footer — Rainbow Gradient Top Border
    ========================================================================== */
 
 .md-footer {
   border-top: 4px solid transparent;
-  border-image: var(--m3-gradient-hero) 1;
+  border-image: var(--v-gradient-rainbow) 1;
 }
 
 .md-footer-meta {
@@ -589,70 +812,75 @@ html {
 }
 
 .md-social__link svg {
-  transition: all 0.2s var(--m3-motion-std);
+  transition: all 0.3s var(--v-motion-pop);
 }
 
 .md-social__link:hover svg {
-  transform: scale(1.2);
-  fill: var(--m3-primary) !important;
+  transform: scale(1.25) rotate(-5deg);
+  fill: var(--v-fuchsia) !important;
 }
 
 /* ==========================================================================
-   Back-to-Top — FAB Style
+   Back-to-Top — Floating Gradient FAB
    ========================================================================== */
 
 .md-top {
-  background: var(--m3-gradient-hero) !important;
-  color: #FFFFFF !important;
-  border-radius: var(--m3-radius-full) !important;
-  box-shadow: 0 4px 18px var(--m3-shadow-colored);
+  background: var(--v-gradient-candy) !important;
+  color: #ffffff !important;
+  border-radius: var(--v-radius-full) !important;
+  box-shadow: 0 4px 20px rgba(124, 77, 255, 0.4);
   font-weight: 700;
-  transition: all 0.3s var(--m3-motion-pop);
+  transition: all 0.3s var(--v-motion-pop);
 }
 
 .md-top:hover {
-  box-shadow: 0 6px 25px var(--m3-glow);
-  transform: translateY(-3px);
+  box-shadow:
+    0 6px 30px rgba(124, 77, 255, 0.5),
+    0 0 40px rgba(224, 64, 251, 0.2);
+  transform: translateY(-4px);
 }
 
 /* ==========================================================================
-   Horizontal Rules — Gradient Line
+   Horizontal Rules — Rainbow Gradient Line
    ========================================================================== */
 
 .md-typeset hr {
   border: none;
   height: 3px;
-  background: var(--m3-gradient-warm);
+  background: var(--v-gradient-rainbow);
+  background-size: 300% 100%;
+  animation: gradientShift 4s ease infinite;
   margin: 2.5rem 0;
-  border-radius: var(--m3-radius-full);
-  opacity: 0.6;
+  border-radius: var(--v-radius-full);
 }
 
 /* ==========================================================================
-   Progress Bar
+   Progress Bar — Rainbow
    ========================================================================== */
 
 .md-progress {
-  background: var(--m3-gradient-hero) !important;
+  background: var(--v-gradient-rainbow) !important;
+  background-size: 300% 100% !important;
+  animation: gradientShift 3s ease infinite;
 }
 
 /* ==========================================================================
-   TOC Right Sidebar
+   TOC Right Sidebar — Colorful Active State
    ========================================================================== */
 
 .md-nav--secondary .md-nav__link {
   border-left: 2px solid transparent;
-  transition: all 0.2s var(--m3-motion-std);
+  transition: all 0.2s var(--v-motion-std);
 }
 
 .md-nav--secondary .md-nav__link--active {
-  color: var(--m3-primary);
+  color: var(--v-violet);
   font-weight: 700;
-  border-left-color: var(--m3-primary);
+  border-left-color: var(--v-fuchsia);
 }
 
 /* ==========================================================================
-   Scrollbar
+   Scrollbar — Thin + Colorful Thumb
    ========================================================================== */
 
 ::-webkit-scrollbar {
@@ -665,16 +893,16 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--m3-outline);
-  border-radius: var(--m3-radius-full);
+  background: var(--v-outline);
+  border-radius: var(--v-radius-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--m3-primary);
+  background: var(--v-violet);
 }
 
 /* ==========================================================================
-   LANDING PAGE — Hero
+   LANDING PAGE — Hero with Multi-Color Glow
    ========================================================================== */
 
 .hero {
@@ -684,34 +912,73 @@ html {
   overflow: hidden;
 }
 
-/* Multi-layer glow behind hero */
+/* Multi-layer rainbow glow behind hero */
 .hero::before {
   content: "";
   position: absolute;
   top: -40%;
   left: 50%;
   transform: translateX(-50%);
-  width: 700px;
-  height: 700px;
+  width: 800px;
+  height: 800px;
   background:
-    radial-gradient(circle at 30% 40%, rgba(255, 109, 0, 0.25) 0%, transparent 50%),
-    radial-gradient(circle at 70% 60%, rgba(101, 31, 255, 0.12) 0%, transparent 50%),
-    radial-gradient(circle at 50% 30%, rgba(255, 152, 0, 0.18) 0%, transparent 60%);
+    radial-gradient(
+      circle at 20% 30%,
+      rgba(255, 107, 107, 0.25) 0%,
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 80% 30%,
+      rgba(124, 77, 255, 0.22) 0%,
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 50% 70%,
+      rgba(224, 64, 251, 0.18) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 30% 60%,
+      rgba(68, 138, 255, 0.15) 0%,
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 70% 50%,
+      rgba(29, 233, 182, 0.12) 0%,
+      transparent 40%
+    );
   pointer-events: none;
   z-index: 0;
-  animation: heroGlow 6s ease-in-out infinite alternate;
-}
-
-@keyframes heroGlow {
-  0% { opacity: 0.8; transform: translateX(-50%) scale(1); }
-  100% { opacity: 1; transform: translateX(-50%) scale(1.08); }
+  animation: heroGlow 8s ease-in-out infinite;
 }
 
 [data-md-color-scheme="slate"] .hero::before {
   background:
-    radial-gradient(circle at 30% 40%, rgba(255, 171, 64, 0.2) 0%, transparent 50%),
-    radial-gradient(circle at 70% 60%, rgba(179, 136, 255, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 50% 30%, rgba(255, 213, 79, 0.12) 0%, transparent 60%);
+    radial-gradient(
+      circle at 20% 30%,
+      rgba(255, 138, 128, 0.2) 0%,
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 80% 30%,
+      rgba(179, 136, 255, 0.2) 0%,
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 50% 70%,
+      rgba(234, 128, 252, 0.15) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 30% 60%,
+      rgba(130, 177, 255, 0.12) 0%,
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 70% 50%,
+      rgba(167, 255, 235, 0.1) 0%,
+      transparent 40%
+    );
 }
 
 .hero > * {
@@ -720,11 +987,13 @@ html {
 }
 
 .hero h1 {
-  font-size: 3.2rem;
+  font-size: 3.4rem;
   font-weight: 900;
   margin-bottom: 0.6rem;
   letter-spacing: -0.04em;
-  background: var(--m3-gradient-hero);
+  background: var(--v-gradient-hero);
+  background-size: 200% 200%;
+  animation: gradientShift 6s ease infinite;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -732,11 +1001,11 @@ html {
 }
 
 .hero p {
-  font-size: 1.15rem;
+  font-size: 1.18rem;
   max-width: 660px;
   margin: 0 auto 2.2rem;
   line-height: 1.6;
-  color: var(--m3-on-surface-variant);
+  color: var(--v-on-surface-variant);
   font-weight: 500;
 }
 
@@ -745,7 +1014,7 @@ html {
 }
 
 /* ==========================================================================
-   LANDING PAGE — Feature Grid (Vibrant Cards)
+   LANDING PAGE — Feature Grid (Rainbow Cards)
    ========================================================================== */
 
 .feature-grid {
@@ -756,16 +1025,16 @@ html {
 }
 
 .feature-card {
-  background: var(--m3-surface);
-  border: 1px solid var(--m3-outline-variant);
-  border-radius: var(--m3-radius-lg);
+  background: var(--v-surface);
+  border: 1px solid var(--v-outline-variant);
+  border-radius: var(--v-radius-lg);
   padding: 1.6rem 1.5rem;
-  transition: all 0.35s var(--m3-motion-pop);
+  transition: all 0.35s var(--v-motion-pop);
   position: relative;
   overflow: hidden;
 }
 
-/* Always-visible colored top bar */
+/* Colored top gradient bar */
 .feature-card::before {
   content: "";
   position: absolute;
@@ -773,11 +1042,11 @@ html {
   left: 0;
   right: 0;
   height: 4px;
-  transition: height 0.3s var(--m3-motion-pop);
+  transition: height 0.3s var(--v-motion-pop);
 }
 
 .feature-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-8px);
   border-color: transparent;
 }
 
@@ -785,33 +1054,93 @@ html {
   height: 5px;
 }
 
-/* Per-card unique coloring — always visible, vivid */
-.feature-card:nth-child(1)::before { background: linear-gradient(90deg, #FF6D00, #FF9800); }
-.feature-card:nth-child(2)::before { background: linear-gradient(90deg, #00C853, #69F0AE); }
-.feature-card:nth-child(3)::before { background: linear-gradient(90deg, #2979FF, #82B1FF); }
-.feature-card:nth-child(4)::before { background: linear-gradient(90deg, #651FFF, #B388FF); }
-.feature-card:nth-child(5)::before { background: linear-gradient(90deg, #E65100, #FF6D00); }
-.feature-card:nth-child(6)::before { background: linear-gradient(90deg, #FF8F00, #FFD54F); }
+/* Per-card rainbow coloring */
+.feature-card:nth-child(1)::before {
+  background: linear-gradient(90deg, #ff6b6b, #ff4081);
+}
+.feature-card:nth-child(2)::before {
+  background: linear-gradient(90deg, #00e676, #1de9b6);
+}
+.feature-card:nth-child(3)::before {
+  background: linear-gradient(90deg, #448aff, #536dfe);
+}
+.feature-card:nth-child(4)::before {
+  background: linear-gradient(90deg, #7c4dff, #e040fb);
+}
+.feature-card:nth-child(5)::before {
+  background: linear-gradient(90deg, #ffd740, #ff6d00);
+}
+.feature-card:nth-child(6)::before {
+  background: linear-gradient(90deg, #18ffff, #1de9b6);
+}
 
-.feature-card:nth-child(1):hover { box-shadow: 0 12px 35px rgba(255, 109, 0, 0.25); }
-.feature-card:nth-child(2):hover { box-shadow: 0 12px 35px rgba(0, 200, 83, 0.2); }
-.feature-card:nth-child(3):hover { box-shadow: 0 12px 35px rgba(41, 121, 255, 0.2); }
-.feature-card:nth-child(4):hover { box-shadow: 0 12px 35px rgba(101, 31, 255, 0.2); }
-.feature-card:nth-child(5):hover { box-shadow: 0 12px 35px rgba(230, 81, 0, 0.25); }
-.feature-card:nth-child(6):hover { box-shadow: 0 12px 35px rgba(255, 143, 0, 0.25); }
+/* Per-card colored hover shadows */
+.feature-card:nth-child(1):hover {
+  box-shadow:
+    0 16px 40px rgba(255, 107, 107, 0.25),
+    0 0 0 1px rgba(255, 64, 129, 0.15);
+}
+.feature-card:nth-child(2):hover {
+  box-shadow:
+    0 16px 40px rgba(0, 230, 118, 0.2),
+    0 0 0 1px rgba(29, 233, 182, 0.15);
+}
+.feature-card:nth-child(3):hover {
+  box-shadow:
+    0 16px 40px rgba(68, 138, 255, 0.25),
+    0 0 0 1px rgba(83, 109, 254, 0.15);
+}
+.feature-card:nth-child(4):hover {
+  box-shadow:
+    0 16px 40px rgba(124, 77, 255, 0.25),
+    0 0 0 1px rgba(224, 64, 251, 0.15);
+}
+.feature-card:nth-child(5):hover {
+  box-shadow:
+    0 16px 40px rgba(255, 215, 64, 0.25),
+    0 0 0 1px rgba(255, 109, 0, 0.15);
+}
+.feature-card:nth-child(6):hover {
+  box-shadow:
+    0 16px 40px rgba(24, 255, 255, 0.2),
+    0 0 0 1px rgba(29, 233, 182, 0.15);
+}
+
+/* Per-card colored heading accents */
+.feature-card:nth-child(1) h3 {
+  color: var(--v-coral);
+}
+.feature-card:nth-child(2) h3 {
+  color: var(--v-emerald);
+}
+.feature-card:nth-child(3) h3 {
+  color: var(--v-blue);
+}
+.feature-card:nth-child(4) h3 {
+  color: var(--v-violet);
+}
+.feature-card:nth-child(5) h3 {
+  color: var(--v-amber);
+}
+.feature-card:nth-child(6) h3 {
+  color: var(--v-cyan);
+}
+
+[data-md-color-scheme="slate"] .feature-card:nth-child(5) h3 {
+  color: var(--v-orange);
+}
 
 .feature-card h3 {
   margin-top: 0.3rem;
   font-size: 1.02rem;
   font-weight: 700;
-  color: var(--m3-on-surface);
 }
 
 .feature-card p {
   font-size: 0.84rem;
   margin-bottom: 0;
   line-height: 1.65;
-  color: var(--m3-on-surface-variant);
+  color: var(--v-on-surface-variant);
 }
 
 /* ==========================================================================
@@ -821,6 +1150,16 @@ html {
 .md-typeset div[style*="text-align: center"] .md-button--primary {
   padding: 14px 40px;
   font-size: 0.92rem;
+}
+
+/* ==========================================================================
+   LANDING PAGE — Section Heading Colors
+   ========================================================================== */
+
+/* Make section headings on the landing page more colorful */
+.hero ~ .md-typeset h2,
+.md-content h2 {
+  display: inline-block;
 }
 
 /* ==========================================================================
@@ -864,8 +1203,8 @@ body,
 .md-typeset details,
 .feature-card {
   transition:
-    background-color 0.35s var(--m3-motion-std),
-    color 0.35s var(--m3-motion-std),
-    border-color 0.35s var(--m3-motion-std),
-    box-shadow 0.35s var(--m3-motion-std);
+    background-color 0.35s var(--v-motion-std),
+    color 0.35s var(--v-motion-std),
+    border-color 0.35s var(--v-motion-std),
+    box-shadow 0.35s var(--v-motion-std);
 }
