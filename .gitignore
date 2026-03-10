@@ -1,0 +1,50 @@
+# ─── OS & editor artifacts ────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+*~
+*.swp
+*.swo
+
+# ─── IDEs ─────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.iml
+
+# ─── Go ───────────────────────────────────────────────────────────────────────
+backend/bin/
+backend/out/
+backend/build/
+backend/dist/
+backend/*.exe
+backend/*.test
+backend/*.out
+backend/coverage/
+backend/go.work
+backend/go.work.sum
+backend/vendor/
+backend/tmp/
+
+# ─── Environment / secrets ────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ─── Frontend (node / build artifacts) ───────────────────────────────────────
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/dist/
+frontend/.nuxt/
+frontend/.output/
+frontend/.svelte-kit/
+frontend/.pnpm-store/
+frontend/.turbo/
+
+# ─── MkDocs ───────────────────────────────────────────────────────────────────
+site/
+.cache/
