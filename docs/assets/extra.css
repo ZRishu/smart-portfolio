@@ -11,10 +11,10 @@
   --tw-slate-800: #1e293b;
   --tw-slate-900: #0f172a;
   
-  --tw-indigo-50: #eef2ff;
-  --tw-indigo-100: #e0e7ff;
-  --tw-indigo-500: #6366f1;
-  --tw-indigo-600: #4f46e5;
+  --tw-orange-50: #fff7ed;
+  --tw-orange-100: #ffedd5;
+  --tw-orange-500: #f97316;
+  --tw-orange-600: #ea580c;
 
   --tw-blue-500: #3b82f6;
   --tw-emerald-500: #10b981;
@@ -25,15 +25,6 @@
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-}
-
-[data-md-color-scheme="slate"] {
-  --tw-slate-50: #0f172a;
-  --tw-slate-100: #1e293b;
-  --tw-slate-200: #334155;
-  --tw-slate-700: #e2e8f0;
-  --tw-slate-800: #f1f5f9;
-  --tw-slate-900: #f8fafc;
 }
 
 /* ==========================================================================
@@ -50,28 +41,20 @@ html {
   color: var(--tw-slate-900);
 }
 
-.md-typeset h1 { font-size: 2.25rem; }
+.md-typeset h1 { font-size: 2rem; }
 .md-typeset h2 { font-size: 1.5rem; }
 .md-typeset h3 { font-size: 1.25rem; }
 
 .md-typeset a {
-  color: var(--tw-indigo-600);
+  color: var(--tw-orange-600);
   text-decoration: none;
   transition: color 0.15s ease-in-out;
 }
 
 .md-typeset a:hover {
-  color: var(--tw-indigo-500);
+  color: var(--tw-orange-500);
   text-decoration: underline;
   text-underline-offset: 2px;
-}
-
-[data-md-color-scheme="slate"] .md-typeset a {
-  color: var(--tw-indigo-500);
-}
-
-[data-md-color-scheme="slate"] .md-typeset a:hover {
-  color: var(--tw-indigo-100);
 }
 
 /* Custom Admonitions using Tailwind-like styles */
@@ -89,10 +72,6 @@ html {
   box-shadow: var(--shadow-sm);
 }
 
-[data-md-color-scheme="slate"] .md-typeset pre {
-  border-color: var(--tw-slate-800);
-}
-
 /* ==========================================================================
    LANDING PAGE — Hero Section
    ========================================================================== */
@@ -104,7 +83,7 @@ html {
 }
 
 .hero h1 {
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: 800;
   line-height: 1.2;
   margin-bottom: 1rem;
@@ -115,7 +94,7 @@ html {
 }
 
 .hero p {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   color: var(--tw-slate-700);
   margin-bottom: 2rem;
   line-height: 1.6;
@@ -130,13 +109,13 @@ html {
 }
 
 .hero .md-button--primary {
-  background-color: var(--tw-indigo-600);
+  background-color: var(--tw-orange-600);
   color: white;
   border: none;
 }
 
 .hero .md-button--primary:hover {
-  background-color: var(--tw-indigo-500);
+  background-color: var(--tw-orange-500);
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }
@@ -162,12 +141,12 @@ html {
 .feature-card:hover {
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
-  border-color: var(--tw-indigo-100);
+  border-color: var(--tw-orange-100);
 }
 
 .feature-card h3 {
   margin-top: 0;
-  font-size: 1.125rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: var(--tw-slate-900);
   display: flex;
@@ -183,25 +162,30 @@ html {
   margin-bottom: 0;
 }
 
-[data-md-color-scheme="slate"] .feature-card {
-  border-color: var(--tw-slate-200);
-  background-color: var(--tw-slate-50);
-}
-
-[data-md-color-scheme="slate"] .feature-card:hover {
-  border-color: var(--tw-indigo-500);
-}
-
 .feature-card h3 .twemoji {
-  color: var(--tw-indigo-500);
+  color: var(--tw-orange-500);
 }
 
 /* Remove gradient border from footer */
 .md-footer {
   border-top: 1px solid var(--tw-slate-200);
 }
-[data-md-color-scheme="slate"] .md-footer {
-  border-top-color: var(--tw-slate-800);
+
+/* ==========================================================================
+   Mermaid Diagrams — Scrollable & Legible
+   ========================================================================== */
+.md-typeset .mermaid {
+  overflow-x: auto;
+  margin: 2rem 0;
+  display: block;
+}
+
+.md-typeset .mermaid svg {
+  min-width: 800px !important;
+  max-width: none !important;
+  height: auto !important;
+  margin: 0 auto;
+  display: block;
 }
 
 /* ==========================================================================
@@ -212,9 +196,9 @@ html {
     padding: 2rem 1rem;
   }
   .hero h1 {
-    font-size: 2.25rem;
+    font-size: 2rem;
   }
   .hero p {
-    font-size: 1.125rem;
+    font-size: 1rem;
   }
 }

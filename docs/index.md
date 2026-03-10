@@ -6,7 +6,7 @@ hide:
 
 <div class="hero" markdown>
 
-# :rocket: Smart Portfolio
+# Smart Portfolio
 
 **Ship your developer portfolio with an AI brain.** Resume chat, project showcase, contact form, and sponsor payments — all in one Go backend.
 
@@ -98,26 +98,57 @@ Swagger UI served at `/docs` with a comprehensive OpenAPI 3.0 spec. Every endpoi
 ## :material-sitemap: Architecture
 
 ```mermaid
-graph TD
-    A[Frontend<br/>Vercel / Netlify] -->|HTTPS| B[Go Backend<br/>chi router]
-    B --> C[PostgreSQL + pgvector]
-    B --> D[Groq LLM API]
-    B --> E[Jina Embeddings API]
-    B --> F[Discord Webhooks]
-    B --> G[Razorpay Webhooks]
+flowchart TD
+    classDef client fill:#ffedd5,stroke:#f97316,stroke-width:2px,color:#0f172a
+    classDef backend fill:#e0e7ff,stroke:#6366f1,stroke-width:2px,color:#0f172a
+    classDef db fill:#dbeafe,stroke:#3b82f6,stroke-width:2px,color:#0f172a
+    classDef ext fill:#d1fae5,stroke:#10b981,stroke-width:2px,color:#0f172a
+    classDef mod fill:#f8fafc,stroke:#94a3b8,stroke-width:2px,color:#0f172a
+    classDef plat fill:#ffffff,stroke:#cbd5e1,stroke-width:2px,stroke-dasharray: 5 5,color:#0f172a
 
-    subgraph Backend Modules
-        B --> H[Content Module<br/>Projects + Contact]
-        B --> I[AI Module<br/>RAG + Ingestion]
-        B --> J[Payment Module<br/>Outbox Pattern]
-        B --> K[Admin Module<br/>Stats + Health]
-        B --> L[Notification Module<br/>Discord]
+    %% 1. Ingress Layer
+    Client[Frontend<br/>Vercel / Netlify]:::client
+    Razorpay[Razorpay Webhooks]:::ext
+    
+    %% 2. API Layer
+    API[Go Backend API<br/>chi router]:::backend
+
+    Client -->|HTTPS| API
+    Razorpay -->|Webhook POST| API
+
+    %% 3. Core Logic Layer
+    subgraph AppModules [Application Modules]
+        direction TB
+        Content[Content Module]:::mod
+        AI[AI Module<br/>RAG]:::mod
+        Payment[Payment Module]:::mod
+        Admin[Admin Module]:::mod
+        Notify[Notification Module]:::mod
     end
 
-    subgraph Platform
-        M[Event Bus] --- J
-        N[In-Memory Cache] --- H
+    subgraph AppPlatform [Platform Services]
+        direction TB
+        Cache[In-Memory Cache]:::plat
+        Bus[Event Bus]:::plat
     end
+
+    API --> AppModules
+    Content -.-> Cache
+    Payment -.->|Publish Event| Bus
+    Bus -.->|Trigger| Notify
+
+    %% 4. Data Layer
+    DB[(PostgreSQL + pgvector)]:::db
+    AppModules --> DB
+
+    %% 5. Egress / External APIs Layer
+    Groq[Groq LLM API]:::ext
+    Jina[Jina Embeddings API]:::ext
+    Discord[Discord Webhooks]:::ext
+
+    AI -.-> Groq
+    AI -.-> Jina
+    Notify -.-> Discord
 ```
 
 ---
