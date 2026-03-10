@@ -1,133 +1,832 @@
 /* =============================================================================
-   Smart Portfolio — MkDocs Material Custom Styles
+   Smart Portfolio — Material 3 Expressive UI
+   Color Palette:
+     Primary:   Saffron / Orange (#FF6D00, #FF9100, #FFA726)
+     Surface:   White (#FFFFFF) / Off-white (#FFFBF5)
+     On-Surface: Black (#1A1A1A) / Dark gray (#2D2D2D)
+     Accent-1:  Green (#2E7D32, #43A047) — status, success
+     Accent-2:  Blue (#1565C0, #1E88E5) — links, info
+     Accent-3:  Indigo (#283593, #3949AB) — code, badges
    ============================================================================= */
 
-/* Slightly tighter max-width for better readability */
+/* ---------- CSS Custom Properties (Light Mode) ---------- */
+:root {
+  /* M3 Expressive tokens */
+  --m3-primary: #ff6d00;
+  --m3-primary-light: #ff9100;
+  --m3-primary-container: #fff3e0;
+  --m3-on-primary: #ffffff;
+  --m3-on-primary-container: #e65100;
+  --m3-secondary: #ff8f00;
+  --m3-surface: #fffbf5;
+  --m3-surface-variant: #fff8f0;
+  --m3-on-surface: #1a1a1a;
+  --m3-on-surface-variant: #4a4a4a;
+  --m3-outline: #e0d5c8;
+  --m3-outline-variant: #f0e8dd;
+  --m3-green: #2e7d32;
+  --m3-green-light: #43a047;
+  --m3-blue: #1565c0;
+  --m3-blue-light: #1e88e5;
+  --m3-indigo: #283593;
+  --m3-indigo-light: #3949ab;
+  --m3-shadow-1: rgba(255, 109, 0, 0.08);
+  --m3-shadow-2: rgba(255, 109, 0, 0.14);
+  --m3-shadow-3: rgba(0, 0, 0, 0.06);
+  --m3-radius-sm: 8px;
+  --m3-radius-md: 16px;
+  --m3-radius-lg: 24px;
+  --m3-radius-xl: 28px;
+  --m3-radius-full: 9999px;
+  --m3-motion-standard: cubic-bezier(0.2, 0, 0, 1);
+  --m3-motion-emphasized: cubic-bezier(0.05, 0.7, 0.1, 1);
+}
+
+/* ---------- Dark Mode Tokens ---------- */
+[data-md-color-scheme="slate"] {
+  --m3-primary: #ffb74d;
+  --m3-primary-light: #ffcc80;
+  --m3-primary-container: #3e2700;
+  --m3-on-primary: #1a1a1a;
+  --m3-on-primary-container: #ffe0b2;
+  --m3-secondary: #ffd54f;
+  --m3-surface: #1a1410;
+  --m3-surface-variant: #2d2318;
+  --m3-on-surface: #f5f0eb;
+  --m3-on-surface-variant: #c8bdb0;
+  --m3-outline: #4a3f33;
+  --m3-outline-variant: #3a3028;
+  --m3-green: #66bb6a;
+  --m3-green-light: #81c784;
+  --m3-blue: #42a5f5;
+  --m3-blue-light: #64b5f6;
+  --m3-indigo: #7986cb;
+  --m3-indigo-light: #9fa8da;
+  --m3-shadow-1: rgba(0, 0, 0, 0.2);
+  --m3-shadow-2: rgba(0, 0, 0, 0.3);
+  --m3-shadow-3: rgba(0, 0, 0, 0.15);
+}
+
+/* ---------- MkDocs Material Color Overrides ---------- */
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: #ff6d00;
+  --md-primary-fg-color--light: #ff9100;
+  --md-primary-fg-color--dark: #e65100;
+  --md-primary-bg-color: #ffffff;
+  --md-primary-bg-color--light: #fffbf5;
+  --md-accent-fg-color: #ff8f00;
+  --md-accent-fg-color--transparent: rgba(255, 143, 0, 0.12);
+  --md-accent-bg-color: #fff3e0;
+  --md-default-bg-color: #fffbf5;
+  --md-default-bg-color--light: #ffffff;
+  --md-default-bg-color--lighter: #ffffff;
+  --md-default-bg-color--lightest: #ffffff;
+  --md-default-fg-color: #1a1a1a;
+  --md-default-fg-color--light: #4a4a4a;
+  --md-default-fg-color--lighter: #7a7a7a;
+  --md-default-fg-color--lightest: rgba(26, 26, 26, 0.07);
+  --md-typeset-a-color: #e65100;
+  --md-code-bg-color: #fff8f0;
+  --md-code-fg-color: #283593;
+  --md-code-hl-color: rgba(255, 109, 0, 0.12);
+  --md-footer-bg-color: #1a1a1a;
+  --md-footer-bg-color--dark: #111111;
+  --md-footer-fg-color: #ffffff;
+  --md-footer-fg-color--light: rgba(255, 255, 255, 0.7);
+  --md-footer-fg-color--lighter: rgba(255, 255, 255, 0.5);
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #ffb74d;
+  --md-primary-fg-color--light: #ffcc80;
+  --md-primary-fg-color--dark: #ff8f00;
+  --md-primary-bg-color: #1a1410;
+  --md-primary-bg-color--light: #2d2318;
+  --md-accent-fg-color: #ffd54f;
+  --md-accent-fg-color--transparent: rgba(255, 213, 79, 0.12);
+  --md-accent-bg-color: #3e2700;
+  --md-default-bg-color: #1a1410;
+  --md-default-bg-color--light: #221a12;
+  --md-default-bg-color--lighter: #2d2318;
+  --md-default-bg-color--lightest: #382d22;
+  --md-default-fg-color: #f5f0eb;
+  --md-default-fg-color--light: #c8bdb0;
+  --md-default-fg-color--lighter: #998e82;
+  --md-default-fg-color--lightest: rgba(245, 240, 235, 0.07);
+  --md-typeset-a-color: #ffb74d;
+  --md-code-bg-color: #2d2318;
+  --md-code-fg-color: #9fa8da;
+  --md-code-hl-color: rgba(255, 183, 77, 0.15);
+  --md-footer-bg-color: #111008;
+  --md-footer-bg-color--dark: #0a0806;
+  --md-footer-fg-color: #f5f0eb;
+  --md-footer-fg-color--light: rgba(245, 240, 235, 0.7);
+  --md-footer-fg-color--lighter: rgba(245, 240, 235, 0.5);
+}
+
+/* ---------- General Layout ---------- */
+html {
+  scroll-behavior: smooth;
+}
+
 .md-grid {
-    max-width: 1200px;
+  max-width: 1220px;
 }
 
-/* Code block styling */
-.highlight code {
-    font-size: 0.82rem;
-    line-height: 1.6;
+/* ---------- Header / Top App Bar ---------- */
+.md-header {
+  background: var(--md-primary-fg-color);
+  box-shadow: 0 2px 8px var(--m3-shadow-3);
+  transition: background 0.3s var(--m3-motion-standard);
 }
 
-/* Inline code styling */
+.md-header__title {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.md-header[data-md-state="shadow"] {
+  box-shadow: 0 4px 16px var(--m3-shadow-2);
+}
+
+/* ---------- Navigation Tabs ---------- */
+.md-tabs {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  background: var(--md-primary-fg-color);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+.md-tabs__link {
+  border-radius: var(--m3-radius-full) !important;
+  margin: 4px 2px;
+  padding: 6px 16px !important;
+  transition: all 0.25s var(--m3-motion-standard);
+}
+
+.md-tabs__link:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.md-tabs__link--active {
+  background: rgba(255, 255, 255, 0.2) !important;
+  font-weight: 600;
+}
+
+/* ---------- Sidebar / Navigation Drawer ---------- */
+.md-sidebar__scrollwrap {
+  scrollbar-width: thin;
+  scrollbar-color: var(--m3-outline) transparent;
+}
+
+.md-nav__link {
+  border-radius: var(--m3-radius-sm);
+  padding: 6px 12px;
+  margin: 1px 8px;
+  transition: all 0.2s var(--m3-motion-standard);
+  font-size: 0.82rem;
+}
+
+.md-nav__link:hover {
+  background: var(--m3-primary-container);
+  color: var(--m3-on-primary-container);
+}
+
+.md-nav__item--active > .md-nav__link {
+  color: var(--m3-primary);
+  font-weight: 600;
+  background: var(--m3-primary-container);
+}
+
+.md-nav__item--active > .md-nav__link::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  background: var(--m3-primary);
+  border-radius: var(--m3-radius-full);
+}
+
+.md-nav__item--active > .md-nav__link {
+  position: relative;
+}
+
+/* ---------- Typography ---------- */
+.md-typeset {
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: var(--m3-on-surface);
+}
+
+.md-typeset h1 {
+  font-weight: 700;
+  color: var(--m3-on-surface);
+  letter-spacing: -0.025em;
+}
+
+.md-typeset h2 {
+  font-weight: 600;
+  color: var(--m3-on-surface);
+  letter-spacing: -0.015em;
+  padding-bottom: 0.4em;
+  border-bottom: 2px solid var(--m3-outline-variant);
+}
+
+.md-typeset h3 {
+  font-weight: 600;
+  color: var(--m3-on-surface-variant);
+}
+
+.md-typeset a {
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s var(--m3-motion-standard);
+}
+
+.md-typeset a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---------- Inline Code (Indigo Chips) ---------- */
 .md-typeset code {
-    padding: 0.1em 0.4em;
-    border-radius: 4px;
+  padding: 0.15em 0.5em;
+  border-radius: var(--m3-radius-sm);
+  font-size: 0.82em;
+  background: var(--md-code-bg-color);
+  color: var(--md-code-fg-color);
+  border: 1px solid var(--m3-outline-variant);
+  font-weight: 500;
 }
 
-/* Table improvements */
+/* ---------- Code Blocks ---------- */
+.md-typeset pre {
+  border-radius: var(--m3-radius-md) !important;
+  border: 1px solid var(--m3-outline-variant);
+  box-shadow: 0 1px 4px var(--m3-shadow-3);
+  overflow: hidden;
+}
+
+.highlight code {
+  font-size: 0.8rem;
+  line-height: 1.65;
+  border: none !important;
+  background: transparent !important;
+}
+
+.md-typeset .highlight .filename {
+  background: var(--m3-primary);
+  color: var(--m3-on-primary);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+  border-radius: var(--m3-radius-md) var(--m3-radius-md) 0 0;
+  padding: 8px 16px;
+}
+
+/* Code copy button */
+.md-clipboard {
+  color: var(--m3-on-surface-variant) !important;
+  transition: color 0.2s var(--m3-motion-standard);
+}
+
+.md-clipboard:hover {
+  color: var(--m3-primary) !important;
+}
+
+/* ---------- Tables (Rounded M3 Cards) ---------- */
 .md-typeset table:not([class]) {
-    font-size: 0.82rem;
-    border-collapse: collapse;
-    width: 100%;
+  font-size: 0.8rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  border-radius: var(--m3-radius-md);
+  overflow: hidden;
+  border: 1px solid var(--m3-outline-variant);
+  box-shadow: 0 1px 4px var(--m3-shadow-3);
 }
 
 .md-typeset table:not([class]) th {
-    font-weight: 600;
-    white-space: nowrap;
+  font-weight: 600;
+  white-space: nowrap;
+  background: var(--m3-primary);
+  color: var(--m3-on-primary);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
 .md-typeset table:not([class]) td,
 .md-typeset table:not([class]) th {
-    padding: 0.6rem 1rem;
+  padding: 0.7rem 1.1rem;
+  border-bottom: 1px solid var(--m3-outline-variant);
 }
 
-/* Admonition tweaks */
+.md-typeset table:not([class]) tbody tr {
+  transition: background 0.15s var(--m3-motion-standard);
+}
+
+.md-typeset table:not([class]) tbody tr:hover {
+  background: var(--m3-primary-container);
+}
+
+.md-typeset table:not([class]) tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ---------- Admonitions (M3 Rounded Cards) ---------- */
 .md-typeset .admonition,
 .md-typeset details {
-    font-size: 0.82rem;
+  font-size: 0.82rem;
+  border-radius: var(--m3-radius-md) !important;
+  border: 1px solid var(--m3-outline-variant) !important;
+  border-left: 4px solid var(--md-accent-fg-color) !important;
+  box-shadow: 0 1px 6px var(--m3-shadow-3);
+  overflow: hidden;
 }
 
-/* Navigation tab bar */
-.md-tabs {
-    font-size: 0.78rem;
+.md-typeset .admonition-title,
+.md-typeset summary {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border-radius: var(--m3-radius-md) var(--m3-radius-md) 0 0 !important;
 }
 
-/* Hero section for landing page */
+/* Admonition type colors */
+.md-typeset .admonition.tip,
+.md-typeset details.tip {
+  border-left-color: var(--m3-green) !important;
+}
+
+.md-typeset .admonition.note,
+.md-typeset details.note {
+  border-left-color: var(--m3-blue) !important;
+}
+
+.md-typeset .admonition.warning,
+.md-typeset details.warning {
+  border-left-color: var(--m3-primary) !important;
+}
+
+.md-typeset .admonition.info,
+.md-typeset details.info {
+  border-left-color: var(--m3-indigo) !important;
+}
+
+/* ---------- Buttons (M3 Filled / Tonal) ---------- */
+.md-typeset .md-button {
+  border-radius: var(--m3-radius-full) !important;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  padding: 10px 28px;
+  transition: all 0.3s var(--m3-motion-emphasized);
+  text-transform: none;
+  box-shadow: 0 1px 4px var(--m3-shadow-1);
+}
+
+.md-typeset .md-button:hover {
+  box-shadow: 0 4px 16px var(--m3-shadow-2);
+  transform: translateY(-2px);
+}
+
+.md-typeset .md-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px var(--m3-shadow-1);
+}
+
+.md-typeset .md-button--primary {
+  background: var(--m3-primary) !important;
+  color: var(--m3-on-primary) !important;
+  border: none !important;
+}
+
+.md-typeset .md-button--primary:hover {
+  background: var(--m3-primary-light) !important;
+}
+
+.md-typeset .md-button:not(.md-button--primary) {
+  background: var(--m3-primary-container) !important;
+  color: var(--m3-on-primary-container) !important;
+  border: 1px solid var(--m3-outline) !important;
+}
+
+.md-typeset .md-button:not(.md-button--primary):hover {
+  background: var(--m3-primary-light) !important;
+  color: var(--m3-on-primary) !important;
+  border-color: var(--m3-primary-light) !important;
+}
+
+/* ---------- Search Bar (M3 Rounded) ---------- */
+.md-search__input {
+  border-radius: var(--m3-radius-full) !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+  transition: all 0.3s var(--m3-motion-standard);
+}
+
+.md-search__input:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.md-search__input::placeholder {
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.md-search-result__meta {
+  background: var(--m3-primary-container);
+  color: var(--m3-on-primary-container);
+  font-weight: 500;
+}
+
+.md-search-result__teaser mark {
+  background: rgba(255, 109, 0, 0.2);
+  color: inherit;
+}
+
+/* ---------- Content Tabs (M3 Segmented) ---------- */
+.md-typeset .tabbed-labels > label {
+  border-radius: var(--m3-radius-full);
+  font-weight: 500;
+  font-size: 0.8rem;
+  padding: 8px 20px;
+  transition: all 0.25s var(--m3-motion-standard);
+}
+
+.md-typeset .tabbed-labels > label:hover {
+  background: var(--m3-primary-container);
+  color: var(--m3-on-primary-container);
+}
+
+.md-typeset .tabbed-labels > .tabbed-labels__active {
+  color: var(--m3-primary) !important;
+}
+
+.md-typeset .tabbed-content {
+  border-radius: 0 0 var(--m3-radius-md) var(--m3-radius-md);
+  border: 1px solid var(--m3-outline-variant);
+  border-top: 2px solid var(--m3-primary);
+}
+
+/* ---------- Task Lists (Green Checks) ---------- */
+.md-typeset .task-list-indicator::before {
+  background-color: var(--m3-green) !important;
+}
+
+/* ---------- Mermaid Diagrams ---------- */
+.mermaid {
+  text-align: center;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: var(--m3-surface-variant);
+  border-radius: var(--m3-radius-lg);
+  border: 1px solid var(--m3-outline-variant);
+}
+
+/* ---------- Footer (Dark, Warm) ---------- */
+.md-footer {
+  border-top: 3px solid var(--m3-primary);
+}
+
+.md-footer-meta {
+  font-size: 0.75rem;
+}
+
+.md-social__link svg {
+  transition: transform 0.2s var(--m3-motion-standard);
+}
+
+.md-social__link:hover svg {
+  transform: scale(1.15);
+  fill: var(--m3-primary) !important;
+}
+
+/* ---------- Back-to-top button ---------- */
+.md-top {
+  background: var(--m3-primary) !important;
+  color: var(--m3-on-primary) !important;
+  border-radius: var(--m3-radius-full) !important;
+  box-shadow: 0 4px 12px var(--m3-shadow-2);
+  font-weight: 600;
+  transition: all 0.3s var(--m3-motion-emphasized);
+}
+
+.md-top:hover {
+  box-shadow: 0 6px 20px var(--m3-shadow-2);
+  transform: translateY(-2px);
+}
+
+/* ---------- Horizontal Rules ---------- */
+.md-typeset hr {
+  border: none;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--m3-outline) 20%,
+    var(--m3-primary) 50%,
+    var(--m3-outline) 80%,
+    transparent
+  );
+  margin: 2.5rem 0;
+  border-radius: var(--m3-radius-full);
+}
+
+/* ---------- Scrollbar (Webkit) ---------- */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--m3-outline);
+  border-radius: var(--m3-radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--m3-primary);
+}
+
+/* ==========================================================================
+   LANDING PAGE — Hero Section
+   ========================================================================== */
+
 .hero {
-    text-align: center;
-    padding: 2rem 1rem 3rem;
+  text-align: center;
+  padding: 4rem 1.5rem 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative gradient glow behind hero */
+.hero::before {
+  content: "";
+  position: absolute;
+  top: -60%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 109, 0, 0.12) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+[data-md-color-scheme="slate"] .hero::before {
+  background: radial-gradient(
+    circle,
+    rgba(255, 183, 77, 0.08) 0%,
+    transparent 70%
+  );
+}
+
+.hero > * {
+  position: relative;
+  z-index: 1;
 }
 
 .hero h1 {
-    font-size: 2.4rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+  letter-spacing: -0.03em;
+  background: linear-gradient(
+    135deg,
+    var(--m3-primary) 0%,
+    var(--m3-secondary) 50%,
+    #e65100 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.15;
 }
 
 .hero p {
-    font-size: 1.1rem;
-    opacity: 0.85;
-    max-width: 640px;
-    margin: 0 auto 1.5rem;
+  font-size: 1.1rem;
+  opacity: 0.8;
+  max-width: 660px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+  color: var(--m3-on-surface-variant);
 }
 
 .hero .md-button {
-    margin: 0.3rem;
+  margin: 0.35rem;
 }
 
-/* Feature grid on landing page */
+/* ==========================================================================
+   LANDING PAGE — Feature Grid (M3 Cards)
+   ========================================================================== */
+
 .feature-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.2rem;
-    margin: 2rem 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.4rem;
+  margin: 2.5rem 0;
 }
 
 .feature-card {
-    border: 1px solid var(--md-default-fg-color--lightest);
-    border-radius: 8px;
-    padding: 1.4rem;
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  background: var(--md-default-bg-color--light);
+  border: 1px solid var(--m3-outline-variant);
+  border-radius: var(--m3-radius-lg);
+  padding: 1.6rem 1.5rem;
+  transition: all 0.3s var(--m3-motion-emphasized);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle top-border accent per card */
+.feature-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--m3-primary),
+    var(--m3-primary-light)
+  );
+  opacity: 0;
+  transition: opacity 0.3s var(--m3-motion-standard);
 }
 
 .feature-card:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-    transform: translateY(-2px);
+  box-shadow:
+    0 8px 28px var(--m3-shadow-2),
+    0 2px 8px var(--m3-shadow-3);
+  transform: translateY(-4px);
+  border-color: var(--m3-primary);
+}
+
+.feature-card:hover::before {
+  opacity: 1;
+}
+
+/* Color-code each nth card's top-border for visual variety */
+.feature-card:nth-child(1)::before {
+  background: linear-gradient(90deg, #ff6d00, #ff9100);
+}
+.feature-card:nth-child(2)::before {
+  background: linear-gradient(90deg, #2e7d32, #43a047);
+}
+.feature-card:nth-child(3)::before {
+  background: linear-gradient(90deg, #1565c0, #1e88e5);
+}
+.feature-card:nth-child(4)::before {
+  background: linear-gradient(90deg, #283593, #3949ab);
+}
+.feature-card:nth-child(5)::before {
+  background: linear-gradient(90deg, #e65100, #ff6d00);
+}
+.feature-card:nth-child(6)::before {
+  background: linear-gradient(90deg, #ff8f00, #ffb300);
+}
+
+.feature-card:nth-child(1):hover {
+  border-color: #ff6d00;
+}
+.feature-card:nth-child(2):hover {
+  border-color: #2e7d32;
+}
+.feature-card:nth-child(3):hover {
+  border-color: #1565c0;
+}
+.feature-card:nth-child(4):hover {
+  border-color: #283593;
+}
+.feature-card:nth-child(5):hover {
+  border-color: #e65100;
+}
+.feature-card:nth-child(6):hover {
+  border-color: #ff8f00;
 }
 
 .feature-card h3 {
-    margin-top: 0;
-    font-size: 1rem;
+  margin-top: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--m3-on-surface);
 }
 
 .feature-card p {
-    font-size: 0.85rem;
-    opacity: 0.8;
-    margin-bottom: 0;
+  font-size: 0.84rem;
+  opacity: 0.78;
+  margin-bottom: 0;
+  line-height: 1.6;
+  color: var(--m3-on-surface-variant);
 }
 
-/* Mermaid diagram centering */
-.mermaid {
-    text-align: center;
-    margin: 1.5rem 0;
+/* ==========================================================================
+   LANDING PAGE — Tech Stack Badge Styling
+   ========================================================================== */
+
+/* Give "strong" tags inside table cells a badge-like look */
+.md-typeset table:not([class]) td strong {
+  color: var(--m3-primary);
+  font-weight: 700;
 }
 
-/* Footer tweaks */
-.md-footer-meta {
-    font-size: 0.75rem;
+/* ==========================================================================
+   LANDING PAGE — Bottom CTA
+   ========================================================================== */
+
+.md-typeset div[style*="text-align: center"] .md-button--primary {
+  padding: 12px 36px;
+  font-size: 0.9rem;
 }
 
-/* Smooth scroll */
-html {
-    scroll-behavior: smooth;
+/* ==========================================================================
+   Progress Bar (Navigation Instant)
+   ========================================================================== */
+
+.md-progress {
+  background: var(--m3-primary) !important;
 }
 
-/* Responsive: collapse feature grid on small screens */
+/* ==========================================================================
+   TOC (Right Sidebar)
+   ========================================================================== */
+
+.md-nav--secondary .md-nav__link--active {
+  color: var(--m3-primary);
+  font-weight: 600;
+}
+
+.md-nav--secondary .md-nav__link {
+  border-left: 2px solid transparent;
+  transition: all 0.2s var(--m3-motion-standard);
+}
+
+.md-nav--secondary .md-nav__link--active {
+  border-left-color: var(--m3-primary);
+}
+
+/* ==========================================================================
+   Selection Color
+   ========================================================================== */
+
+::selection {
+  background: rgba(255, 109, 0, 0.2);
+  color: var(--m3-on-surface);
+}
+
+[data-md-color-scheme="slate"] ::selection {
+  background: rgba(255, 183, 77, 0.25);
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+
+@media screen and (max-width: 76.25em) {
+  .hero h1 {
+    font-size: 2.4rem;
+  }
+}
+
 @media screen and (max-width: 600px) {
-    .feature-grid {
-        grid-template-columns: 1fr;
-    }
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
 
-    .hero h1 {
-        font-size: 1.8rem;
-    }
+  .hero {
+    padding: 2.5rem 1rem 2rem;
+  }
 
-    .hero p {
-        font-size: 0.95rem;
-    }
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .hero p {
+    font-size: 0.95rem;
+  }
+}
+
+/* ==========================================================================
+   Smooth Transition for Theme Toggle
+   ========================================================================== */
+
+body,
+.md-header,
+.md-tabs,
+.md-sidebar,
+.md-footer {
+  transition:
+    background-color 0.3s var(--m3-motion-standard),
+    color 0.3s var(--m3-motion-standard);
 }
