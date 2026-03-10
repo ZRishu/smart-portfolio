@@ -8,7 +8,7 @@ hide:
 
 # :rocket: Smart Portfolio
 
-**A full-stack developer portfolio with AI-powered resume chat, project showcase, contact form, and sponsorship payments.**
+**Ship your developer portfolio with an AI brain.** Resume chat, project showcase, contact form, and sponsor payments — all in one Go backend.
 
 Built with Go, PostgreSQL + pgvector, Groq LLM, and Jina Embeddings.
 
@@ -166,8 +166,11 @@ smart-portfolio/
 
 ---
 
-<div style="text-align: center; padding: 2rem 0;" markdown>
+<div style="text-align: center; padding: 3rem 0;" markdown>
+
+**Ready to build your portfolio?**
 
 [Read the Full Guide :material-book-open-page-variant:](guide/index.md){ .md-button .md-button--primary }
+[Explore the API :material-api:](api/index.md){ .md-button }
 
 </div>
