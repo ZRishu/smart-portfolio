@@ -14,13 +14,13 @@ Built with Go, PostgreSQL + pgvector, Groq LLM, and Jina Embeddings.
 
 [Get Started :material-arrow-right:](guide/index.md){ .md-button .md-button--primary }
 [API Reference :material-book-open-variant:](api/index.md){ .md-button }
-[View on GitHub :fontawesome-brands-github:](https://github.com/ZRishu/smart-portfolio){ .md-button }
+[GitHub :fontawesome-brands-github:](https://github.com/ZRishu/smart-portfolio){ .md-button }
 
 </div>
 
 ---
 
-## Features
+## :material-star-four-points: Features
 
 <div class="feature-grid" markdown>
 
@@ -76,26 +76,26 @@ Swagger UI served at `/docs` with a comprehensive OpenAPI 3.0 spec. Every endpoi
 
 ---
 
-## Tech Stack
+## :material-layers-triple: Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| **Language** | Go 1.25 |
-| **Router** | chi/v5 |
-| **Database** | PostgreSQL 16 + pgvector (pgx/v5) |
-| **AI / LLM** | Groq (OpenAI-compatible) |
-| **Embeddings** | Jina Embeddings v2 |
-| **Logging** | zerolog (structured, request-ID correlated) |
-| **Payments** | Razorpay webhooks |
-| **Notifications** | Discord webhooks |
-| **Caching** | go-cache (in-memory, TTL-based) |
-| **API Docs** | OpenAPI 3.0 + embedded Swagger UI |
-| **CI/CD** | GitHub Actions → GHCR + GitHub Releases |
-| **Deployment** | Docker (~11 MB image), Railway / Render / Fly.io / VPS |
+| Layer             | Technology                                             |
+| ----------------- | ------------------------------------------------------ |
+| **Language**      | Go 1.25                                                |
+| **Router**        | chi/v5                                                 |
+| **Database**      | PostgreSQL 16 + pgvector (pgx/v5)                      |
+| **AI / LLM**      | Groq (OpenAI-compatible)                               |
+| **Embeddings**    | Jina Embeddings v2                                     |
+| **Logging**       | zerolog (structured, request-ID correlated)            |
+| **Payments**      | Razorpay webhooks                                      |
+| **Notifications** | Discord webhooks                                       |
+| **Caching**       | go-cache (in-memory, TTL-based)                        |
+| **API Docs**      | OpenAPI 3.0 + embedded Swagger UI                      |
+| **CI/CD**         | GitHub Actions → GHCR + GitHub Releases                |
+| **Deployment**    | Docker (~11 MB image), Railway / Render / Fly.io / VPS |
 
 ---
 
-## Architecture
+## :material-sitemap: Architecture
 
 ```mermaid
 graph TD
@@ -122,7 +122,7 @@ graph TD
 
 ---
 
-## Quick Start
+## :material-lightning-bolt: Quick Start
 
 !!! tip "Fastest path: Docker Compose"
 
@@ -142,7 +142,7 @@ For detailed setup instructions, see the [Complete Guide](guide/index.md).
 
 ---
 
-## Project Structure
+## :material-folder-open: Project Structure
 
 ```text
 smart-portfolio/
