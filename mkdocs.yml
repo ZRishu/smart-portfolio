@@ -40,15 +40,15 @@ theme:
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: indigo
-      accent: deep purple
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: indigo
-      accent: deep purple
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -111,7 +111,7 @@ extra:
 extra_css:
   - assets/extra.css
 
-copyright: Copyright &copy; 2024-2025 ZRishu
+copyright: Copyright &copy; 2024-2026 ZRishu
 
 nav:
   - Home: index.md
