@@ -26,7 +26,7 @@ smart-portfolio/
 
 ### Backend
 
-- **Language:** Go 1.23
+- **Language:** Go 1.25
 - **Router:** chi/v5
 - **Database:** PostgreSQL 16 + pgvector (pgx/v5 driver)
 - **AI:** Groq (LLM, OpenAI-compatible) + Jina (embeddings)
