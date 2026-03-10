@@ -157,4 +157,4 @@ See [`backend/.env.example`](backend/.env.example) for the full annotated list. 
 
 ## License
 
-MIT
+[MIT](./LICENSE)
