@@ -34,16 +34,11 @@ backend/tmp/
 *.log
 logs/
 
-# ─── Frontend (node / build artifacts) ───────────────────────────────────────
+# ─── Frontend (bun / build artifacts) ────────────────────────────────────────
 frontend/node_modules/
-frontend/.next/
-frontend/out/
+frontend/.astro/
 frontend/dist/
-frontend/.nuxt/
-frontend/.output/
-frontend/.svelte-kit/
-frontend/.pnpm-store/
-frontend/.turbo/
+frontend/package-lock.json
 
 # ─── MkDocs ───────────────────────────────────────────────────────────────────
 site/

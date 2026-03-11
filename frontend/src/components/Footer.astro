@@ -1,0 +1,30 @@
+---
+const year: number = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container footer-content">
+    <p class="footer-text">
+      &copy; {year} Smart Portfolio. Built with
+      <a href="https://astro.build" target="_blank" rel="noopener noreferrer">Astro</a>
+      &amp; <a href="https://go.dev" target="_blank" rel="noopener noreferrer">Go</a>.
+    </p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--color-border);
+    padding: 2rem 0;
+    text-align: center;
+  }
+
+  .footer-text {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+  }
+
+  .footer-text a {
+    color: var(--color-primary);
+  }
+</style>
