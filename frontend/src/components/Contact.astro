@@ -1,0 +1,125 @@
+---
+
+---
+
+<section id="contact">
+  <div class="container">
+    <h2 class="section-title">Get in Touch</h2>
+    <form class="contact-form" id="contact-form">
+      <div class="form-group">
+        <label for="sender_name">Name</label>
+        <input type="text" id="sender_name" name="sender_name" required placeholder="Your name" />
+      </div>
+      <div class="form-group">
+        <label for="sender_email">Email</label>
+        <input type="email" id="sender_email" name="sender_email" required placeholder="you@example.com" />
+      </div>
+      <div class="form-group">
+        <label for="message_body">Message</label>
+        <textarea id="message_body" name="message_body" required placeholder="Your message…" rows="5"></textarea>
+      </div>
+      <div class="form-status" id="form-status"></div>
+      <button type="submit" class="btn btn-primary" id="contact-submit">
+        Send Message
+      </button>
+    </form>
+  </div>
+</section>
+
+<script>
+  function initContactForm(): void {
+    const form = document.getElementById("contact-form") as HTMLFormElement | null;
+    const statusEl = document.getElementById("form-status");
+    const submitBtn = document.getElementById("contact-submit") as HTMLButtonElement | null;
+
+    if (!form || !statusEl || !submitBtn) return;
+
+    async function handleSubmit(e: Event): Promise<void> {
+      e.preventDefault();
+      submitBtn!.disabled = true;
+      statusEl!.textContent = "";
+      statusEl!.className = "form-status";
+
+      const formData = new FormData(form!);
+      const payload = {
+        sender_name: String(formData.get("sender_name") ?? ""),
+        sender_email: String(formData.get("sender_email") ?? ""),
+        message_body: String(formData.get("message_body") ?? ""),
+      };
+
+      try {
+        const res = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        interface ContactEnvelope {
+          success: boolean;
+          error?: { message: string };
+        }
+
+        const envelope: ContactEnvelope = await res.json() as ContactEnvelope;
+
+        if (envelope.success) {
+          statusEl!.textContent = "Message sent! I'll get back to you soon.";
+          statusEl!.classList.add("success");
+          form!.reset();
+        } else {
+          statusEl!.textContent = envelope.error?.message ?? "Something went wrong.";
+          statusEl!.classList.add("error");
+        }
+      } catch {
+        statusEl!.textContent = "Network error. Please try again.";
+        statusEl!.classList.add("error");
+      }
+
+      submitBtn!.disabled = false;
+    }
+
+    form.addEventListener("submit", (e: Event) => {
+      void handleSubmit(e);
+    });
+  }
+
+  initContactForm();
+</script>
+
+<style>
+  .contact-form {
+    max-width: 520px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .form-group label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+  }
+
+  .form-status {
+    font-size: 0.875rem;
+    min-height: 1.25rem;
+  }
+
+  .form-status.success {
+    color: var(--color-success);
+  }
+
+  .form-status.error {
+    color: var(--color-error);
+  }
+
+  .contact-form .btn {
+    align-self: flex-start;
+  }
+</style>

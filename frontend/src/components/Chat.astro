@@ -1,0 +1,231 @@
+---
+
+---
+
+<section id="chat" class="chat-section">
+  <div class="container">
+    <h2 class="section-title">Ask AI About Me</h2>
+    <p class="chat-subtitle">Powered by my resume — ask anything about my experience, skills, or projects.</p>
+    <div class="chat-box" id="chat-box">
+      <div class="chat-messages" id="chat-messages">
+        <div class="chat-message assistant">
+          <p>Hi! Ask me anything about this portfolio's owner. I'll answer based on their resume.</p>
+        </div>
+      </div>
+      <form class="chat-input-form" id="chat-form">
+        <label for="chat-input" class="sr-only">Ask a question</label>
+        <input
+          type="text"
+          id="chat-input"
+          placeholder="e.g. What technologies do you work with?"
+          autocomplete="off"
+          required
+        />
+        <button type="submit" class="btn btn-primary" id="chat-submit">
+          Send
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  function initChat(): void {
+    const form = document.getElementById("chat-form") as HTMLFormElement | null;
+    const input = document.getElementById("chat-input") as HTMLInputElement | null;
+    const messages = document.getElementById("chat-messages");
+    const submitBtn = document.getElementById("chat-submit") as HTMLButtonElement | null;
+
+    if (!form || !input || !messages || !submitBtn) return;
+
+    let isStreaming = false;
+
+    function addMessage(role: "user" | "assistant", text: string): HTMLElement {
+      const div = document.createElement("div");
+      div.className = `chat-message ${role}`;
+      const p = document.createElement("p");
+      p.textContent = text;
+      div.appendChild(p);
+      messages!.appendChild(div);
+      messages!.scrollTop = messages!.scrollHeight;
+      return div;
+    }
+
+    function createStreamingMessage(): HTMLElement {
+      const div = document.createElement("div");
+      div.className = "chat-message assistant";
+      const p = document.createElement("p");
+      p.className = "streaming";
+      div.appendChild(p);
+      messages!.appendChild(div);
+      return p;
+    }
+
+    async function handleSubmit(e: Event): Promise<void> {
+      e.preventDefault();
+      if (isStreaming) return;
+
+      const question = input!.value.trim();
+      if (!question) return;
+
+      addMessage("user", question);
+      input!.value = "";
+      isStreaming = true;
+      submitBtn!.disabled = true;
+
+      const streamEl = createStreamingMessage();
+      let fullText = "";
+
+      try {
+        const response = await fetch("/api/chat/stream", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question }),
+        });
+
+        if (!response.ok || !response.body) {
+          streamEl.textContent = "Sorry, I couldn't get a response. Please try again.";
+          isStreaming = false;
+          submitBtn!.disabled = false;
+          return;
+        }
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split("\n");
+          buffer = lines.pop() ?? "";
+
+          for (const line of lines) {
+            if (line.startsWith("event: done")) {
+              break;
+            }
+            if (line.startsWith("data: ")) {
+              fullText += line.slice(6);
+              streamEl.textContent = fullText;
+              messages!.scrollTop = messages!.scrollHeight;
+            }
+          }
+        }
+
+        streamEl.classList.remove("streaming");
+        if (!fullText) {
+          streamEl.textContent = "I received an empty response. Try asking something else.";
+        }
+      } catch {
+        streamEl.textContent = "Connection error. Please check the backend and try again.";
+        streamEl.classList.remove("streaming");
+      }
+
+      isStreaming = false;
+      submitBtn!.disabled = false;
+      input!.focus();
+    }
+
+    form.addEventListener("submit", (e: Event) => {
+      void handleSubmit(e);
+    });
+  }
+
+  initChat();
+</script>
+
+<style>
+  .chat-section {
+    background: var(--color-surface);
+  }
+
+  .chat-subtitle {
+    text-align: center;
+    color: var(--color-text-muted);
+    margin-bottom: 1.5rem;
+    font-size: 0.9375rem;
+  }
+
+  .chat-box {
+    max-width: 640px;
+    margin: 0 auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--color-bg);
+  }
+
+  .chat-messages {
+    padding: 1rem;
+    max-height: 400px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .chat-message {
+    padding: 0.625rem 0.875rem;
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    max-width: 85%;
+    word-wrap: break-word;
+  }
+
+  .chat-message.user {
+    background: var(--color-primary);
+    color: var(--color-bg);
+    align-self: flex-end;
+    border-bottom-right-radius: 2px;
+  }
+
+  .chat-message.assistant {
+    background: var(--color-surface);
+    color: var(--color-text);
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
+  }
+
+  .streaming::after {
+    content: "▋";
+    animation: blink 0.7s infinite;
+  }
+
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  .chat-input-form {
+    display: flex;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .chat-input-form input {
+    flex: 1;
+    border: none;
+    border-radius: 0;
+    padding: 0.875rem;
+    background: var(--color-bg);
+  }
+
+  .chat-input-form input:focus {
+    outline: none;
+    box-shadow: inset 0 0 0 1px var(--color-primary);
+  }
+
+  .chat-input-form .btn {
+    border-radius: 0;
+    padding: 0.875rem 1.25rem;
+  }
+
+  @media (max-width: 640px) {
+    .chat-messages {
+      max-height: 300px;
+    }
+  }
+</style>

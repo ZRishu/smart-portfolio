@@ -1,0 +1,16 @@
+{
+  "name": "smart-portfolio-frontend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.7",
+    "astro": "^6.0.2",
+    "typescript": "^5.9.3"
+  }
+}

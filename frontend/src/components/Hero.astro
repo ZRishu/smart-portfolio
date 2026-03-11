@@ -1,0 +1,119 @@
+---
+
+---
+
+<section id="hero" class="hero">
+  <div class="container hero-content">
+    <p class="hero-greeting">Hi, I'm</p>
+    <h1 class="hero-name" id="hero-name">Loading…</h1>
+    <p class="hero-tagline" id="hero-tagline"></p>
+    <div class="hero-actions">
+      <a href="#projects" class="btn btn-primary">View Projects</a>
+      <a href="#contact" class="btn btn-outline">Get in Touch</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  async function loadHero(): Promise<void> {
+    const nameEl = document.getElementById("hero-name");
+    const taglineEl = document.getElementById("hero-tagline");
+    if (!nameEl || !taglineEl) return;
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          question:
+            "What is the full name of the person in this resume? Reply with ONLY the name, nothing else.",
+        }),
+      });
+
+      interface ChatEnvelope {
+        success: boolean;
+        data?: { answer: string };
+      }
+
+      const envelope: ChatEnvelope = await res.json() as ChatEnvelope;
+      if (envelope.success && envelope.data) {
+        nameEl.textContent = envelope.data.answer.trim();
+      } else {
+        nameEl.textContent = "Developer";
+      }
+    } catch {
+      nameEl.textContent = "Developer";
+    }
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          question:
+            "Give a one-line professional tagline for the person in this resume. Reply with ONLY the tagline, no quotes.",
+        }),
+      });
+
+      interface ChatEnvelope {
+        success: boolean;
+        data?: { answer: string };
+      }
+
+      const envelope: ChatEnvelope = await res.json() as ChatEnvelope;
+      if (envelope.success && envelope.data) {
+        taglineEl.textContent = envelope.data.answer.trim();
+      }
+    } catch {
+      taglineEl.textContent = "Building things for the web";
+    }
+  }
+
+  loadHero();
+</script>
+
+<style>
+  .hero {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    padding: 4rem 0;
+  }
+
+  .hero-content {
+    text-align: center;
+  }
+
+  .hero-greeting {
+    font-size: 1.125rem;
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-name {
+    font-size: clamp(2.5rem, 7vw, 4rem);
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+    background: linear-gradient(135deg, var(--color-text), var(--color-primary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-tagline {
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    color: var(--color-text-muted);
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    min-height: 1.5em;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+</style>
