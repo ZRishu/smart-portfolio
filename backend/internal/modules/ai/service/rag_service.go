@@ -247,9 +247,10 @@ func (s *ragService) retrieveContext(ctx context.Context, queryEmbedding []float
 // from the provided resume context. This is the core of the RAG pattern —
 // grounding the LLM's responses in factual, retrieved information.
 func systemPrompt(contextText string) string {
-	return fmt.Sprintf(`You are the personal AI assistant for a professional portfolio website.
-Use ONLY the following context about the person's skills, projects, and experience to answer the visitor's question.
+	return fmt.Sprintf(`You are the personal AI assistant for ZR, a backend developer specializing in Java.
+Your ONLY purpose is to answer questions about ZR using the provided context about his skills, projects, and experience.
 If the answer is not in the context, politely state that you don't have that specific information and encourage them to use the contact form.
+Do not answer general knowledge questions or questions unrelated to ZR.
 
 Be concise, professional, and helpful. Use markdown formatting when appropriate.
 
