@@ -256,6 +256,48 @@ func (r *PaymentRepository) FindAllSponsors(ctx context.Context) ([]model.Sponso
 	return sponsors, nil
 }
 
+// FindRecentSponsors returns the most recent successful sponsors.
+// Intended for public view.
+func (r *PaymentRepository) FindRecentSponsors(ctx context.Context, limit int) ([]model.Sponsor, error) {
+	const query = `
+		SELECT id, sponsor_name, email, amount, currency, status, razorpay_payment_id, created_at
+		FROM sponsors
+		WHERE status = 'SUCCESS'
+		ORDER BY created_at DESC
+		LIMIT $1
+	`
+
+	rows, err := r.pool.Query(ctx, query, limit)
+	if err != nil {
+		return nil, fmt.Errorf("payment_repo.FindRecentSponsors: query failed: %w", err)
+	}
+	defer rows.Close()
+
+	var sponsors []model.Sponsor
+	for rows.Next() {
+		var s model.Sponsor
+		if err := rows.Scan(
+			&s.ID,
+			&s.SponsorName,
+			&s.Email,
+			&s.Amount,
+			&s.Currency,
+			&s.Status,
+			&s.RazorpayPaymentID,
+			&s.CreatedAt,
+		); err != nil {
+			return nil, fmt.Errorf("payment_repo.FindRecentSponsors: scan failed: %w", err)
+		}
+		sponsors = append(sponsors, s)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("payment_repo.FindRecentSponsors: rows iteration error: %w", err)
+	}
+
+	return sponsors, nil
+}
+
 // CountSponsors returns the total number of sponsors and the sum of all
 // successful sponsorship amounts. Useful for dashboard statistics.
 func (r *PaymentRepository) CountSponsors(ctx context.Context) (count int64, totalAmount float64, err error) {
