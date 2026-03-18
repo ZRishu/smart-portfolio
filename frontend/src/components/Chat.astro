@@ -1,33 +1,87 @@
 ---
-
 ---
 
-<section id="chat" class="chat-section">
-  <div class="container">
-    <h2 class="section-title">Ask AI About Me</h2>
-    <p class="chat-subtitle">Powered by my resume — ask anything about my experience, skills, or projects.</p>
-    <div class="chat-box" id="chat-box">
-      <div class="chat-messages" id="chat-messages">
-        <div class="chat-message assistant">
-          <p>Hi! Ask me anything about this portfolio's owner. I'll answer based on their resume.</p>
+<section id="chat" data-bg-layer="chat" class="min-h-[calc(100svh-4rem)] scroll-mt-16 snap-start border-b border-border bg-transparent py-8 md:py-10 flex items-center">
+  <div class="max-w-7xl mx-auto w-full px-4 md:px-8">
+    <div class="flex flex-col lg:flex-row gap-8 lg:gap-12 items-stretch">
+      <!-- Info Pane -->
+      <div class="w-full lg:w-1/3 space-y-6 md:space-y-8 flex flex-col justify-center">
+        <div class="space-y-2">
+          <h2 class="text-[10px] font-mono text-muted-foreground tracking-[0.2em] uppercase">// NEURAL_INTERFACE</h2>
+          <h3 class="text-3xl font-mono font-bold tracking-tighter italic">AI_AGENT_ZR</h3>
+        </div>
+        <p class="text-[11px] font-mono leading-relaxed text-muted-foreground uppercase">
+          CONNECTED_TO: <span class="text-brand-orange">RESUME_DATA_CORE_V1</span><br/>
+          MODEL: GROQ_LLAMA_3_70B<br/>
+          STATUS: <span id="connection-status" class="text-brand-green">ONLINE_READY</span>
+        </p>
+        <div class="p-6 border border-border bg-card">
+          <p class="text-[10px] font-mono text-muted-foreground leading-relaxed uppercase">
+            <span class="text-brand-green">></span> Ask specific questions about system architecture, tech stacks, or professional history. The agent is grounded in the uploaded resume context.
+          </p>
         </div>
       </div>
-      <form class="chat-input-form" id="chat-form">
-        <label for="chat-input" class="sr-only">Ask a question</label>
-        <input
-          type="text"
-          id="chat-input"
-          placeholder="e.g. What technologies do you work with?"
-          autocomplete="off"
-          required
-        />
-        <button type="submit" class="btn btn-primary" id="chat-submit">
-          Send
-        </button>
-      </form>
+
+      <!-- Chat Interface -->
+      <div class="w-full lg:w-2/3 border border-border flex flex-col h-[min(56svh,34rem)] md:h-[min(60svh,36rem)] bg-background relative">
+        <div class="flex items-center justify-between px-6 py-3 border-b border-border bg-muted">
+          <span class="text-[10px] font-mono tracking-widest text-muted-foreground uppercase">SESSION_ID: {Math.random().toString(36).substring(7).toUpperCase()}</span>
+          <div class="flex gap-1.5">
+            <div class="w-2.5 h-2.5 bg-brand-red"></div>
+            <div class="w-2.5 h-2.5 bg-brand-orange"></div>
+            <div class="w-2.5 h-2.5 bg-brand-green"></div>
+          </div>
+        </div>
+
+        <div id="chat-messages" class="flex-grow overflow-y-auto p-6 md:p-8 space-y-6 scrollbar-hide">
+          <div class="flex gap-4">
+            <span class="text-[10px] font-mono text-brand-green mt-1">[BOT]</span>
+            <div class="text-sm font-mono text-foreground leading-relaxed max-w-xl">
+              SYSTEM_READY. HOW CAN I ASSIST YOUR INQUIRY?
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4 md:p-6 border-t border-border">
+          <form id="chat-form" class="flex gap-4">
+            <span class="text-[10px] font-mono text-muted-foreground mt-3">>></span>
+            <input 
+              type="text" 
+              id="chat-input"
+              placeholder="ENTER_QUERY_HERE..." 
+              class="flex-grow bg-transparent border-none focus:ring-0 text-sm font-mono text-foreground placeholder:text-muted-foreground"
+              autocomplete="off"
+              required
+            />
+            <button 
+              type="submit" 
+              id="chat-submit"
+              class="px-6 py-2 bg-foreground text-background font-mono text-[10px] font-bold tracking-widest transition-all uppercase"
+            >
+              EXECUTE
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 </section>
+
+<style>
+  .streaming::after {
+    content: "▋";
+    animation: blink 1s step-end infinite;
+    display: inline-block;
+    width: 6px;
+    height: 12px;
+    margin-left: 4px;
+    background-color: var(--foreground);
+    vertical-align: middle;
+  }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
 
 <script>
   function initChat(): void {
@@ -35,30 +89,43 @@
     const input = document.getElementById("chat-input") as HTMLInputElement | null;
     const messages = document.getElementById("chat-messages");
     const submitBtn = document.getElementById("chat-submit") as HTMLButtonElement | null;
+    const connStatus = document.getElementById("connection-status");
 
     if (!form || !input || !messages || !submitBtn) return;
 
     let isStreaming = false;
 
-    function addMessage(role: "user" | "assistant", text: string): HTMLElement {
-      const div = document.createElement("div");
-      div.className = `chat-message ${role}`;
-      const p = document.createElement("p");
-      p.textContent = text;
-      div.appendChild(p);
-      messages!.appendChild(div);
-      messages!.scrollTop = messages!.scrollHeight;
-      return div;
-    }
+    // Validation logic for hover effect
+    submitBtn.addEventListener("mouseenter", () => {
+      if (input.value.trim() !== "" && !isStreaming) {
+        submitBtn.classList.add("bg-brand-green", "text-white");
+        submitBtn.classList.remove("bg-foreground", "text-background");
+      }
+    });
 
-    function createStreamingMessage(): HTMLElement {
-      const div = document.createElement("div");
-      div.className = "chat-message assistant";
-      const p = document.createElement("p");
-      p.className = "streaming";
-      div.appendChild(p);
-      messages!.appendChild(div);
-      return p;
+    submitBtn.addEventListener("mouseleave", () => {
+      submitBtn.classList.remove("bg-brand-green", "text-white");
+      submitBtn.classList.add("bg-foreground", "text-background");
+    });
+
+    function addMessage(role: "USR" | "BOT", text: string): HTMLElement | null {
+      const wrapper = document.createElement("div");
+      wrapper.className = "flex gap-4";
+      
+      const roleTag = document.createElement("span");
+      roleTag.className = `text-[10px] font-mono mt-1 ${role === 'USR' ? 'text-brand-orange' : 'text-brand-green'}`;
+      roleTag.textContent = `[${role}]`;
+      
+      const content = document.createElement("div");
+      content.className = `text-sm font-mono leading-relaxed max-w-xl ${role === 'USR' ? 'text-muted-foreground' : 'text-foreground'}`;
+      content.textContent = text;
+      
+      wrapper.appendChild(roleTag);
+      wrapper.appendChild(content);
+      messages!.appendChild(wrapper);
+      messages!.scrollTop = messages!.scrollHeight;
+      
+      return role === 'BOT' ? content : null;
     }
 
     async function handleSubmit(e: Event): Promise<void> {
@@ -68,13 +135,15 @@
       const question = input!.value.trim();
       if (!question) return;
 
-      addMessage("user", question);
+      addMessage("USR", question.toUpperCase());
       input!.value = "";
       isStreaming = true;
       submitBtn!.disabled = true;
+      submitBtn!.textContent = "WAIT...";
 
-      const streamEl = createStreamingMessage();
-      let fullText = "";
+      const botContent = addMessage("BOT", "");
+      if (!botContent) return;
+      botContent.classList.add("streaming");
 
       try {
         const response = await fetch("/api/chat/stream", {
@@ -83,15 +152,11 @@
           body: JSON.stringify({ question }),
         });
 
-        if (!response.ok || !response.body) {
-          streamEl.textContent = "Sorry, I couldn't get a response. Please try again.";
-          isStreaming = false;
-          submitBtn!.disabled = false;
-          return;
-        }
+        if (!response.ok || !response.body) throw new Error();
 
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
+        let fullText = "";
         let buffer = "";
 
         while (true) {
@@ -103,29 +168,33 @@
           buffer = lines.pop() ?? "";
 
           for (const line of lines) {
-            if (line.startsWith("event: done")) {
-              break;
-            }
             if (line.startsWith("data: ")) {
-              fullText += line.slice(6);
-              streamEl.textContent = fullText;
+              let text = line.slice(6);
+              text = text.replace(/\\n/g, '\n');
+              fullText += text;
+              botContent.textContent = fullText;
               messages!.scrollTop = messages!.scrollHeight;
             }
           }
         }
-
-        streamEl.classList.remove("streaming");
-        if (!fullText) {
-          streamEl.textContent = "I received an empty response. Try asking something else.";
+        
+        if (connStatus) {
+          connStatus.textContent = "ONLINE_READY";
+          connStatus.className = "text-brand-green";
         }
       } catch {
-        streamEl.textContent = "Connection error. Please check the backend and try again.";
-        streamEl.classList.remove("streaming");
+        botContent.textContent = "ERROR: INTERFACE_TIMEOUT__OR_CONNECTION_FAILURE.";
+        if (connStatus) {
+          connStatus.textContent = "OFFLINE_FAILURE";
+          connStatus.className = "text-brand-red";
+        }
+      } finally {
+        botContent.classList.remove("streaming");
+        isStreaming = false;
+        submitBtn!.disabled = false;
+        submitBtn!.textContent = "EXECUTE";
+        input!.focus();
       }
-
-      isStreaming = false;
-      submitBtn!.disabled = false;
-      input!.focus();
     }
 
     form.addEventListener("submit", (e: Event) => {
@@ -135,97 +204,3 @@
 
   initChat();
 </script>
-
-<style>
-  .chat-section {
-    background: var(--color-surface);
-  }
-
-  .chat-subtitle {
-    text-align: center;
-    color: var(--color-text-muted);
-    margin-bottom: 1.5rem;
-    font-size: 0.9375rem;
-  }
-
-  .chat-box {
-    max-width: 640px;
-    margin: 0 auto;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    background: var(--color-bg);
-  }
-
-  .chat-messages {
-    padding: 1rem;
-    max-height: 400px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .chat-message {
-    padding: 0.625rem 0.875rem;
-    border-radius: var(--radius);
-    font-size: 0.875rem;
-    line-height: 1.6;
-    max-width: 85%;
-    word-wrap: break-word;
-  }
-
-  .chat-message.user {
-    background: var(--color-primary);
-    color: var(--color-bg);
-    align-self: flex-end;
-    border-bottom-right-radius: 2px;
-  }
-
-  .chat-message.assistant {
-    background: var(--color-surface);
-    color: var(--color-text);
-    align-self: flex-start;
-    border-bottom-left-radius: 2px;
-  }
-
-  .streaming::after {
-    content: "▋";
-    animation: blink 0.7s infinite;
-  }
-
-  @keyframes blink {
-    50% {
-      opacity: 0;
-    }
-  }
-
-  .chat-input-form {
-    display: flex;
-    border-top: 1px solid var(--color-border);
-  }
-
-  .chat-input-form input {
-    flex: 1;
-    border: none;
-    border-radius: 0;
-    padding: 0.875rem;
-    background: var(--color-bg);
-  }
-
-  .chat-input-form input:focus {
-    outline: none;
-    box-shadow: inset 0 0 0 1px var(--color-primary);
-  }
-
-  .chat-input-form .btn {
-    border-radius: 0;
-    padding: 0.875rem 1.25rem;
-  }
-
-  @media (max-width: 640px) {
-    .chat-messages {
-      max-height: 300px;
-    }
-  }
-</style>

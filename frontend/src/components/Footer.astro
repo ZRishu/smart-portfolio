@@ -1,30 +1,58 @@
 ---
-const year: number = new Date().getFullYear();
+const currentYear = new Date().getFullYear();
+const buildStamp = new Date().toLocaleString('en-GB', {
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: false
+}).replace(/\//g, '.').replace(', ', '_');
 ---
 
-<footer class="footer">
-  <div class="container footer-content">
-    <p class="footer-text">
-      &copy; {year} Smart Portfolio. Built with
-      <a href="https://astro.build" target="_blank" rel="noopener noreferrer">Astro</a>
-      &amp; <a href="https://go.dev" target="_blank" rel="noopener noreferrer">Go</a>.
-    </p>
+<footer class="py-12 border-t border-border bg-background">
+  <div class="max-w-7xl mx-auto px-4 md:px-8">
+    <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+      <div class="flex flex-col items-center md:items-start gap-2">
+        <span class="font-mono font-bold text-sm tracking-tighter">ZR_SYSTEMS</span>
+        <span class="text-[9px] font-mono text-muted-foreground uppercase tracking-[0.2em]">ALL_RIGHTS_RESERVED // {currentYear}</span>
+      </div>
+      
+      <div class="flex gap-8">
+        <a href="https://github.com/ZRishu" target="_blank" class="text-[10px] font-mono text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest">GITHUB</a>
+        <a href="https://linkedin.com/in/ZRishu" target="_blank" class="text-[10px] font-mono text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest">LINKEDIN</a>
+        <a href="https://x.com/ZRishu" target="_blank" class="text-[10px] font-mono text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest">X/TWITTER</a>
+      </div>
+
+      <div class="text-right">
+        <span 
+          id="build-stamp" 
+          class="text-[9px] font-mono text-zinc-700 uppercase tracking-widest cursor-crosshair select-none"
+          title="DBL_CLICK_TO_RESTORE_DARK_MODE"
+        >
+          BUILD_STAMP: {buildStamp}
+        </span>
+      </div>
+    </div>
   </div>
 </footer>
 
-<style>
-  .footer {
-    border-top: 1px solid var(--color-border);
-    padding: 2rem 0;
-    text-align: center;
+<script>
+  function initDarkModeRestore(): void {
+    const stamp = document.getElementById("build-stamp");
+    const html = document.documentElement;
+
+    if (!stamp) return;
+
+    stamp.addEventListener("dblclick", (e) => {
+      // Only trigger if we are currently in light mode
+      if (html.classList.contains("dark")) return;
+
+      if (typeof (window as any).toggleTheme === 'function') {
+        (window as any).toggleTheme(e, "dark");
+      }
+    });
   }
 
-  .footer-text {
-    font-size: 0.8125rem;
-    color: var(--color-text-muted);
-  }
-
-  .footer-text a {
-    color: var(--color-primary);
-  }
-</style>
+  initDarkModeRestore();
+</script>

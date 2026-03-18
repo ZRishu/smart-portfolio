@@ -1,12 +1,82 @@
 ---
-
+const fallbackAchievements = [
+  {
+    title: "HIGH_IMPACT_DELIVERY",
+    metric: "SCALABLE_SYSTEMS",
+    description: "Delivered backend features oriented around performance, reliability, and maintainable service design.",
+  },
+  {
+    title: "STACK_DEPTH",
+    metric: "MULTI_LANGUAGE",
+    description: "Built across Java, Go, Python, databases, containers, and cloud-native deployment workflows.",
+  },
+  {
+    title: "AI_ENABLEMENT",
+    metric: "RESUME_GROUNDED_AGENT",
+    description: "Integrated conversational interfaces grounded in structured professional data and backend services.",
+  },
+  {
+    title: "OPERATIONS_MINDSET",
+    metric: "PRODUCTION_READY",
+    description: "Focused on automation, deployment hygiene, and service observability as part of engineering delivery.",
+  },
+];
 ---
 
-<section id="projects">
-  <div class="container">
-    <h2 class="section-title">Projects</h2>
-    <div class="projects-grid" id="projects-grid">
-      <p class="projects-loading">Loading projects…</p>
+<section id="projects" data-bg-layer="projects" class="min-h-[calc(100svh-4rem)] scroll-mt-16 snap-start border-b border-border bg-transparent py-8 md:py-10 flex items-center">
+  <div class="max-w-7xl mx-auto w-full px-4 md:px-8">
+    <div class="grid grid-cols-1 xl:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] gap-8 xl:gap-10 items-start">
+      <div>
+        <div class="mb-6 md:mb-8 flex justify-between items-end gap-4">
+          <div class="space-y-2">
+            <h2 class="text-[10px] font-mono text-muted-foreground tracking-[0.2em] uppercase">// SOURCE_CODE_REGISTRY</h2>
+            <h3 class="text-3xl font-mono font-bold tracking-tighter italic">SELECTED_WORKS</h3>
+          </div>
+          <div class="hidden sm:block text-[10px] font-mono text-muted-foreground">
+            STATUS: <span class="text-brand-orange animate-pulse">FETCHING_REMOTE_DATA...</span>
+          </div>
+        </div>
+
+        <div class="flex overflow-x-auto snap-x snap-mandatory gap-px bg-border border border-border scrollbar-hide" id="projects-grid">
+          <!-- Loading placeholders -->
+          {[1, 2, 3, 4, 5, 6].map(() => (
+            <div class="min-w-[18rem] md:min-w-[22rem] h-[20rem] md:h-[22rem] snap-start shrink-0 bg-background p-6 animate-pulse flex flex-col justify-between">
+              <div class="space-y-4">
+                <div class="h-4 bg-muted w-2/3"></div>
+                <div class="h-12 bg-muted w-full"></div>
+              </div>
+              <div class="h-4 bg-muted w-1/2"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <div class="mb-6 md:mb-8 flex justify-between items-end gap-4">
+          <div class="space-y-2">
+            <h2 class="text-[10px] font-mono text-muted-foreground tracking-[0.2em] uppercase">// ACHIEVEMENT_MATRIX</h2>
+            <h3 class="text-3xl font-mono font-bold tracking-tighter italic">PERFORMANCE_HIGHLIGHTS</h3>
+          </div>
+          <div class="hidden sm:block text-[10px] font-mono text-muted-foreground">
+            MODE: <span class="text-brand-orange">SIGNAL_EXTRACTION</span>
+          </div>
+        </div>
+
+        <div id="achievement-grid" class="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border border-border max-h-[22rem] overflow-y-auto scrollbar-hide">
+          {fallbackAchievements.map((item) => (
+            <article class="bg-background p-6 md:p-7 flex flex-col justify-between min-h-56 space-y-8">
+              <div class="space-y-4">
+                <span class="text-[9px] font-mono text-brand-orange uppercase tracking-[0.2em]">{item.metric}</span>
+                <h4 class="text-base font-mono font-bold tracking-tight text-foreground">{item.title}</h4>
+                <p class="text-[11px] leading-relaxed text-muted-foreground font-mono tracking-tight">{item.description}</p>
+              </div>
+              <div class="pt-4 border-t border-border">
+                <span class="text-[9px] font-mono text-brand-green uppercase tracking-[0.2em]">STATUS_CONFIRMED</span>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -21,25 +91,56 @@
     live_url?: string;
   }
 
-  interface ProjectsEnvelope {
-    success: boolean;
-    data?: Project[];
-    error?: { message: string };
+  interface AchievementItem {
+    title: string;
+    metric: string;
+    description: string;
   }
 
-  function escapeHtml(text: string): string {
-    const div = document.createElement("div");
-    div.textContent = text;
-    return div.innerHTML;
-  }
+  const fallbackAchievements: AchievementItem[] = [
+    {
+      title: "HIGH_IMPACT_DELIVERY",
+      metric: "SCALABLE_SYSTEMS",
+      description:
+        "Delivered backend features oriented around performance, reliability, and maintainable service design.",
+    },
+    {
+      title: "STACK_DEPTH",
+      metric: "MULTI_LANGUAGE",
+      description:
+        "Built across Java, Go, Python, databases, containers, and cloud-native deployment workflows.",
+    },
+    {
+      title: "AI_ENABLEMENT",
+      metric: "RESUME_GROUNDED_AGENT",
+      description:
+        "Integrated conversational interfaces grounded in structured professional data and backend services.",
+    },
+    {
+      title: "OPERATIONS_MINDSET",
+      metric: "PRODUCTION_READY",
+      description:
+        "Focused on automation, deployment hygiene, and service observability as part of engineering delivery.",
+    },
+  ];
 
-  function escapeAttr(text: string): string {
-    return text
-      .replace(/&/g, "&amp;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#39;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;");
+  function renderAchievements(items: AchievementItem[]): string {
+    return items
+      .map(
+        (item) => `
+          <article class="bg-background p-6 md:p-7 flex flex-col justify-between min-h-56 space-y-8">
+            <div class="space-y-4">
+              <span class="text-[9px] font-mono text-brand-orange uppercase tracking-[0.2em]">${item.metric}</span>
+              <h4 class="text-base font-mono font-bold tracking-tight text-foreground">${item.title}</h4>
+              <p class="text-[11px] leading-relaxed text-muted-foreground font-mono tracking-tight">${item.description}</p>
+            </div>
+            <div class="pt-4 border-t border-border">
+              <span class="text-[9px] font-mono text-brand-green uppercase tracking-[0.2em]">STATUS_CONFIRMED</span>
+            </div>
+          </article>
+        `,
+      )
+      .join("");
   }
 
   async function loadProjects(): Promise<void> {
@@ -48,103 +149,79 @@
 
     try {
       const res = await fetch("/api/projects");
-      const envelope: ProjectsEnvelope = await res.json() as ProjectsEnvelope;
+      const envelope = await res.json();
 
       if (!envelope.success || !envelope.data || envelope.data.length === 0) {
-        grid.innerHTML = '<p class="projects-empty">No projects yet. Check back soon!</p>';
+        grid.innerHTML = '<div class="w-full bg-background p-12 text-center text-muted-foreground font-mono text-xs uppercase tracking-widest">No matching registry entries found.</div>';
         return;
       }
 
       grid.innerHTML = envelope.data
-        .map(
-          (p: Project) => `
-        <article class="project-card">
-          <h3 class="project-title">${escapeHtml(p.title)}</h3>
-          <p class="project-desc">${escapeHtml(p.description)}</p>
-          ${
-            p.tech_stack
-              ? `<div class="project-tech">${p.tech_stack
-                  .split(",")
-                  .map((t: string) => `<span class="tech-badge">${escapeHtml(t.trim())}</span>`)
-                  .join("")}</div>`
-              : ""
-          }
-          <div class="project-links">
-            ${p.github_url ? `<a href="${escapeAttr(p.github_url)}" target="_blank" rel="noopener noreferrer" class="btn btn-outline">GitHub</a>` : ""}
-            ${p.live_url ? `<a href="${escapeAttr(p.live_url)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Live Demo</a>` : ""}
-          </div>
-        </article>
-      `,
-        )
-        .join("");
+        .map((p: Project) => `
+          <article class="min-w-[18rem] md:min-w-[22rem] max-w-[22rem] h-[20rem] md:h-[22rem] snap-start shrink-0 bg-background p-6 hover:bg-muted/50 transition-all flex flex-col justify-between group">
+            <div class="space-y-4">
+              <div class="flex justify-between items-start">
+                <h4 class="font-mono text-lg font-bold tracking-tight text-foreground group-hover:text-brand-green transition-colors">${p.title.toUpperCase()}</h4>
+                <div class="flex gap-4 text-muted-foreground">
+                  ${p.github_url ? `<a href="${p.github_url}" target="_blank" class="hover:text-brand-orange transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg></a>` : ""}
+                </div>
+              </div>
+              <p class="text-[11px] leading-relaxed text-muted-foreground font-mono tracking-tight line-clamp-6">${p.description}</p>
+            </div>
+            
+            <div class="space-y-4">
+              ${p.tech_stack ? `
+                <div class="flex flex-wrap gap-2">
+                  ${p.tech_stack.split(",").map(t => `<span class="text-[9px] font-mono text-muted-foreground uppercase border border-border px-1.5 py-0.5 tracking-tighter">${t.trim()}</span>`).join("")}
+                </div>
+              ` : ""}
+              <div class="pt-4 border-t border-border flex justify-between items-center">
+                <span class="text-[9px] font-mono text-zinc-500 uppercase tracking-widest">V.0.1_STABLE</span>
+                ${p.live_url ? `<a href="${p.live_url}" target="_blank" class="text-[9px] font-mono text-brand-green hover:underline uppercase tracking-widest">DEPLOYMENT_LINK</a>` : ""}
+              </div>
+            </div>
+          </article>
+        `).join("");
     } catch {
-      grid.innerHTML = '<p class="projects-empty">Unable to load projects. Please try again later.</p>';
+      grid.innerHTML = '<div class="w-full bg-background p-12 text-center text-brand-orange font-mono text-xs uppercase tracking-widest">CRITICAL_ERROR: REMOTE_REGISTRY_OFFLINE</div>';
+    }
+  }
+
+  async function loadAchievements(): Promise<void> {
+    const target = document.getElementById("achievement-grid");
+    if (!target) return;
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          question:
+            'From the resume, return ONLY valid JSON as an array of notable achievement objects. Each object must have: title, metric, description. Keep title and metric short. Keep description to one short sentence. Prefer measurable or high-signal outcomes. If exact metrics are unavailable, summarize conservatively. No markdown. No explanation.',
+        }),
+      });
+
+      const envelope = await res.json();
+      const raw = envelope?.data?.answer;
+      if (!envelope.success || !raw) throw new Error("NO_DATA");
+
+      const parsed = JSON.parse(raw) as AchievementItem[];
+      const normalized = parsed
+        .filter((item) => item.title && item.description)
+        .slice(0, 6)
+        .map((item) => ({
+          title: String(item.title).toUpperCase().replace(/\s+/g, "_"),
+          metric: String(item.metric || "KEY_SIGNAL").toUpperCase().replace(/\s+/g, "_"),
+          description: String(item.description).trim(),
+        }));
+
+      if (normalized.length === 0) throw new Error("EMPTY");
+      target.innerHTML = renderAchievements(normalized);
+    } catch {
+      target.innerHTML = renderAchievements(fallbackAchievements);
     }
   }
 
   loadProjects();
+  loadAchievements();
 </script>
-
-<style>
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .projects-loading,
-  .projects-empty {
-    text-align: center;
-    color: var(--color-text-muted);
-    font-style: italic;
-    grid-column: 1 / -1;
-  }
-
-  .project-card {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    transition: border-color 0.2s;
-  }
-
-  .project-card:hover {
-    border-color: var(--color-primary);
-  }
-
-  .project-title {
-    font-size: 1.125rem;
-    color: var(--color-text);
-  }
-
-  .project-desc {
-    font-size: 0.875rem;
-    color: var(--color-text-muted);
-    line-height: 1.6;
-    flex: 1;
-  }
-
-  .project-tech {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.375rem;
-  }
-
-  .tech-badge {
-    font-size: 0.75rem;
-    padding: 0.2rem 0.5rem;
-    background: var(--color-bg);
-    color: var(--color-accent);
-    border-radius: 4px;
-    font-family: var(--font-mono);
-  }
-
-  .project-links {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
-  }
-</style>

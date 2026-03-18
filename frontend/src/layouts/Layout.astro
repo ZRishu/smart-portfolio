@@ -1,29 +1,254 @@
 ---
+import "@/styles/style.css";
 interface Props {
   title?: string;
   description?: string;
 }
 
 const {
-  title = "Smart Portfolio",
-  description = "Developer portfolio powered by AI",
+  title = "ZR | Backend Developer",
+  description = "Backend Developer specializing in Java, Distributed Systems, and AI.",
 } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <script is:inline src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style is:global>
+      :root {
+        --font-mono: 'JetBrains Mono', monospace;
+        --font-sans: 'Inter', sans-serif;
+      }
+      body {
+        font-family: var(--font-sans);
+        cursor: none; /* Hide real cursor */
+      }
+      a, button, input, textarea, [role="button"], #profile-trigger, #build-stamp {
+        cursor: none !important;
+      }
+      .font-mono {
+        font-family: var(--font-mono);
+      }
+      .section-bg-layer {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transition: opacity 650ms ease;
+      }
+
+      /* View Transition Styles for Theme Toggle */
+      ::view-transition-old(root),
+      ::view-transition-new(root) {
+        animation: none;
+        mix-blend-mode: normal;
+      }
+      ::view-transition-old(root) {
+        z-index: 1;
+      }
+      ::view-transition-new(root) {
+        z-index: 2;
+      }
+
+      /* Custom Cursor Styles */
+      #custom-cursor {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 12px;
+        height: 12px;
+        background-color: var(--cursor-color);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 10000;
+        transition: transform 0.08s ease-out, background-color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+        box-shadow: 0 0 0 6px var(--cursor-glow);
+      }
+
+      #custom-cursor-follower {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 24px;
+        height: 24px;
+        border: 1px solid var(--cursor-glow);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transition: transform 0.16s ease-out, opacity 0.3s ease, border-color 0.3s ease;
+      }
+    </style>
+    <script is:inline>
+      const theme = (() => {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+          return localStorage.getItem('theme');
+        }
+        return 'dark';
+      })();
+      if (theme === 'light') {
+        document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.add('dark');
+      }
+    </script>
   </head>
-  <body>
-    <slot />
+  <body class="min-h-screen overflow-x-hidden bg-background text-foreground antialiased relative snap-y snap-mandatory">
+    <div id="custom-cursor"></div>
+    <div id="custom-cursor-follower"></div>
+    <div id="section-bg-stage" class="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-background">
+      <div data-bg-id="default" class="section-bg-layer opacity-100">
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.05)_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+      </div>
+      <div data-bg-id="about" class="section-bg-layer">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(0,163,84,0.12),transparent_32%),radial-gradient(circle_at_85%_18%,rgba(255,140,0,0.12),transparent_22%)] dark:bg-[radial-gradient(circle_at_top_left,rgba(255,140,0,0.14),transparent_32%),radial-gradient(circle_at_85%_18%,rgba(0,163,84,0.1),transparent_22%)]"></div>
+        <div class="absolute inset-y-0 right-[12%] w-px bg-[linear-gradient(to_bottom,transparent,rgba(0,0,0,0.18),transparent)] dark:bg-[linear-gradient(to_bottom,transparent,rgba(255,255,255,0.16),transparent)]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(135deg,rgba(0,0,0,0.05)_1px,transparent_1px)] dark:bg-[linear-gradient(135deg,rgba(255,255,255,0.06)_1px,transparent_1px)] bg-[size:32px_32px] opacity-60"></div>
+      </div>
+      <div data-bg-id="experience" class="section-bg-layer">
+        <div class="absolute inset-0 bg-[repeating-linear-gradient(90deg,rgba(0,0,0,0.05),rgba(0,0,0,0.05)_1px,transparent_1px,transparent_56px)] dark:bg-[repeating-linear-gradient(90deg,rgba(255,255,255,0.06),rgba(255,255,255,0.06)_1px,transparent_1px,transparent_56px)]"></div>
+        <div class="absolute left-0 right-0 top-[22%] h-px bg-[linear-gradient(to_right,transparent,rgba(0,163,84,0.4),transparent)] dark:bg-[linear-gradient(to_right,transparent,rgba(255,140,0,0.42),transparent)]"></div>
+        <div class="absolute -left-16 bottom-12 h-48 w-48 rounded-full bg-brand-green/8 blur-3xl dark:bg-brand-orange/10"></div>
+      </div>
+      <div data-bg-id="projects" class="section-bg-layer">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_22%,rgba(0,163,84,0.08),transparent_18%),radial-gradient(circle_at_78%_78%,rgba(255,140,0,0.1),transparent_24%)] dark:bg-[radial-gradient(circle_at_20%_22%,rgba(255,140,0,0.12),transparent_18%),radial-gradient(circle_at_78%_78%,rgba(0,163,84,0.08),transparent_24%)]"></div>
+        <div class="absolute inset-0 bg-[repeating-linear-gradient(135deg,transparent,transparent_18px,rgba(0,0,0,0.045)_18px,rgba(0,0,0,0.045)_19px)] dark:bg-[repeating-linear-gradient(135deg,transparent,transparent_18px,rgba(255,255,255,0.05)_18px,rgba(255,255,255,0.05)_19px)] opacity-80"></div>
+      </div>
+      <div data-bg-id="chat" class="section-bg-layer">
+        <div class="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,163,84,0.06),transparent_20%,transparent_80%,rgba(0,0,0,0.04)),repeating-linear-gradient(to_bottom,transparent,transparent_28px,rgba(0,0,0,0.05)_28px,rgba(0,0,0,0.05)_29px)] dark:bg-[linear-gradient(to_bottom,rgba(255,140,0,0.08),transparent_20%,transparent_80%,rgba(255,255,255,0.03)),repeating-linear-gradient(to_bottom,transparent,transparent_28px,rgba(255,255,255,0.06)_28px,rgba(255,255,255,0.06)_29px)]"></div>
+        <div class="absolute right-[10%] top-[14%] h-32 w-32 rounded-full border border-brand-green/25 dark:border-brand-orange/30"></div>
+      </div>
+      <div data-bg-id="contact" class="section-bg-layer">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(0,163,84,0.1),transparent_24%),linear-gradient(115deg,transparent_0%,transparent_56%,rgba(0,0,0,0.05)_56%,rgba(0,0,0,0.05)_57%,transparent_57%)] dark:bg-[radial-gradient(circle_at_bottom_left,rgba(255,140,0,0.12),transparent_24%),linear-gradient(115deg,transparent_0%,transparent_56%,rgba(255,255,255,0.06)_56%,rgba(255,255,255,0.06)_57%,transparent_57%)]"></div>
+        <div class="absolute left-[8%] top-[18%] h-20 w-20 rotate-12 border border-brand-green/25 dark:border-brand-orange/30"></div>
+      </div>
+      <div data-bg-id="admin" class="section-bg-layer">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(0,163,84,0.08),transparent_24%),radial-gradient(circle_at_bottom_left,rgba(255,140,0,0.1),transparent_28%)] dark:bg-[radial-gradient(circle_at_top_right,rgba(255,140,0,0.12),transparent_24%),radial-gradient(circle_at_bottom_left,rgba(0,163,84,0.08),transparent_28%)]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.045)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.045)_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:56px_56px]"></div>
+        <div class="absolute inset-y-10 left-1/2 w-px -translate-x-1/2 bg-[linear-gradient(to_bottom,transparent,rgba(0,0,0,0.16),transparent)] dark:bg-[linear-gradient(to_bottom,transparent,rgba(255,255,255,0.16),transparent)]"></div>
+      </div>
+    </div>
+    <div class="relative z-10 flex flex-col min-h-screen bg-transparent">
+      <slot />
+    </div>
+
+    <script>
+      function initCursor(): void {
+        const cursor = document.getElementById('custom-cursor');
+        const follower = document.getElementById('custom-cursor-follower');
+        if (!cursor || !follower) return;
+
+        let posX = 0, posY = 0;
+        let mouseX = 0, mouseY = 0;
+
+        window.addEventListener('mousemove', (e) => {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+          
+          cursor.style.transform = `translate3d(${mouseX - (cursor.offsetWidth / 2)}px, ${mouseY - (cursor.offsetHeight / 2)}px, 0)`;
+
+          // Global element detection
+          const target = e.target as HTMLElement;
+          if (!target) return;
+
+        });
+
+        function animate() {
+          if (!follower) return;
+          posX += (mouseX - posX) * 0.15;
+          posY += (mouseY - posY) * 0.15;
+          
+          follower.style.transform = `translate3d(${posX - (follower.offsetWidth / 2)}px, ${posY - (follower.offsetHeight / 2)}px, 0)`;
+          requestAnimationFrame(animate);
+        }
+        animate();
+      }
+
+      function initSectionBackground(): void {
+        const layers = Array.from(document.querySelectorAll<HTMLElement>('[data-bg-id]'));
+        const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-bg-layer]'));
+        if (layers.length === 0 || sections.length === 0) return;
+
+        const setActive = (id: string) => {
+          layers.forEach((layer) => {
+            layer.style.opacity = layer.dataset.bgId === id ? '1' : '0';
+          });
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+          const visible = entries
+            .filter((entry) => entry.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+          if (!visible) return;
+          setActive((visible.target as HTMLElement).dataset.bgLayer || 'default');
+        }, {
+          threshold: [0.2, 0.4, 0.6, 0.8],
+          rootMargin: '-20% 0px -20% 0px',
+        });
+
+        sections.forEach((section) => observer.observe(section));
+        const initialSection = sections[0];
+        setActive(initialSection ? (initialSection.dataset.bgLayer || 'default') : 'default');
+      }
+
+      initCursor();
+      initSectionBackground();
+
+      // Global Theme Toggle with Native View Transitions
+      (window as any).toggleTheme = function(e: MouseEvent, nextTheme: string) {
+        const html = document.documentElement;
+        const isDark = html.classList.contains("dark");
+        if ((isDark && nextTheme === 'dark') || (!isDark && nextTheme === 'light')) return;
+
+        const performToggle = () => {
+          if (nextTheme === 'dark') {
+            html.classList.add('dark');
+          } else {
+            html.classList.remove('dark');
+          }
+          localStorage.setItem('theme', nextTheme);
+          document.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme: nextTheme } }));
+        };
+
+        if (!(document as any).startViewTransition) {
+          performToggle();
+          return;
+        }
+
+        const x = e.clientX;
+        const y = e.clientY;
+        const endRadius = Math.hypot(
+          Math.max(x, window.innerWidth - x),
+          Math.max(y, window.innerHeight - y)
+        );
+
+        const transition = (document as any).startViewTransition(performToggle);
+
+        transition.ready.then(() => {
+          const clipPath = [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`
+          ];
+          
+          document.documentElement.animate(
+            {
+              clipPath: clipPath,
+            },
+            {
+              duration: 800,
+              easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
+              pseudoElement: '::view-transition-new(root)',
+            }
+          );
+        });
+      };
+    </script>
   </body>
 </html>
-
-<style is:global>
-  @import "../styles/global.css";
-</style>

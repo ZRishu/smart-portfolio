@@ -1,28 +1,86 @@
 ---
-
 ---
 
-<section id="contact">
-  <div class="container">
-    <h2 class="section-title">Get in Touch</h2>
-    <form class="contact-form" id="contact-form">
-      <div class="form-group">
-        <label for="sender_name">Name</label>
-        <input type="text" id="sender_name" name="sender_name" required placeholder="Your name" />
+<section id="contact" data-bg-layer="contact" class="min-h-[calc(100svh-4rem)] scroll-mt-16 snap-start bg-transparent py-8 md:py-10 flex items-center">
+  <div class="max-w-7xl mx-auto w-full px-4 md:px-8">
+    <div class="flex flex-col lg:flex-row gap-8 lg:gap-12 items-stretch">
+      <!-- Info -->
+      <div class="w-full lg:w-1/3 space-y-6 md:space-y-8 flex flex-col justify-center">
+        <div class="space-y-2">
+          <h2 class="text-[10px] font-mono text-muted-foreground tracking-[0.2em] uppercase">// COMMUNICATION_CHANNEL</h2>
+          <h3 class="text-3xl font-mono font-bold tracking-tighter italic">DIRECT_MESSAGE</h3>
+        </div>
+        <div class="space-y-3 md:space-y-4">
+          <a href="mailto:ZRishu@hotmail.com" class="block p-4 border border-border bg-card hover:border-brand-green transition-all group">
+            <span class="text-[9px] font-mono text-muted-foreground block mb-1 uppercase tracking-widest">EMAIL_STATION</span>
+            <span class="text-sm font-mono text-foreground group-hover:text-brand-green transition-colors">ZRISHU@HOTMAIL.COM</span>
+          </a>
+          <a href="https://github.com/ZRishu" target="_blank" class="block p-4 border border-border bg-card hover:border-brand-green transition-all group">
+            <span class="text-[9px] font-mono text-muted-foreground block mb-1 uppercase tracking-widest">GITHUB_REPOSITORY</span>
+            <span class="text-sm font-mono text-foreground group-hover:text-brand-green transition-colors">GITHUB.COM/ZRISHU</span>
+          </a>
+          <a href="https://linkedin.com/in/ZRishu" target="_blank" class="block p-4 border border-border bg-card hover:border-brand-green transition-all group">
+            <span class="text-[9px] font-mono text-muted-foreground block mb-1 uppercase tracking-widest">PROFESSIONAL_NETWORK</span>
+            <span class="text-sm font-mono text-foreground group-hover:text-brand-green transition-colors">LINKEDIN.COM/IN/ZRISHU</span>
+          </a>
+          <a href="https://x.com/ZRishu" target="_blank" class="block p-4 border border-border bg-card hover:border-brand-green transition-all group">
+            <span class="text-[9px] font-mono text-muted-foreground block mb-1 uppercase tracking-widest">SOCIAL_CIRCLE</span>
+            <span class="text-sm font-mono text-foreground group-hover:text-brand-green transition-colors">X.COM/ZRISHU</span>
+          </a>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="sender_email">Email</label>
-        <input type="email" id="sender_email" name="sender_email" required placeholder="you@example.com" />
+
+      <!-- Form -->
+      <div class="w-full lg:w-2/3 border border-border p-6 md:p-10 bg-card flex items-center">
+        <form id="contact-form" class="space-y-6 md:space-y-8 w-full">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+            <div class="space-y-2 group">
+              <label for="sender_name" class="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">>> SENDER_NAME</label>
+              <input 
+                type="text" 
+                id="sender_name" 
+                name="sender_name" 
+                required 
+                placeholder="INPUT_NAME" 
+                class="w-full bg-transparent border-b border-border py-2 text-sm font-mono text-foreground placeholder:text-muted-foreground transition-colors"
+              />
+            </div>
+            <div class="space-y-2 group">
+              <label for="sender_email" class="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">>> SENDER_EMAIL</label>
+              <input 
+                type="email" 
+                id="sender_email" 
+                name="sender_email" 
+                required 
+                placeholder="INPUT_EMAIL" 
+                class="w-full bg-transparent border-b border-border py-2 text-sm font-mono text-foreground placeholder:text-muted-foreground transition-colors"
+              />
+            </div>
+          </div>
+          <div class="space-y-2 group">
+            <label for="message_body" class="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">>> MESSAGE_PAYLOAD</label>
+            <textarea 
+              id="message_body" 
+              name="message_body" 
+              required 
+              placeholder="ENTER_MESSAGE_BODY..." 
+              rows="4" 
+              class="w-full bg-transparent border-b border-border py-2 text-sm font-mono text-foreground placeholder:text-muted-foreground resize-none transition-colors"
+            ></textarea>
+          </div>
+          
+          <div id="form-status" class="text-[10px] font-mono text-muted-foreground uppercase tracking-widest min-h-[1.5rem]"></div>
+          
+          <button 
+            type="submit" 
+            id="contact-submit"
+            class="px-8 py-3 bg-foreground text-background font-mono text-xs font-bold tracking-[0.2em] transition-all uppercase border border-border"
+          >
+            TRANSMIT_MESSAGE
+          </button>
+        </form>
       </div>
-      <div class="form-group">
-        <label for="message_body">Message</label>
-        <textarea id="message_body" name="message_body" required placeholder="Your message…" rows="5"></textarea>
-      </div>
-      <div class="form-status" id="form-status"></div>
-      <button type="submit" class="btn btn-primary" id="contact-submit">
-        Send Message
-      </button>
-    </form>
+    </div>
   </div>
 </section>
 
@@ -34,11 +92,32 @@
 
     if (!form || !statusEl || !submitBtn) return;
 
+    // Validation logic for hover effect
+    const validate = () => {
+      const inputs = Array.from(form.querySelectorAll('input[required], textarea[required]')) as (HTMLInputElement | HTMLTextAreaElement)[];
+      return inputs.every(input => input.value.trim() !== "");
+    };
+
+    submitBtn.addEventListener("mouseenter", () => {
+      if (validate()) {
+        submitBtn.classList.add("bg-brand-green", "text-white");
+        submitBtn.classList.remove("bg-foreground", "text-background");
+      }
+    });
+
+    submitBtn.addEventListener("mouseleave", () => {
+      submitBtn.classList.remove("bg-brand-green", "text-white");
+      submitBtn.classList.add("bg-foreground", "text-background");
+    });
+
     async function handleSubmit(e: Event): Promise<void> {
       e.preventDefault();
       submitBtn!.disabled = true;
-      statusEl!.textContent = "";
-      statusEl!.className = "form-status";
+      const originalText = submitBtn!.innerText;
+      submitBtn!.innerText = "TRANSMITTING...";
+      
+      statusEl!.textContent = ">> UPLOADING_PAYLOAD...";
+      statusEl!.className = "text-[10px] font-mono text-brand-orange uppercase tracking-widest";
 
       const formData = new FormData(form!);
       const payload = {
@@ -54,27 +133,23 @@
           body: JSON.stringify(payload),
         });
 
-        interface ContactEnvelope {
-          success: boolean;
-          error?: { message: string };
-        }
-
-        const envelope: ContactEnvelope = await res.json() as ContactEnvelope;
+        const envelope = await res.json();
 
         if (envelope.success) {
-          statusEl!.textContent = "Message sent! I'll get back to you soon.";
-          statusEl!.classList.add("success");
+          statusEl!.textContent = ">> SUCCESS: MESSAGE_STATION_ACKNOWLEDGED_200_OK";
+          statusEl!.className = "text-[10px] font-mono text-brand-green uppercase tracking-widest font-bold";
           form!.reset();
         } else {
-          statusEl!.textContent = envelope.error?.message ?? "Something went wrong.";
-          statusEl!.classList.add("error");
+          statusEl!.textContent = `>> ERROR: ${envelope.error?.message ?? "UNKNOWN_EXCEPTION"}`;
+          statusEl!.className = "text-[10px] font-mono text-brand-red uppercase tracking-widest";
         }
       } catch {
-        statusEl!.textContent = "Network error. Please try again.";
-        statusEl!.classList.add("error");
+        statusEl!.textContent = ">> FATAL: NETWORK_HANDSHAKE_FAILED";
+        statusEl!.className = "text-[10px] font-mono text-brand-red uppercase tracking-widest";
+      } finally {
+        submitBtn!.disabled = false;
+        submitBtn!.innerText = originalText;
       }
-
-      submitBtn!.disabled = false;
     }
 
     form.addEventListener("submit", (e: Event) => {
@@ -84,42 +159,3 @@
 
   initContactForm();
 </script>
-
-<style>
-  .contact-form {
-    max-width: 520px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.375rem;
-  }
-
-  .form-group label {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--color-text-muted);
-  }
-
-  .form-status {
-    font-size: 0.875rem;
-    min-height: 1.25rem;
-  }
-
-  .form-status.success {
-    color: var(--color-success);
-  }
-
-  .form-status.error {
-    color: var(--color-error);
-  }
-
-  .contact-form .btn {
-    align-self: flex-start;
-  }
-</style>
