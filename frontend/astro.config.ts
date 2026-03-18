@@ -1,7 +1,9 @@
 import { defineConfig } from "astro/config";
 
+import tailwindcss from "@tailwindcss/vite";
+
 export default defineConfig({
-  server: {
+	server: {
     port: 5173,
   },
   vite: {
@@ -13,5 +15,7 @@ export default defineConfig({
         },
       },
     },
+
+    plugins: [tailwindcss()],
   },
 });
