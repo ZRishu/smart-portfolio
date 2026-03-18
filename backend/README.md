@@ -77,6 +77,7 @@ docker compose down -v         # Stop + destroy data
 ```bash
 cp .env.example .env
 # Fill in DATABASE_URL, GROQ_API_KEY, JINA_API_KEY
+# Also set FRONTEND_URL to your frontend origin and ADMIN_API_KEY for admin protection
 
 go mod tidy
 make run          # Build and run
@@ -165,6 +166,21 @@ See [`.env.example`](.env.example) for the full annotated list.
 | `RAZORPAY_WEBHOOK_SECRET` | No       | —                                       |
 | `FRONTEND_URL`            | No       | `http://localhost:5173`                 |
 | `RATE_LIMIT_RPS`          | No       | `10`                                    |
+
+### Production Minimum
+
+For production, set at least:
+
+```env
+ENV=production
+LOG_LEVEL=info
+SERVER_PORT=8080
+DATABASE_URL=postgres://user:password@host:5432/dbname?sslmode=require
+GROQ_API_KEY=...
+JINA_API_KEY=...
+FRONTEND_URL=https://your-frontend-domain.example
+ADMIN_API_KEY=generate-a-long-random-secret
+```
 
 ## Development
 

@@ -101,11 +101,34 @@ const { showSectionNav = true } = Astro.props;
     const sponsorBtn = document.getElementById("sponsor-btn");
     if (!sponsorBtn) return;
 
+    async function ensureRazorpayLoaded(): Promise<void> {
+      if ((window as any).Razorpay) return;
+
+      await new Promise<void>((resolve, reject) => {
+        const existing = document.querySelector<HTMLScriptElement>('script[data-razorpay-checkout="true"]');
+        if (existing) {
+          existing.addEventListener("load", () => resolve(), { once: true });
+          existing.addEventListener("error", () => reject(new Error("RAZORPAY_SCRIPT_LOAD_FAILED")), { once: true });
+          return;
+        }
+
+        const script = document.createElement("script");
+        script.src = "https://checkout.razorpay.com/v1/checkout.js";
+        script.async = true;
+        script.dataset.razorpayCheckout = "true";
+        script.addEventListener("load", () => resolve(), { once: true });
+        script.addEventListener("error", () => reject(new Error("RAZORPAY_SCRIPT_LOAD_FAILED")), { once: true });
+        document.head.appendChild(script);
+      });
+    }
+
     sponsorBtn.addEventListener("click", async () => {
       const originalText = sponsorBtn.innerText;
       sponsorBtn.innerText = "INITIALIZING...";
       
       try {
+        await ensureRazorpayLoaded();
+
         const res = await fetch("/api/webhooks/razorpay/create-order", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -113,10 +136,14 @@ const { showSectionNav = true } = Astro.props;
         });
         
         if (!res.ok) throw new Error("API_ERROR");
-        const data = await res.json();
+        const envelope = await res.json();
+        const data = envelope?.data;
+        if (!envelope?.success || !data?.id || !data?.key_id) {
+          throw new Error("RAZORPAY_CONFIG_MISSING");
+        }
         
         const options = {
-          key: import.meta.env?.PUBLIC_RAZORPAY_KEY_ID || "YOUR_RAZORPAY_KEY_ID",
+          key: data.key_id,
           amount: data.amount,
           currency: data.currency,
           name: "ZR_SPONSOR_HUB",

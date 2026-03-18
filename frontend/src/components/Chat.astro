@@ -33,11 +33,18 @@
           </div>
         </div>
 
-        <div id="chat-messages" class="flex-grow overflow-y-auto p-6 md:p-8 space-y-6 scrollbar-hide">
-          <div class="flex gap-4">
-            <span class="text-[10px] font-mono text-brand-green mt-1">[BOT]</span>
-            <div class="text-sm font-mono text-foreground leading-relaxed max-w-xl">
-              SYSTEM_READY. HOW CAN I ASSIST YOUR INQUIRY?
+        <div class="custom-scroll-host flex-grow pr-4">
+          <div id="chat-messages" class="app-scrollbar h-full overflow-y-auto p-6 md:p-8 space-y-6">
+            <div class="flex gap-4">
+              <span class="text-[10px] font-mono text-brand-green mt-1">[BOT]</span>
+              <div class="text-sm font-mono text-foreground leading-relaxed max-w-xl">
+                SYSTEM_READY. HOW CAN I ASSIST YOUR INQUIRY?
+              </div>
+            </div>
+          </div>
+          <div class="custom-scrollbar custom-scrollbar-vertical" data-scrollbar-for="chat-messages" data-scrollbar-orientation="vertical">
+            <div class="custom-scrollbar-track">
+              <div class="custom-scrollbar-thumb"></div>
             </div>
           </div>
         </div>
@@ -79,8 +86,6 @@
     vertical-align: middle;
   }
   @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-  .scrollbar-hide::-webkit-scrollbar { display: none; }
-  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 </style>
 
 <script>

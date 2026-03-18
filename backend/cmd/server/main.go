@@ -104,7 +104,7 @@ func main() {
 	contactSvc := contentservice.NewContactMessageService(contactRepo, discordService)
 
 	projectHandler := contenthandler.NewProjectHandler(projectSvc)
-	contactHandler := contenthandler.NewContactHandler(contactSvc)
+	contactHandler := contenthandler.NewContactHandler(contactSvc, cfg.Admin.APIKey)
 
 	log.Info().Msg("content module: initialized (projects + contact messages)")
 

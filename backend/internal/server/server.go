@@ -54,7 +54,7 @@ func New(cfg *config.Config) *Server {
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   buildAllowedOrigins(cfg.Frontend.URL),
 		AllowedMethods:   []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-Request-ID"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-Request-ID", "X-Admin-Key"},
 		ExposedHeaders:   []string{"X-Request-ID"},
 		AllowCredentials: false,
 		MaxAge:           300, // 5 minutes preflight cache

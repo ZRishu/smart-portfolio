@@ -10,6 +10,7 @@ Astro + TypeScript frontend for the Smart Portfolio backend. Requires **Bun** as
 ## Setup
 
 ```bash
+cp .env.example .env
 bun install
 ```
 
@@ -39,11 +40,23 @@ bun run preview
 | Variable | Default | Description |
 |---|---|---|
 | `PUBLIC_API_URL` | `""` (proxied) | Backend API base URL for production |
+| `PUBLIC_DEV_API_PROXY` | `http://localhost:8080` | Dev-only proxy target for `/api` requests |
+| `FRONTEND_PORT` | `5173` | Astro dev server port |
 
 Create `.env` for overrides:
 
 ```env
 PUBLIC_API_URL=https://api.example.com
+PUBLIC_DEV_API_PROXY=http://localhost:8080
+```
+
+## Deployment
+
+- Set `PUBLIC_API_URL` to your deployed backend origin, for example `https://api.example.com`
+- The frontend is static, so you can deploy `dist/` to any static host after:
+
+```bash
+bun run build
 ```
 
 ## Architecture

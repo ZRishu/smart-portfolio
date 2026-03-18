@@ -12,12 +12,13 @@ import (
 
 // ContactHandler handles HTTP requests for the /api/contact endpoints.
 type ContactHandler struct {
-	service service.ContactMessageService
+	service  service.ContactMessageService
+	adminKey string
 }
 
 // NewContactHandler creates a new ContactHandler backed by the given service.
-func NewContactHandler(svc service.ContactMessageService) *ContactHandler {
-	return &ContactHandler{service: svc}
+func NewContactHandler(svc service.ContactMessageService, adminKey string) *ContactHandler {
+	return &ContactHandler{service: svc, adminKey: adminKey}
 }
 
 // Routes returns a chi.Router with all contact message routes mounted. This
@@ -64,6 +65,10 @@ func (h *ContactHandler) Submit(w http.ResponseWriter, r *http.Request) {
 // GetAll handles GET /api/contact. It returns every contact message ordered by
 // submission date descending. Intended for admin dashboard use.
 func (h *ContactHandler) GetAll(w http.ResponseWriter, r *http.Request) {
+	if !h.authorizeAdmin(w, r) {
+		return
+	}
+
 	messages, err := h.service.GetAllMessages(r.Context())
 	if httputil.HandleServiceError(w, err, "ContactHandler.GetAll") {
 		return
@@ -81,6 +86,10 @@ func (h *ContactHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 // messages ordered by submission date descending. Useful for quickly seeing
 // new messages that need attention.
 func (h *ContactHandler) GetUnread(w http.ResponseWriter, r *http.Request) {
+	if !h.authorizeAdmin(w, r) {
+		return
+	}
+
 	messages, err := h.service.GetUnreadMessages(r.Context())
 	if httputil.HandleServiceError(w, err, "ContactHandler.GetUnread") {
 		return
@@ -97,6 +106,10 @@ func (h *ContactHandler) GetUnread(w http.ResponseWriter, r *http.Request) {
 // TRUE for the message matching the URL parameter. Returns 400 if the ID is
 // malformed and 404 if no message matches or if it was already read.
 func (h *ContactHandler) MarkAsRead(w http.ResponseWriter, r *http.Request) {
+	if !h.authorizeAdmin(w, r) {
+		return
+	}
+
 	id := chi.URLParam(r, "id")
 	if id == "" {
 		httputil.WriteError(w, http.StatusBadRequest, "missing message id in URL path")
@@ -117,6 +130,10 @@ func (h *ContactHandler) MarkAsRead(w http.ResponseWriter, r *http.Request) {
 // matching the URL parameter and returns 204 No Content on success. Returns
 // 400 if the ID is malformed and 404 if no message matches the given ID.
 func (h *ContactHandler) Delete(w http.ResponseWriter, r *http.Request) {
+	if !h.authorizeAdmin(w, r) {
+		return
+	}
+
 	id := chi.URLParam(r, "id")
 	if id == "" {
 		httputil.WriteError(w, http.StatusBadRequest, "missing message id in URL path")
@@ -129,4 +146,23 @@ func (h *ContactHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusNoContent)
+}
+
+func (h *ContactHandler) authorizeAdmin(w http.ResponseWriter, r *http.Request) bool {
+	if h.adminKey == "" {
+		return true
+	}
+
+	key := r.Header.Get("X-Admin-Key")
+	if key == "" {
+		httputil.WriteError(w, http.StatusUnauthorized, "missing admin credentials")
+		return false
+	}
+
+	if key != h.adminKey {
+		httputil.WriteError(w, http.StatusUnauthorized, "invalid admin credentials")
+		return false
+	}
+
+	return true
 }

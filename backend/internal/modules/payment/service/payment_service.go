@@ -312,11 +312,13 @@ func (s *paymentService) CreateRazorpayOrder(amount float64, currency string) (m
 		return nil, err
 	}
 
-	// The frontend expects id, amount, currency just like Java returns
+	// Return the public key with the order payload so the frontend does not need
+	// a separate Razorpay env var. The secret remains backend-only.
 	return map[string]interface{}{
 		"id":       result["id"],
 		"amount":   result["amount"],
 		"currency": result["currency"],
+		"key_id":   s.keyID,
 	}, nil
 }
 

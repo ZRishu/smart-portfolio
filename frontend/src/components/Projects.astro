@@ -37,17 +37,24 @@ const fallbackAchievements = [
           </div>
         </div>
 
-        <div class="flex overflow-x-auto snap-x snap-mandatory gap-px bg-border border border-border scrollbar-hide" id="projects-grid">
-          <!-- Loading placeholders -->
-          {[1, 2, 3, 4, 5, 6].map(() => (
-            <div class="min-w-[18rem] md:min-w-[22rem] h-[20rem] md:h-[22rem] snap-start shrink-0 bg-background p-6 animate-pulse flex flex-col justify-between">
-              <div class="space-y-4">
-                <div class="h-4 bg-muted w-2/3"></div>
-                <div class="h-12 bg-muted w-full"></div>
+        <div class="custom-scroll-host pb-4">
+          <div class="app-scrollbar flex overflow-x-auto snap-x snap-mandatory gap-px bg-border border border-border" id="projects-grid">
+            <!-- Loading placeholders -->
+            {[1, 2, 3, 4, 5, 6].map(() => (
+              <div class="min-w-[18rem] md:min-w-[22rem] h-[20rem] md:h-[22rem] snap-start shrink-0 bg-background p-6 animate-pulse flex flex-col justify-between">
+                <div class="space-y-4">
+                  <div class="h-4 bg-muted w-2/3"></div>
+                  <div class="h-12 bg-muted w-full"></div>
+                </div>
+                <div class="h-4 bg-muted w-1/2"></div>
               </div>
-              <div class="h-4 bg-muted w-1/2"></div>
+            ))}
+          </div>
+          <div class="custom-scrollbar custom-scrollbar-horizontal" data-scrollbar-for="projects-grid" data-scrollbar-orientation="horizontal">
+            <div class="custom-scrollbar-track">
+              <div class="custom-scrollbar-thumb"></div>
             </div>
-          ))}
+          </div>
         </div>
       </div>
 
@@ -62,19 +69,26 @@ const fallbackAchievements = [
           </div>
         </div>
 
-        <div id="achievement-grid" class="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border border-border max-h-[22rem] overflow-y-auto scrollbar-hide">
-          {fallbackAchievements.map((item) => (
-            <article class="bg-background p-6 md:p-7 flex flex-col justify-between min-h-56 space-y-8">
-              <div class="space-y-4">
-                <span class="text-[9px] font-mono text-brand-orange uppercase tracking-[0.2em]">{item.metric}</span>
-                <h4 class="text-base font-mono font-bold tracking-tight text-foreground">{item.title}</h4>
-                <p class="text-[11px] leading-relaxed text-muted-foreground font-mono tracking-tight">{item.description}</p>
-              </div>
-              <div class="pt-4 border-t border-border">
-                <span class="text-[9px] font-mono text-brand-green uppercase tracking-[0.2em]">STATUS_CONFIRMED</span>
-              </div>
-            </article>
-          ))}
+        <div class="custom-scroll-host pr-4">
+          <div id="achievement-grid" class="app-scrollbar grid grid-cols-1 md:grid-cols-2 gap-px bg-border border border-border max-h-[22rem] overflow-y-auto">
+            {fallbackAchievements.map((item) => (
+              <article class="bg-background p-6 md:p-7 flex flex-col justify-between min-h-56 space-y-8">
+                <div class="space-y-4">
+                  <span class="text-[9px] font-mono text-brand-orange uppercase tracking-[0.2em]">{item.metric}</span>
+                  <h4 class="text-base font-mono font-bold tracking-tight text-foreground">{item.title}</h4>
+                  <p class="text-[11px] leading-relaxed text-muted-foreground font-mono tracking-tight">{item.description}</p>
+                </div>
+                <div class="pt-4 border-t border-border">
+                  <span class="text-[9px] font-mono text-brand-green uppercase tracking-[0.2em]">STATUS_CONFIRMED</span>
+                </div>
+              </article>
+            ))}
+          </div>
+          <div class="custom-scrollbar custom-scrollbar-vertical" data-scrollbar-for="achievement-grid" data-scrollbar-orientation="vertical">
+            <div class="custom-scrollbar-track">
+              <div class="custom-scrollbar-thumb"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
