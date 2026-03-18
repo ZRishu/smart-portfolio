@@ -7,9 +7,13 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"strings"
 
+	"github.com/google/uuid"
+
 	"github.com/ZRishu/smart-portfolio/internal/config"
+	"github.com/ZRishu/smart-portfolio/internal/modules/payment/model"
 	"github.com/ZRishu/smart-portfolio/internal/modules/payment/repository"
 	"github.com/rs/zerolog/log"
 )
@@ -31,6 +35,12 @@ type PaymentService interface {
 	// webhook delivery), this method returns a DuplicateEventError so the
 	// caller can respond with 200 OK without re-processing.
 	HandlePaymentCaptured(ctx context.Context, payload []byte) error
+
+	// CreateRazorpayOrder creates a new order in Razorpay
+	CreateRazorpayOrder(amount float64, currency string) (map[string]interface{}, error)
+
+	// GetRecentSponsors fetches the top recent sponsors.
+	GetRecentSponsors(ctx context.Context) ([]model.Sponsor, error)
 }
 
 // DuplicateEventError is returned when a webhook event has already been
@@ -58,6 +68,8 @@ func IsDuplicateEventError(err error) bool {
 // paymentService is the concrete implementation of PaymentService.
 type paymentService struct {
 	repo          *repository.PaymentRepository
+	keyID         string
+	keySecret     string
 	webhookSecret string
 }
 
@@ -67,11 +79,16 @@ func NewPaymentService(repo *repository.PaymentRepository, cfg config.RazorpayCo
 	if cfg.WebhookSecret == "" {
 		log.Warn().Msg("payment_service: RAZORPAY_WEBHOOK_SECRET is empty — webhook signature verification will always fail")
 	}
+	if cfg.KeyID == "" || cfg.KeySecret == "" {
+		log.Warn().Msg("payment_service: RAZORPAY_KEY_ID or RAZORPAY_KEY_SECRET is empty — order creation will fail")
+	}
 
 	log.Info().Msg("payment_service: initialized")
 
 	return &paymentService{
 		repo:          repo,
+		keyID:         cfg.KeyID,
+		keySecret:     cfg.KeySecret,
 		webhookSecret: cfg.WebhookSecret,
 	}
 }
@@ -244,4 +261,66 @@ func truncate(s string, maxLen int) string {
 		return s
 	}
 	return s[:maxLen] + "..."
+}
+
+// CreateRazorpayOrder creates a new order via the Razorpay API.
+func (s *paymentService) CreateRazorpayOrder(amount float64, currency string) (map[string]interface{}, error) {
+	if s.keyID == "" || s.keySecret == "" {
+		return nil, fmt.Errorf("razorpay credentials not configured")
+	}
+
+	importRazorpay := "github.com/razorpay/razorpay-go"
+	_ = importRazorpay // tricking go imports if we don't use it directly at top, wait we should just do HTTP request to avoid messing with top imports in this replace block, or I can update the top imports later. I'll use standard net/http for a simple API call.
+
+	url := "https://api.razorpay.com/v1/orders"
+
+	// Razorpay requires amount in paise
+	amountInPaise := int(amount * 100)
+	receipt := "txn_" + strings.ReplaceAll(uuid.New().String(), "-", "")[:8]
+
+	payload := map[string]interface{}{
+		"amount":   amountInPaise,
+		"currency": currency,
+		"receipt":  receipt,
+	}
+	bodyBytes, err := json.Marshal(payload)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", url, strings.NewReader(string(bodyBytes)))
+	if err != nil {
+		return nil, err
+	}
+
+	req.SetBasicAuth(s.keyID, s.keySecret)
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 400 {
+		return nil, fmt.Errorf("razorpay api error: status %d", resp.StatusCode)
+	}
+
+	var result map[string]interface{}
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return nil, err
+	}
+
+	// The frontend expects id, amount, currency just like Java returns
+	return map[string]interface{}{
+		"id":       result["id"],
+		"amount":   result["amount"],
+		"currency": result["currency"],
+	}, nil
+}
+
+// GetRecentSponsors fetches the top 10 recent sponsors.
+func (s *paymentService) GetRecentSponsors(ctx context.Context) ([]model.Sponsor, error) {
+	return s.repo.FindRecentSponsors(ctx, 10)
 }
