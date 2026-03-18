@@ -122,7 +122,7 @@
       roleTag.textContent = `[${role}]`;
       
       const content = document.createElement("div");
-      content.className = `text-sm font-mono leading-relaxed max-w-xl ${role === 'USR' ? 'text-muted-foreground' : 'text-foreground'}`;
+      content.className = `text-sm font-mono leading-relaxed max-w-xl whitespace-pre-wrap ${role === 'USR' ? 'text-muted-foreground' : 'text-foreground'}`;
       content.textContent = text;
       
       wrapper.appendChild(roleTag);
@@ -173,8 +173,16 @@
           buffer = lines.pop() ?? "";
 
           for (const line of lines) {
-            if (line.startsWith("data: ")) {
-              let text = line.slice(6);
+            const trimmed = line.trim();
+            if (!trimmed) continue;
+
+            if (trimmed.startsWith("event: done")) {
+              break;
+            }
+
+            if (trimmed.startsWith("data: ")) {
+              let text = trimmed.slice(6);
+              // Unescape "\\n" sequence sent by the backend.
               text = text.replace(/\\n/g, '\n');
               fullText += text;
               botContent.textContent = fullText;

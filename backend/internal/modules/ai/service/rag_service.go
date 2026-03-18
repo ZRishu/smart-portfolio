@@ -458,11 +458,14 @@ func (s *ragService) saveToCacheAsync(question string, embedding []float32, resp
 // ---------------------------------------------------------------------------
 
 // writeSSEData writes a single SSE "data:" frame to the writer and flushes
-// immediately so the client receives it without delay.
+// immediately so the client receives it without delay. Newlines in the data
+// are escaped to "\\n" to prevent breaking the SSE format while ensuring
+// the client can reconstruct the original formatting.
 func writeSSEData(w http.ResponseWriter, flusher http.Flusher, data string) {
 	// SSE spec: each line of data must be prefixed with "data: " and the
 	// message is terminated by a blank line.
-	fmt.Fprintf(w, "data: %s\n\n", data)
+	escaped := strings.ReplaceAll(data, "\n", "\\n")
+	fmt.Fprintf(w, "data: %s\n\n", escaped)
 	flusher.Flush()
 }
 
