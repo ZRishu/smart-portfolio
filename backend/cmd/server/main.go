@@ -132,8 +132,9 @@ func main() {
 	paymentRepo := paymentrepository.NewPaymentRepository(pg.Pool)
 	paymentSvc := paymentservice.NewPaymentService(paymentRepo, cfg.Razorpay)
 	webhookHandler := paymenthandler.NewWebhookHandler(paymentSvc)
+	paymentPublicHandler := paymenthandler.NewPaymentHandler(paymentSvc)
 
-	log.Info().Msg("payment module: initialized (Razorpay webhooks)")
+	log.Info().Msg("payment module: initialized (Razorpay webhooks + public routes)")
 
 	// ─────────────────────────────────────────────────────────────────────
 	// 10. Admin module (dashboard stats, sponsors listing, deep health)
@@ -200,6 +201,8 @@ func main() {
 		Chat:            aiHandler.ChatRoutes(),
 		Ingest:          aiHandler.IngestRoutes(),
 		RazorpayWebhook: webhookHandler.Routes(),
+		Payments:        paymentPublicHandler.PaymentRoutes(),
+		Sponsors:        paymentPublicHandler.SponsorRoutes(),
 		Admin:           adminH.Routes(),
 	})
 

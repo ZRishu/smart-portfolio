@@ -87,6 +87,8 @@ type ModuleRoutes struct {
 	Chat            chi.Router // mounted at /api/chat
 	Ingest          chi.Router // mounted at /api/ingest
 	RazorpayWebhook chi.Router // mounted at /api/webhooks/razorpay
+	Payments        chi.Router // mounted at /api/payments
+	Sponsors        chi.Router // mounted at /api/sponsors
 	Admin           chi.Router // mounted at /api/admin (auth-protected)
 }
 
@@ -119,6 +121,10 @@ type ModuleRoutes struct {
 //	    DELETE /                         → clear vector store
 //	  /webhooks/razorpay                 → WebhookHandler.Routes()
 //	    POST /                           → Razorpay webhook
+//	  /payments                          → PaymentHandler.PaymentRoutes()
+//	    POST /create-order               → create razorpay order
+//	  /sponsors                          → PaymentHandler.SponsorRoutes()
+//	    GET /                            → list recent sponsors
 //	  /admin                             → AdminHandler.Routes() [admin-auth]
 //	    GET /health                      → deep health check (DB ping)
 //	    GET /stats                       → dashboard aggregate stats
@@ -168,6 +174,12 @@ func (s *Server) RegisterRoutes(m ModuleRoutes) {
 		// Payment webhook is secured by HMAC, not admin key
 		if m.RazorpayWebhook != nil {
 			api.Mount("/webhooks/razorpay", m.RazorpayWebhook)
+		}
+		if m.Payments != nil {
+			api.Mount("/payments", m.Payments)
+		}
+		if m.Sponsors != nil {
+			api.Mount("/sponsors", m.Sponsors)
 		}
 
 		// ── Admin-protected endpoints ────────────────────────────────
