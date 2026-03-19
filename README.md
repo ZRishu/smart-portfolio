@@ -26,7 +26,7 @@ smart-portfolio/
 
 ### Backend
 
-- **Language:** Go 1.25
+- **Language:** Go 1.26
 - **Router:** chi/v5
 - **Database:** PostgreSQL 16 + pgvector (pgx/v5 driver)
 - **AI:** Groq (LLM, OpenAI-compatible) + Jina (embeddings)
@@ -44,7 +44,7 @@ The frontend directory is ready for any modern framework. See [`frontend/README.
 
 ### Prerequisites
 
-- [Go 1.23+](https://go.dev/dl/)
+- [Go 1.26+](https://go.dev/dl/)
 - [Docker](https://docs.docker.com/get-docker/) and Docker Compose
 - A [Groq API key](https://console.groq.com/) (free tier)
 - A [Jina API key](https://jina.ai/) (free tier)
@@ -59,7 +59,7 @@ cp .env.example .env
 docker compose up -d --build
 ```
 
-The backend starts at **http://localhost:8080** with PostgreSQL + pgvector.
+The backend starts at **http://localhost:8080**.
 
 | URL | Description |
 |-----|-------------|

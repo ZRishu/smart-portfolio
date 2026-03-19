@@ -21,8 +21,7 @@ This guide covers everything you need to run, test, build, deploy, and automate 
 
 | Task | Command |
 |------|---------|
-| Start everything (Docker) | `cd backend && docker compose up -d --build` |
-| Start only PostgreSQL | `cd backend && docker compose up -d postgres` |
+| Start backend (Docker) | `cd backend && docker compose up -d --build` |
 | Run locally | `cd backend && make run` |
 | Live reload dev server | `cd backend && make dev` |
 | Run tests | `cd backend && make test` |
@@ -36,7 +35,6 @@ This guide covers everything you need to run, test, build, deploy, and automate 
 | Build Docker image | `cd backend && make docker-build` |
 | View logs | `cd backend && docker compose logs -f app` |
 | Stop everything | `cd backend && docker compose down` |
-| Nuke everything + DB | `cd backend && docker compose down -v` |
 | Clean build artifacts | `cd backend && make clean` |
 | Tag a release | `git tag v1.0.0 && git push origin v1.0.0` |
 | Open Swagger UI | `http://localhost:8080/docs` |

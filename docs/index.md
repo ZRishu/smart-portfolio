@@ -80,7 +80,7 @@ Swagger UI served at `/docs` with a comprehensive OpenAPI 3.0 spec. Every endpoi
 
 | Layer             | Technology                                             |
 | ----------------- | ------------------------------------------------------ |
-| **Language**      | Go 1.25                                                |
+| **Language**      | Go 1.26                                                |
 | **Router**        | chi/v5                                                 |
 | **Database**      | PostgreSQL 16 + pgvector (pgx/v5)                      |
 | **AI / LLM**      | Groq (OpenAI-compatible)                               |
@@ -186,7 +186,7 @@ smart-portfolio/
 │   ├── internal/             Application code (config, modules, platform)
 │   ├── migrations/           SQL migration files
 │   ├── Dockerfile            Multi-stage production build
-│   ├── docker-compose.yml    Local dev stack (app + PostgreSQL)
+│   ├── docker-compose.yml    Local dev stack (app)
 │   └── Makefile              Build, test, lint, Docker targets
 ├── frontend/                 Frontend application
 ├── docs/                     This documentation site (MkDocs)

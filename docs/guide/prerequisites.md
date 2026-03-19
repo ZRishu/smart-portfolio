@@ -8,8 +8,8 @@ Install these tools and gather the API keys before running Smart Portfolio.
 
 | Tool | Minimum Version | Purpose | Install |
 |------|----------------|---------|---------|
-| **Go** | 1.25+ | Compile and run the backend | [go.dev/dl](https://go.dev/dl/) |
-| **Docker** | 24+ | Container runtime for app and database | [docs.docker.com](https://docs.docker.com/get-docker/) |
+| **Go** | 1.26+ | Compile and run the backend | [go.dev/dl](https://go.dev/dl/) |
+| **Docker** | 24+ | Container runtime for the app | [docs.docker.com](https://docs.docker.com/get-docker/) |
 | **Docker Compose** | v2+ | Multi-container orchestration | Bundled with Docker Desktop |
 | **Git** | 2.40+ | Version control | [git-scm.com](https://git-scm.com/) |
 | **make** | any | Run Makefile targets | Pre-installed on Linux and macOS |
@@ -32,6 +32,14 @@ Both keys are **required** — without them the AI chat and resume ingestion fea
 |-----|--------------|---------------|
 | `GROQ_API_KEY` | [console.groq.com](https://console.groq.com/) | LLM inference for AI chat answers |
 | `JINA_API_KEY` | [jina.ai](https://jina.ai/) | Text embeddings for RAG retrieval |
+
+## Database Requirement
+
+You need an external PostgreSQL database with the `pgvector` extension installed. You will provide the connection string via the `DATABASE_URL` environment variable.
+
+Providers like **Neon** ([neon.tech](https://neon.tech)) or **Supabase** ([supabase.com](https://supabase.com)) offer generous free tiers that include `pgvector` out of the box.
+
+---
 
 ## Optional Credentials
 
@@ -62,6 +70,7 @@ cp .env.example .env
 Then open `.env` in your editor. At minimum, set:
 
 ```dotenv
+DATABASE_URL=your-external-postgres-url
 GROQ_API_KEY=your-groq-key-here
 JINA_API_KEY=your-jina-key-here
 ```

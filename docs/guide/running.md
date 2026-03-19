@@ -6,7 +6,7 @@ Three options are available depending on your workflow. Docker Compose is the re
 
 ## Option A: Docker Compose (Recommended)
 
-One command starts both PostgreSQL with pgvector and the Go server. Migrations run automatically on startup.
+One command starts the Go server container connected to your external database. Migrations run automatically on startup.
 
 ```bash
 # 1. Navigate to the backend directory
@@ -15,20 +15,19 @@ cd backend
 # 2. Create your environment file from the example
 cp .env.example .env
 # Edit .env — fill in at minimum:
+#   DATABASE_URL=your-external-postgres-url
 #   GROQ_API_KEY=your-groq-key
 #   JINA_API_KEY=your-jina-key
 
-# 3. Start the full stack
+# 3. Start the backend stack
 docker compose up -d --build
 ```
 
 **What happens on startup:**
 
-1. Docker pulls `pgvector/pgvector:pg16` and starts PostgreSQL on port 5432
-2. Docker builds the Go app from the Dockerfile (multi-stage, ~11 MB final image)
-3. The app waits for PostgreSQL's health check to pass
-4. The Go server runs `migrations/001_init.sql` automatically
-5. The server starts on port 8080
+1. Docker builds the Go app from the Dockerfile (multi-stage, ~11 MB final image)
+2. The Go server connects to your external database and runs `migrations/001_init.sql` automatically
+3. The server starts on port 8080
 
 **Verify it's working:**
 
@@ -57,11 +56,8 @@ docker compose logs -f app
 # See running containers
 docker compose ps
 
-# Stop everything (data is preserved)
+# Stop everything
 docker compose down
-
-# Stop everything AND destroy the database volume
-docker compose down -v
 
 # Rebuild after code changes
 docker compose up -d --build
@@ -71,28 +67,23 @@ docker compose up -d --build
 
 ## Option B: Local Go + External PostgreSQL
 
-Use this when you want fast iteration without Docker rebuilds for the Go binary, but still run PostgreSQL in a container.
+Use this when you want fast iteration running the Go binary locally, connecting to an external PostgreSQL database.
 
 ```bash
-# 1. Start only the PostgreSQL container
+# 1. Navigate to the backend directory
 cd backend
-docker compose up -d postgres
 
-# 2. Wait for it to be ready
-docker compose logs postgres | tail -5
-# Should print: "database system is ready to accept connections"
-
-# 3. Create your .env file
+# 2. Create your .env file
 cp .env.example .env
 # Set at minimum:
-#   DATABASE_URL=postgres://portfolio:portfolio_secret@localhost:5432/smart_portfolio?sslmode=disable
+#   DATABASE_URL=your-external-postgres-url
 #   GROQ_API_KEY=your-key
 #   JINA_API_KEY=your-key
 
-# 4. Download Go dependencies
+# 3. Download Go dependencies
 go mod tidy
 
-# 5. Build and run
+# 4. Build and run
 make run
 ```
 
@@ -114,9 +105,8 @@ go run ./cmd/server
 # 1. Install Air (one-time setup)
 go install github.com/air-verse/air@latest
 
-# 2. Start PostgreSQL
+# 2. Make sure your .env has DATABASE_URL set
 cd backend
-docker compose up -d postgres
 
 # 3. Start the dev server with live reload
 make dev
@@ -140,8 +130,6 @@ Air uses the configuration in `.air.toml`. It watches `.go`, `.sql`, and `.toml`
 | Situation | Command |
 |-----------|---------|
 | Docker Compose running | `docker compose down` |
-| Keep PostgreSQL data | `docker compose down` |
-| Destroy data volumes too | `docker compose down -v` |
 | Air or `go run` terminal | `Ctrl+C` |
 
 The server performs a graceful shutdown on SIGINT/SIGTERM: it drains in-flight HTTP requests, stops the outbox poller, shuts down the event bus, waits for Discord notifications in flight, and closes the database pool.

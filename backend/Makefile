@@ -154,7 +154,7 @@ docker-build:
 	docker build -t $(IMAGE_NAME):$(IMAGE_TAG) .
 	@echo "==> Docker image built."
 
-## docker-up: Start the full docker compose stack (app + postgres)
+## docker-up: Start the docker compose stack (app)
 docker-up:
 	@echo "==> Starting docker compose stack..."
 	$(COMPOSE) up -d --build
@@ -164,12 +164,6 @@ docker-up:
 docker-down:
 	@echo "==> Stopping docker compose stack..."
 	$(COMPOSE) down
-
-## docker-nuke: Stop the stack and destroy all volumes (WARNING: deletes DB data)
-docker-nuke:
-	@echo "==> Destroying docker compose stack and volumes..."
-	$(COMPOSE) down -v --remove-orphans
-	@echo "==> Everything destroyed."
 
 ## docker-logs: Tail logs from the docker compose stack
 docker-logs:

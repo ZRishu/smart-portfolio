@@ -52,7 +52,7 @@ migrations/
 
 ### Prerequisites
 
-- Go 1.25+
+- Go 1.26+
 - PostgreSQL 15+ with the [pgvector](https://github.com/pgvector/pgvector) extension
 - A [Groq](https://console.groq.com/) API key (free tier)
 - A [Jina](https://jina.ai/) embeddings API key (free tier)
@@ -69,7 +69,6 @@ docker compose up -d --build
 
 docker compose logs -f app     # Tail logs
 docker compose down            # Stop
-docker compose down -v         # Stop + destroy data
 ```
 
 ### Option 2: Local Development
@@ -200,7 +199,6 @@ make tidy         # Tidy go modules
 make check        # Full pre-commit suite (fmt + vet + lint + test)
 make docker-up    # Start docker compose stack
 make docker-down  # Stop stack
-make docker-nuke  # Stop + destroy volumes
 make clean        # Remove build artifacts
 make help         # Show all targets
 ```
@@ -258,7 +256,7 @@ Produces a minimal Alpine image (~11 MB) with non-root user, built-in health che
 
 ### Compose Stack
 
-Includes PostgreSQL 16 with pgvector + the Go app:
+Includes the Go app container:
 
 ```bash
 docker compose up -d --build

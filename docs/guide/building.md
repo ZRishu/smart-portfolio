@@ -109,7 +109,7 @@ docker run --rm -p 8080:8080 \
 
 **The Dockerfile is a two-stage build:**
 
-1. **Builder stage** (`golang:1.25-alpine`): Downloads deps, compiles a static binary
+1. **Builder stage** (`golang:1.26-alpine`): Downloads deps, compiles a static binary
 2. **Production stage** (`alpine:3.20`): Copies only the binary + migrations, runs as non-root user, includes a health check
 
 The final image contains:

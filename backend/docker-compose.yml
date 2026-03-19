@@ -10,28 +10,6 @@
 
 services:
   # ─────────────────────────────────────────────────────────────────────────
-  # PostgreSQL with pgvector extension
-  # ─────────────────────────────────────────────────────────────────────────
-  postgres:
-    image: pgvector/pgvector:pg16
-    container_name: smart-portfolio-db
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: portfolio
-      POSTGRES_PASSWORD: portfolio_secret
-      POSTGRES_DB: smart_portfolio
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U portfolio -d smart_portfolio"]
-      interval: 5s
-      timeout: 3s
-      retries: 10
-      start_period: 10s
-
-  # ─────────────────────────────────────────────────────────────────────────
   # Smart Portfolio Application
   # ─────────────────────────────────────────────────────────────────────────
   app:
@@ -42,57 +20,5 @@ services:
     restart: unless-stopped
     ports:
       - "8080:8080"
-    depends_on:
-      postgres:
-        condition: service_healthy
-    environment:
-      # ── Server ──────────────────────────────────────────────────────────
-      ENV: development
-      LOG_LEVEL: debug
-      SERVER_PORT: "8080"
-
-      # ── Database ────────────────────────────────────────────────────────
-      DATABASE_URL: postgres://portfolio:portfolio_secret@postgres:5432/smart_portfolio?sslmode=disable
-      DB_MAX_OPEN_CONNS: "10"
-      DB_MAX_IDLE_CONNS: "5"
-      DB_CONN_MAX_LIFETIME_MIN: "30"
-
-      # ── AI / LLM (Groq — OpenAI-compatible) ────────────────────────────
-      # Replace with your actual API key or pass via .env / env_file
-      GROQ_API_KEY: ${GROQ_API_KEY:-your-groq-api-key}
-      GROQ_BASE_URL: https://api.groq.com/openai/v1
-      AI_MODEL: llama-3.3-70b-versatile
-      AI_TEMPERATURE: "0.3"
-
-      # ── Embeddings (Jina) ──────────────────────────────────────────────
-      # Replace with your actual API key or pass via .env / env_file
-      JINA_API_KEY: ${JINA_API_KEY:-your-jina-api-key}
-      JINA_BASE_URL: https://api.jina.ai/v1
-      EMBEDDING_MODEL: jina-embeddings-v2-base-en
-      EMBEDDING_DIMENSIONS: "768"
-
-      # ── Discord Notifications (optional) ───────────────────────────────
-      DISCORD_WEBHOOK_URL: ${DISCORD_WEBHOOK_URL:-}
-
-      # ── Razorpay (optional) ────────────────────────────────────────────
-      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:-}
-      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-}
-      RAZORPAY_WEBHOOK_SECRET: ${RAZORPAY_WEBHOOK_SECRET:-}
-
-      # ── Frontend CORS ──────────────────────────────────────────────────
-      FRONTEND_URL: http://localhost:5173
-
-      # ── Rate Limiting ──────────────────────────────────────────────────
-      RATE_LIMIT_RPS: "20"
-      RATE_LIMIT_BURST: "40"
-
-      # ── Outbox Poller ──────────────────────────────────────────────────
-      OUTBOX_POLL_INTERVAL: "10"
-
-      # ── Cache ──────────────────────────────────────────────────────────
-      CACHE_TTL_HOURS: "24"
-      CACHE_MAX_ITEMS: "200"
-
-volumes:
-  pgdata:
-    driver: local
+    env_file:
+      - .env
