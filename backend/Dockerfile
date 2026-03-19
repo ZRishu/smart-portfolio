@@ -51,13 +51,5 @@ COPY --from=builder /app/migrations /app/migrations
 # Switch to non-root user for security
 USER appuser
 
-# Expose the default server port
-EXPOSE 8080
-
-# Health check — the /healthz endpoint returns {"status":"ok"} when the
-# server is ready to accept connections.
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD wget -qO- http://localhost:8080/healthz || exit 1
-
 # Run the server binary directly (no shell wrapper needed)
 ENTRYPOINT ["/app/server"]
