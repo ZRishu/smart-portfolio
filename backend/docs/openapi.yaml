@@ -51,10 +51,6 @@ info:
   license:
     name: MIT
 
-servers:
-  - url: http://localhost:8080
-    description: Local development
-
 tags:
   - name: Health
     description: Liveness and readiness probes
