@@ -249,6 +249,9 @@ func buildAllowedOrigins(frontendURL string) []string {
 		return []string{"*"}
 	}
 
+	// Clean up the URL: remove trailing slashes.
+	frontendURL = strings.TrimRight(frontendURL, "/")
+
 	// Always allow the configured frontend URL plus common local dev origins.
 	return []string{
 		frontendURL,
