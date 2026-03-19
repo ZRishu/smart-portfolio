@@ -187,7 +187,7 @@ func (s *embeddingService) EmbedBatch(ctx context.Context, texts []string) ([][]
 				Int("attempt", attempt+1).
 				Dur("backoff", backoff).
 				Msg("embedding_service: rate limit hit, retrying")
-			
+
 			select {
 			case <-ctx.Done():
 				return nil, ctx.Err()
