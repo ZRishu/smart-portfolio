@@ -303,8 +303,11 @@ const {
           isDragging = false;
           activePointerId = null;
           thumb.classList.remove('is-dragging');
-          html.style.scrollBehavior = restoreScrollBehavior;
+          
+          const scrollTargetElement = isWindowTarget ? html : (scrollable as HTMLElement);
+          scrollTargetElement.style.scrollBehavior = restoreScrollBehavior;
           body.style.scrollSnapType = restoreSnapType;
+          
           window.removeEventListener('pointermove', onPointerMove);
           window.removeEventListener('pointerup', stopDrag);
           window.removeEventListener('pointercancel', stopDrag);
@@ -330,10 +333,14 @@ const {
           activePointerId = event.pointerId;
           isDragging = true;
           suppressTrackClick = false;
-          restoreScrollBehavior = html.style.scrollBehavior;
+          
+          const scrollTargetElement = isWindowTarget ? html : (scrollable as HTMLElement);
+          restoreScrollBehavior = scrollTargetElement.style.scrollBehavior;
           restoreSnapType = body.style.scrollSnapType;
-          html.style.scrollBehavior = 'auto';
+          
+          scrollTargetElement.style.scrollBehavior = 'auto';
           body.style.scrollSnapType = 'none';
+          
           thumb.classList.add('is-dragging');
           thumb.setPointerCapture(event.pointerId);
           window.addEventListener('pointermove', onPointerMove, { passive: false });

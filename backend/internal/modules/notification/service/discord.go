@@ -133,7 +133,7 @@ func (d *DiscordNotificationService) sendAsync(ctx context.Context, message stri
 			}
 		}()
 
-		if err := d.send(ctx, message); err != nil {
+		if err := d.send(context.WithoutCancel(ctx), message); err != nil {
 			log.Error().Err(err).Msg("discord: failed to send notification")
 		}
 	}()

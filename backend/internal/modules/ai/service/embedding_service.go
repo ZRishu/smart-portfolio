@@ -144,42 +144,68 @@ func (s *embeddingService) EmbedBatch(ctx context.Context, texts []string) ([][]
 	}
 
 	buf := s.bufPool.Get().(*bytes.Buffer)
-	buf.Reset()
 	defer s.bufPool.Put(buf)
 
-	if err := json.NewEncoder(buf).Encode(payload); err != nil {
-		return nil, fmt.Errorf("embedding_service.EmbedBatch: failed to marshal request: %w", err)
-	}
+	var body []byte
+	var respStatusCode int
+	maxRetries := 5
+	backoff := 1 * time.Second
 
-	// Build the HTTP request.
-	endpoint := s.baseURL + "/embeddings"
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, endpoint, buf)
-	if err != nil {
-		return nil, fmt.Errorf("embedding_service.EmbedBatch: failed to create HTTP request: %w", err)
-	}
+	for attempt := 0; attempt <= maxRetries; attempt++ {
+		buf.Reset()
+		if err := json.NewEncoder(buf).Encode(payload); err != nil {
+			return nil, fmt.Errorf("embedding_service.EmbedBatch: failed to marshal request: %w", err)
+		}
 
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+s.apiKey)
+		// Build the HTTP request.
+		endpoint := s.baseURL + "/embeddings"
+		req, err := http.NewRequestWithContext(ctx, http.MethodPost, endpoint, buf)
+		if err != nil {
+			return nil, fmt.Errorf("embedding_service.EmbedBatch: failed to create HTTP request: %w", err)
+		}
 
-	// Execute the request.
-	resp, err := s.client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("embedding_service.EmbedBatch: HTTP request failed: %w", err)
-	}
-	defer resp.Body.Close()
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", "Bearer "+s.apiKey)
 
-	// Read the full response body so we can provide useful error messages.
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, fmt.Errorf("embedding_service.EmbedBatch: failed to read response body: %w", err)
-	}
+		// Execute the request.
+		resp, err := s.client.Do(req)
+		if err != nil {
+			return nil, fmt.Errorf("embedding_service.EmbedBatch: HTTP request failed: %w", err)
+		}
 
-	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		return nil, fmt.Errorf(
-			"embedding_service.EmbedBatch: API returned status %d: %s",
-			resp.StatusCode,
-			truncateBytes(body, 512),
-		)
+		// Read the full response body so we can provide useful error messages.
+		body, err = io.ReadAll(resp.Body)
+		respStatusCode = resp.StatusCode
+		resp.Body.Close()
+
+		if err != nil {
+			return nil, fmt.Errorf("embedding_service.EmbedBatch: failed to read response body: %w", err)
+		}
+
+		if respStatusCode == http.StatusTooManyRequests && attempt < maxRetries {
+			log.Warn().
+				Int("attempt", attempt+1).
+				Dur("backoff", backoff).
+				Msg("embedding_service: rate limit hit, retrying")
+			
+			select {
+			case <-ctx.Done():
+				return nil, ctx.Err()
+			case <-time.After(backoff):
+			}
+			backoff *= 2
+			continue
+		}
+
+		if respStatusCode < 200 || respStatusCode >= 300 {
+			return nil, fmt.Errorf(
+				"embedding_service.EmbedBatch: API returned status %d: %s",
+				respStatusCode,
+				truncateBytes(body, 512),
+			)
+		}
+
+		break // Success, exit retry loop
 	}
 
 	// Parse the response.
