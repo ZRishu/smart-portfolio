@@ -95,7 +95,7 @@ func Load() (*Config, error) {
 	var errs []string
 
 	// ── Server ───────────────────────────────────────────────────────────
-	cfg.Server.Port = envOrDefault("SERVER_PORT", "8080")
+	cfg.Server.Port = envOrDefault("PORT", envOrDefault("SERVER_PORT", "8080"))
 
 	// ── Database ─────────────────────────────────────────────────────────
 	cfg.Database.URL = requireEnv("DATABASE_URL", &errs)
