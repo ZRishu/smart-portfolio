@@ -96,6 +96,8 @@ const fallbackAchievements = [
 </section>
 
 <script>
+  import { apiUrl } from "../lib/public-api";
+
   interface Project {
     id: string;
     title: string;
@@ -162,7 +164,7 @@ const fallbackAchievements = [
     if (!grid) return;
 
     try {
-      const res = await fetch("/api/projects");
+      const res = await fetch(apiUrl("/api/projects"));
       const envelope = await res.json();
 
       if (!envelope.success || !envelope.data || envelope.data.length === 0) {
@@ -206,7 +208,7 @@ const fallbackAchievements = [
     if (!target) return;
 
     try {
-      const res = await fetch("/api/chat", {
+      const res = await fetch(apiUrl("/api/chat"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

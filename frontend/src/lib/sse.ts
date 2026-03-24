@@ -1,7 +1,4 @@
-const API_BASE =
-  typeof window !== "undefined"
-    ? (import.meta.env.PUBLIC_API_URL || "")
-    : "";
+import { apiUrl } from "./public-api";
 
 export async function streamChat(
   question: string,
@@ -10,7 +7,7 @@ export async function streamChat(
   onError: (error: string) => void,
 ): Promise<void> {
   try {
-    const response = await fetch(`${API_BASE}/api/chat/stream`, {
+    const response = await fetch(apiUrl("/api/chat/stream"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ question }),

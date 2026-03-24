@@ -83,6 +83,8 @@ const { showSectionNav = true } = Astro.props;
 </header>
 
 <script>
+  import { apiUrl } from "../lib/public-api";
+
   function initNav(): void {
     const toggle = document.getElementById("nav-toggle");
     const menu = document.getElementById("mobile-menu");
@@ -129,7 +131,7 @@ const { showSectionNav = true } = Astro.props;
       try {
         await ensureRazorpayLoaded();
 
-        const res = await fetch("/api/webhooks/razorpay/create-order", {
+        const res = await fetch(apiUrl("/api/payments/create-order"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ amount: 500, currency: "INR" })

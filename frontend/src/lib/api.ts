@@ -5,14 +5,13 @@ import type {
   ContactMessageResponse,
   ChatResponse,
 } from "./types";
-
-const API_BASE = import.meta.env.PUBLIC_API_URL || "";
+import { apiUrl } from "./public-api";
 
 async function fetchAPI<T>(
   path: string,
   options?: RequestInit,
 ): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`, {
+  const res = await fetch(apiUrl(path), {
     headers: { "Content-Type": "application/json" },
     ...options,
   });

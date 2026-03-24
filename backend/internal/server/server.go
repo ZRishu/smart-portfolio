@@ -250,16 +250,32 @@ func buildAllowedOrigins(frontendURL string) []string {
 		return []string{"*"}
 	}
 
-	// Clean up the URL: remove trailing slashes.
-	frontendURL = strings.TrimRight(frontendURL, "/")
-
-	// Always allow the configured frontend URL plus common local dev origins.
-	return []string{
-		frontendURL,
+	origins := []string{
 		"http://localhost:3000",
 		"http://localhost:5173",
 		"http://localhost:5174",
 	}
+
+	seen := make(map[string]struct{}, len(origins))
+	for _, origin := range origins {
+		seen[origin] = struct{}{}
+	}
+
+	for _, raw := range strings.FieldsFunc(frontendURL, func(r rune) bool {
+		return r == ',' || r == '\n'
+	}) {
+		origin := strings.TrimSpace(strings.TrimRight(raw, "/"))
+		if origin == "" {
+			continue
+		}
+		if _, ok := seen[origin]; ok {
+			continue
+		}
+		origins = append(origins, origin)
+		seen[origin] = struct{}{}
+	}
+
+	return origins
 }
 
 // logRegisteredRoutes walks the chi router tree and logs every registered

@@ -67,6 +67,8 @@ import Footer from "../../components/Footer.astro";
 </Layout>
 
 <script>
+  import { apiUrl } from "../../lib/public-api";
+
   function initIngestion(): void {
     const form = document.getElementById("ingest-form") as HTMLFormElement | null;
     const statusEl = document.getElementById("ingest-status");
@@ -119,7 +121,7 @@ import Footer from "../../components/Footer.astro";
       formData.append("file", file);
 
       try {
-        const res = await fetch("/api/admin/ingest", {
+        const res = await fetch(apiUrl("/api/ingest"), {
           method: "POST",
           headers: {
             "X-Admin-Key": key

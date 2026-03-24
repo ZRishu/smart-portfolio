@@ -77,13 +77,15 @@ const techStack = [
 </section>
 
 <script>
+  import { apiUrl } from "../lib/public-api";
+
   async function loadHero(): Promise<void> {
     const nameEl = document.getElementById("hero-name");
     const taglineEl = document.getElementById("hero-tagline");
     if (!nameEl || !taglineEl) return;
 
     try {
-      const res = await fetch("/api/chat", {
+      const res = await fetch(apiUrl("/api/chat"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -98,7 +100,7 @@ const techStack = [
     } catch {}
 
     try {
-      const res = await fetch("/api/chat", {
+      const res = await fetch(apiUrl("/api/chat"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

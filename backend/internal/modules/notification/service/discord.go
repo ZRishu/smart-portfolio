@@ -5,9 +5,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"math/rand"
 	"net/http"
-	"strconv"
 	"sync"
 	"time"
 
@@ -49,6 +49,13 @@ type DiscordNotificationService struct {
 	client     *http.Client
 	wg         sync.WaitGroup
 	random     *rand.Rand
+	sendMu     sync.Mutex
+}
+
+type rateLimitResponse struct {
+	Message    string  `json:"message"`
+	RetryAfter float64 `json:"retry_after"`
+	Global     bool    `json:"global"`
 }
 
 // NewDiscordNotificationService creates a new DiscordNotificationService.
@@ -163,8 +170,11 @@ func (d *DiscordNotificationService) send(ctx context.Context, message string) e
 	initialBackoff := 2 * time.Second
 
 	for attempt := 0; attempt <= maxRetries; attempt++ {
+		d.sendMu.Lock()
+
 		req, err := http.NewRequestWithContext(ctx, http.MethodPost, d.webhookURL, bytes.NewReader(body))
 		if err != nil {
+			d.sendMu.Unlock()
 			return fmt.Errorf("discord: failed to create request: %w", err)
 		}
 
@@ -172,32 +182,31 @@ func (d *DiscordNotificationService) send(ctx context.Context, message string) e
 
 		resp, err := d.client.Do(req)
 		if err != nil {
+			d.sendMu.Unlock()
 			return fmt.Errorf("discord: request failed: %w", err)
 		}
 
 		// Success!
 		if resp.StatusCode >= 200 && resp.StatusCode < 300 {
 			resp.Body.Close()
+			d.sendMu.Unlock()
 			log.Info().Msg("discord: notification sent successfully")
 			return nil
 		}
 
 		// Handle Rate Limiting (429)
 		if resp.StatusCode == http.StatusTooManyRequests {
-			retryAfterStr := resp.Header.Get("Retry-After")
-			resp.Body.Close() // Close early as we're retrying
-
-			var waitTime time.Duration
-			if retryAfterStr != "" {
-				// Discord can send Retry-After as a float (seconds).
-				if seconds, err := strconv.ParseFloat(retryAfterStr, 64); err == nil {
-					waitTime = time.Duration(seconds * float64(time.Second))
-				} else {
-					waitTime = initialBackoff * time.Duration(1<<attempt)
-				}
-			} else {
+			waitTime, err := parseDiscordRetryAfter(resp)
+			if err != nil {
+				resp.Body.Close()
+				d.sendMu.Unlock()
+				return err
+			}
+			if waitTime <= 0 {
 				waitTime = initialBackoff * time.Duration(1<<attempt)
 			}
+			resp.Body.Close()
+			d.sendMu.Unlock()
 
 			// Add jitter (±20%) to prevent synchronized retries.
 			jitter := 0.8 + 0.4*d.random.Float64()
@@ -225,6 +234,7 @@ func (d *DiscordNotificationService) send(ctx context.Context, message string) e
 		// For other errors, log and potentially retry if it's a 5xx.
 		status := resp.StatusCode
 		resp.Body.Close()
+		d.sendMu.Unlock()
 
 		if status >= 500 && attempt < maxRetries {
 			time.Sleep(initialBackoff * time.Duration(1<<attempt))
@@ -235,4 +245,41 @@ func (d *DiscordNotificationService) send(ctx context.Context, message string) e
 	}
 
 	return fmt.Errorf("discord: failed after %d attempts", maxRetries+1)
+}
+
+func parseDiscordRetryAfter(resp *http.Response) (time.Duration, error) {
+	for _, header := range []string{"Retry-After", "X-RateLimit-Reset-After"} {
+		if value := resp.Header.Get(header); value != "" {
+			if wait, ok := parseRetryAfterSeconds(value); ok {
+				return wait, nil
+			}
+		}
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return 0, fmt.Errorf("discord: failed to read rate limit body: %w", err)
+	}
+	if len(body) == 0 {
+		return 0, nil
+	}
+
+	var payload rateLimitResponse
+	if err := json.Unmarshal(body, &payload); err != nil {
+		return 0, nil
+	}
+	if payload.RetryAfter <= 0 {
+		return 0, nil
+	}
+
+	return time.Duration(payload.RetryAfter * float64(time.Second)), nil
+}
+
+func parseRetryAfterSeconds(value string) (time.Duration, bool) {
+	var seconds float64
+	if _, err := fmt.Sscanf(value, "%f", &seconds); err != nil {
+		return 0, false
+	}
+
+	return time.Duration(seconds * float64(time.Second)), true
 }

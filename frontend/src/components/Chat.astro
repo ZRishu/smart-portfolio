@@ -89,6 +89,8 @@
 </style>
 
 <script>
+  import { apiUrl } from "../lib/public-api";
+
   function initChat(): void {
     const form = document.getElementById("chat-form") as HTMLFormElement | null;
     const input = document.getElementById("chat-input") as HTMLInputElement | null;
@@ -151,7 +153,7 @@
       botContent.classList.add("streaming");
 
       try {
-        const response = await fetch("/api/chat/stream", {
+        const response = await fetch(apiUrl("/api/chat/stream"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ question }),
