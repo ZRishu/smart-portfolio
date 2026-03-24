@@ -1,4 +1,6 @@
 ---
+import ExperienceList, { type ExperienceItem } from "./solid/ExperienceList";
+
 const fallbackExperience = [
   {
     company: "SYSTEM_NODE_ALPHA",
@@ -16,7 +18,7 @@ const fallbackExperience = [
       "Worked across service development, data pipelines, and deployment automation with an emphasis on reliability and scalability.",
     stack: ["GO", "PYTHON", "KAFKA", "KUBERNETES"],
   },
-];
+ ] satisfies ExperienceItem[];
 ---
 
 <section id="experience" data-bg-layer="experience" class="min-h-[calc(100svh-4rem)] scroll-mt-16 snap-start border-b border-border bg-transparent py-8 md:py-10 flex items-center">
@@ -32,32 +34,7 @@ const fallbackExperience = [
     </div>
 
     <div class="custom-scroll-host pr-4">
-      <div id="experience-list" class="app-scrollbar grid grid-cols-1 xl:grid-cols-2 gap-px bg-border border border-border max-h-[62svh] overflow-y-auto">
-        {fallbackExperience.map((item) => (
-          <article class="bg-card p-6 md:p-8 space-y-5">
-            <div class="flex items-start justify-between gap-6">
-              <div class="space-y-2">
-                <span class="text-[9px] font-mono text-muted-foreground uppercase tracking-[0.2em]">NODE</span>
-                <h4 class="text-lg font-mono font-bold tracking-tight text-foreground">{item.company}</h4>
-              </div>
-              <span class="text-[9px] font-mono text-brand-orange uppercase tracking-[0.2em] whitespace-nowrap">{item.period}</span>
-            </div>
-
-            <div class="border-l border-border pl-4 space-y-3">
-              <p class="text-[10px] font-mono text-brand-green uppercase tracking-[0.2em]">{item.role}</p>
-              <p class="text-[11px] leading-relaxed text-muted-foreground font-mono tracking-tight">{item.summary}</p>
-            </div>
-
-            <div class="flex flex-wrap gap-2">
-              {item.stack.map((tech) => (
-                <span class="text-[9px] font-mono text-muted-foreground uppercase border border-border px-2 py-1 tracking-widest">
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </article>
-        ))}
-      </div>
+      <ExperienceList client:load items={fallbackExperience} />
       <div class="custom-scrollbar custom-scrollbar-vertical" data-scrollbar-for="experience-list" data-scrollbar-orientation="vertical">
         <div class="custom-scrollbar-track">
           <div class="custom-scrollbar-thumb"></div>
@@ -66,105 +43,3 @@ const fallbackExperience = [
     </div>
   </div>
 </section>
-
-<script>
-  import { apiUrl } from "../lib/public-api";
-
-  interface ExperienceItem {
-    company: string;
-    role: string;
-    period: string;
-    summary: string;
-    stack?: string[];
-  }
-
-  const fallbackExperience: ExperienceItem[] = [
-    {
-      company: "SYSTEM_NODE_ALPHA",
-      role: "BACKEND_ENGINEER",
-      period: "2023_PRESENT",
-      summary:
-        "Built backend services and API workflows focused on Java, distributed systems, and production-grade integrations.",
-      stack: ["JAVA", "SPRING_BOOT", "POSTGRESQL", "DOCKER"],
-    },
-    {
-      company: "SYSTEM_NODE_BETA",
-      role: "SOFTWARE_ENGINEER",
-      period: "2021_2023",
-      summary:
-        "Worked across service development, data pipelines, and deployment automation with an emphasis on reliability and scalability.",
-      stack: ["GO", "PYTHON", "KAFKA", "KUBERNETES"],
-    },
-  ];
-
-  function renderExperience(items: ExperienceItem[]): string {
-    return items
-      .map(
-        (item) => `
-          <article class="bg-card p-6 md:p-8 space-y-5">
-            <div class="flex items-start justify-between gap-6">
-              <div class="space-y-2">
-                <span class="text-[9px] font-mono text-muted-foreground uppercase tracking-[0.2em]">NODE</span>
-                <h4 class="text-lg font-mono font-bold tracking-tight text-foreground">${item.company}</h4>
-              </div>
-              <span class="text-[9px] font-mono text-brand-orange uppercase tracking-[0.2em] whitespace-nowrap">${item.period}</span>
-            </div>
-            <div class="border-l border-border pl-4 space-y-3">
-              <p class="text-[10px] font-mono text-brand-green uppercase tracking-[0.2em]">${item.role}</p>
-              <p class="text-[11px] leading-relaxed text-muted-foreground font-mono tracking-tight">${item.summary}</p>
-            </div>
-            <div class="flex flex-wrap gap-2">
-              ${(item.stack ?? [])
-                .map(
-                  (tech) =>
-                    `<span class="text-[9px] font-mono text-muted-foreground uppercase border border-border px-2 py-1 tracking-widest">${tech}</span>`,
-                )
-                .join("")}
-            </div>
-          </article>
-        `,
-      )
-      .join("");
-  }
-
-  async function loadExperience(): Promise<void> {
-    const target = document.getElementById("experience-list");
-    if (!target) return;
-
-    try {
-      const res = await fetch(apiUrl("/api/chat"), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          question:
-            'From the resume, return ONLY valid JSON as an array of work experience objects. Each object must have: company, role, period, summary, stack. Keep stack as an array of up to 4 short uppercase technologies. Keep summary to one short sentence. If exact data is missing, infer conservatively from the resume. No markdown. No explanation.',
-        }),
-      });
-
-      const envelope = await res.json();
-      const raw = envelope?.data?.answer;
-      if (!envelope.success || !raw) throw new Error("NO_DATA");
-
-      const parsed = JSON.parse(raw) as ExperienceItem[];
-      const normalized = parsed
-        .filter((item) => item.company && item.role)
-        .slice(0, 4)
-        .map((item) => ({
-          company: String(item.company).toUpperCase().replace(/\s+/g, "_"),
-          role: String(item.role).toUpperCase().replace(/\s+/g, "_"),
-          period: String(item.period || "TIMELINE_UNSPECIFIED").toUpperCase().replace(/\s+/g, "_"),
-          summary: String(item.summary || "").trim(),
-          stack: Array.isArray(item.stack)
-            ? item.stack.slice(0, 4).map((tech) => String(tech).toUpperCase().replace(/\s+/g, "_"))
-            : [],
-        }));
-
-      if (normalized.length === 0) throw new Error("EMPTY");
-      target.innerHTML = renderExperience(normalized);
-    } catch {
-      target.innerHTML = renderExperience(fallbackExperience);
-    }
-  }
-
-  loadExperience();
-</script>

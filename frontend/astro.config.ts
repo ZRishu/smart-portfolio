@@ -1,4 +1,6 @@
 import { defineConfig } from "astro/config";
+import react from "@astrojs/react";
+import solid from "@astrojs/solid-js";
 import { loadEnv } from "vite";
 import tailwindcss from "@tailwindcss/vite";
 
@@ -10,6 +12,14 @@ const apiProxyTarget =
   "http://localhost:8080";
 
 export default defineConfig({
+  integrations: [
+    react({
+      include: ["**/components/react/**/*"],
+    }),
+    solid({
+      include: ["**/components/solid/**/*"],
+    }),
+  ],
   server: {
     host: true,
     port: frontendPort,

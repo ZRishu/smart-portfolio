@@ -1,4 +1,7 @@
 ---
+import MotionLink from "./react/MotionLink";
+import SponsorButton from "./react/SponsorButton";
+
 interface Props {
   showSectionNav?: boolean;
 }
@@ -34,26 +37,23 @@ const { showSectionNav = true } = Astro.props;
     </div>
 
     <div class="flex items-center gap-4">
-      <button 
-        id="sponsor-btn"
-        class="hidden sm:flex items-center gap-2 px-4 py-1.5 border border-border font-mono text-[10px] tracking-widest hover:bg-[#ec4899] hover:text-white transition-all"
-      >
-        SPONSOR_ME
-      </button>
+      <SponsorButton client:load />
       {showSectionNav ? (
-        <a 
+        <MotionLink
+          client:load
           href="#chat"
-          class="px-4 py-1.5 bg-foreground text-background font-mono text-[10px] font-bold tracking-widest hover:bg-brand-green hover:text-white transition-all uppercase"
+          className="px-4 py-1.5 bg-foreground text-background font-mono text-[10px] font-bold tracking-widest hover:bg-brand-green hover:text-white transition-all uppercase"
         >
           EXEC_AI_CHAT
-        </a>
+        </MotionLink>
       ) : (
-        <a 
+        <MotionLink
+          client:load
           href="/"
-          class="px-4 py-1.5 bg-foreground text-background font-mono text-[10px] font-bold tracking-widest hover:bg-brand-green hover:text-white transition-all uppercase"
+          className="px-4 py-1.5 bg-foreground text-background font-mono text-[10px] font-bold tracking-widest hover:bg-brand-green hover:text-white transition-all uppercase"
         >
           RETURN_HOME
-        </a>
+        </MotionLink>
       )}
       
       <!-- Mobile Menu Toggle -->
@@ -83,8 +83,6 @@ const { showSectionNav = true } = Astro.props;
 </header>
 
 <script>
-  import { apiUrl } from "../lib/public-api";
-
   function initNav(): void {
     const toggle = document.getElementById("nav-toggle");
     const menu = document.getElementById("mobile-menu");
@@ -99,75 +97,5 @@ const { showSectionNav = true } = Astro.props;
     });
   }
 
-  function initSponsor(): void {
-    const sponsorBtn = document.getElementById("sponsor-btn");
-    if (!sponsorBtn) return;
-
-    async function ensureRazorpayLoaded(): Promise<void> {
-      if ((window as any).Razorpay) return;
-
-      await new Promise<void>((resolve, reject) => {
-        const existing = document.querySelector<HTMLScriptElement>('script[data-razorpay-checkout="true"]');
-        if (existing) {
-          existing.addEventListener("load", () => resolve(), { once: true });
-          existing.addEventListener("error", () => reject(new Error("RAZORPAY_SCRIPT_LOAD_FAILED")), { once: true });
-          return;
-        }
-
-        const script = document.createElement("script");
-        script.src = "https://checkout.razorpay.com/v1/checkout.js";
-        script.async = true;
-        script.dataset.razorpayCheckout = "true";
-        script.addEventListener("load", () => resolve(), { once: true });
-        script.addEventListener("error", () => reject(new Error("RAZORPAY_SCRIPT_LOAD_FAILED")), { once: true });
-        document.head.appendChild(script);
-      });
-    }
-
-    sponsorBtn.addEventListener("click", async () => {
-      const originalText = sponsorBtn.innerText;
-      sponsorBtn.innerText = "INITIALIZING...";
-      
-      try {
-        await ensureRazorpayLoaded();
-
-        const res = await fetch(apiUrl("/api/payments/create-order"), {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ amount: 500, currency: "INR" })
-        });
-        
-        if (!res.ok) throw new Error("API_ERROR");
-        const envelope = await res.json();
-        const data = envelope?.data;
-        if (!envelope?.success || !data?.id || !data?.key_id) {
-          throw new Error("RAZORPAY_CONFIG_MISSING");
-        }
-        
-        const options = {
-          key: data.key_id,
-          amount: data.amount,
-          currency: data.currency,
-          name: "ZR_SPONSOR_HUB",
-          description: "SYSTEM_CONTRIBUTION_V1",
-          order_id: data.id,
-          handler: function (_response: any) {
-            alert("CONTRIBUTION_RECEIVED_SUCCESSFULLY. THANK_YOU.");
-          },
-          theme: { color: "#ec4899" }
-        };
-        
-        const rzp = new (window as any).Razorpay(options);
-        rzp.open();
-      } catch (err) {
-        console.error(err);
-        alert("GATEWAY_FAILED_RETRY_LATER");
-      } finally {
-        sponsorBtn.innerText = originalText;
-      }
-    });
-  }
-
   initNav();
-  initSponsor();
 </script>
