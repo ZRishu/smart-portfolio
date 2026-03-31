@@ -166,6 +166,8 @@ func main() {
 			Amount      float64 `json:"amount"`
 			Currency    string  `json:"currency"`
 			Email       string  `json:"email"`
+			Status      string  `json:"status"`
+			PaymentID   string  `json:"paymentId"`
 		}
 
 		if err := json.Unmarshal([]byte(event.Payload), &payload); err != nil {
@@ -173,7 +175,15 @@ func main() {
 			return err
 		}
 
-		discordService.SendSponsorNotification(ctx, payload.SponsorName, payload.Email, payload.Currency, payload.Amount)
+		discordService.SendSponsorNotification(
+			ctx,
+			payload.SponsorName,
+			payload.Email,
+			payload.Currency,
+			payload.Amount,
+			payload.PaymentID,
+			payload.Status,
+		)
 		return nil
 	})
 

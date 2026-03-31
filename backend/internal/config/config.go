@@ -50,7 +50,9 @@ type EmbeddingConfig struct {
 }
 
 type DiscordConfig struct {
-	WebhookURL string
+	WebhookURL        string
+	ContactWebhookURL string
+	PaymentWebhookURL string
 }
 
 type RazorpayConfig struct {
@@ -117,6 +119,8 @@ func Load() (*Config, error) {
 
 	// ── Discord ──────────────────────────────────────────────────────────
 	cfg.Discord.WebhookURL = envOrDefault("DISCORD_WEBHOOK_URL", "")
+	cfg.Discord.ContactWebhookURL = envOrDefault("DISCORD_CONTACT_WEBHOOK_URL", cfg.Discord.WebhookURL)
+	cfg.Discord.PaymentWebhookURL = envOrDefault("DISCORD_PAYMENT_WEBHOOK_URL", cfg.Discord.WebhookURL)
 
 	// ── Razorpay ─────────────────────────────────────────────────────────
 	cfg.Razorpay.KeyID = envOrDefault("RAZORPAY_KEY_ID", "")
