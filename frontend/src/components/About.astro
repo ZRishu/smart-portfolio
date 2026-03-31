@@ -13,14 +13,16 @@ const techStack = [
           <!-- Profile Picture with Mode Toggle -->
           <div 
             id="profile-trigger"
-            class="w-40 h-40 md:w-48 md:h-48 border border-border bg-muted mb-6 md:mb-8 flex items-center justify-center grayscale relative cursor-pointer group overflow-hidden"
+            class="w-40 h-40 md:w-48 md:h-48 border border-border bg-muted mb-6 md:mb-8 flex items-center justify-center relative cursor-pointer group overflow-hidden"
           >
             <img
+              id="profile-image-default"
               src="/image.webp"
               alt="Profile image"
               class="absolute inset-0 h-full w-full object-cover transition-all duration-500 ease-out group-hover:scale-105 group-hover:opacity-0"
             />
             <img
+              id="profile-image-hover"
               src="/jesus.webp"
               alt="Hover image"
               class="absolute inset-0 h-full w-full object-cover opacity-0 transition-all duration-500 ease-out group-hover:opacity-100 group-hover:scale-110 group-hover:-rotate-6 group-hover:translate-x-1 group-hover:-translate-y-1"
@@ -30,12 +32,12 @@ const techStack = [
               <button
                 id="toggle-text"
                 type="button"
-                class="pointer-events-auto absolute right-2 top-3 max-w-[8rem] -translate-y-1 rounded-full border border-black/20 bg-brand-green px-3 py-2 text-[10px] font-mono font-bold tracking-tighter uppercase leading-tight text-black shadow-[0_10px_30px_rgba(0,163,84,0.25)] transition-all duration-300 ease-out group-hover:-translate-y-2 group-hover:rotate-3 animate-[thoughtFloat_2.2s_ease-in-out_infinite]"
+                class="pointer-events-auto absolute right-2 top-3 max-w-[8rem] -translate-y-1 rounded-[999px] border border-black/10 bg-white px-3 py-2 text-[10px] font-mono font-bold tracking-tighter uppercase leading-tight text-black shadow-[0_10px_30px_rgba(255,255,255,0.28)] transition-all duration-300 ease-out group-hover:-translate-y-2 group-hover:rotate-3 animate-[thoughtFloat_2.2s_ease-in-out_infinite]"
               >
                 LET_THERE_BE_LIGHT
               </button>
-              <span class="absolute right-8 top-[3.9rem] h-3 w-3 rounded-full bg-brand-green transition-all duration-300 group-hover:right-9 group-hover:top-[4.1rem]"></span>
-              <span class="absolute right-5 top-[4.9rem] h-2 w-2 rounded-full bg-brand-green/80 transition-all duration-300 group-hover:right-6 group-hover:top-[5.05rem]"></span>
+              <span class="absolute right-8 top-[3.9rem] h-3 w-3 rounded-full border border-black/10 bg-white transition-all duration-300 group-hover:right-9 group-hover:top-[4.1rem]"></span>
+              <span class="absolute right-5 top-[4.9rem] h-2 w-2 rounded-full border border-black/10 bg-white/95 transition-all duration-300 group-hover:right-6 group-hover:top-[5.05rem]"></span>
             </div>
           </div>
 
@@ -99,6 +101,47 @@ const techStack = [
       transform: translateY(-0.6rem) rotate(4deg);
     }
   }
+
+  #profile-trigger {
+    filter: grayscale(1);
+    transition: filter 220ms ease;
+  }
+
+  #profile-trigger:hover {
+    filter: grayscale(1);
+  }
+
+  #profile-trigger.is-light-mode {
+    filter: grayscale(1);
+    cursor: default;
+  }
+
+  #profile-trigger.is-light-mode:hover {
+    filter: grayscale(0);
+  }
+
+  #profile-trigger.is-light-mode #profile-image-default {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  #profile-trigger.is-light-mode #profile-image-hover {
+    opacity: 0 !important;
+    transform: none !important;
+  }
+
+  #profile-trigger.is-light-mode #hover-overlay {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  .dark #profile-trigger:hover #profile-image-default {
+    opacity: 0 !important;
+  }
+
+  .dark #profile-trigger:hover #profile-image-hover {
+    opacity: 1 !important;
+  }
 </style>
 
 <script>
@@ -156,6 +199,17 @@ const techStack = [
 
     if (!trigger || !hoverOverlay || !toggleText) return;
 
+    const syncLightModeState = (isLight: boolean): void => {
+      trigger.classList.toggle("is-light-mode", isLight);
+      hoverOverlay.classList.toggle("group-hover:opacity-100", !isLight);
+      trigger.style.cursor = "default";
+      if (isLight) {
+        toggleText.setAttribute("disabled", "true");
+      } else {
+        toggleText.removeAttribute("disabled");
+      }
+    };
+
     const switchToLight = (e: Event): void => {
       if (!html.classList.contains("dark")) return;
       if (typeof (window as any).toggleTheme === 'function') {
@@ -165,26 +219,17 @@ const techStack = [
 
     // Listen for global theme changes to update UI
     document.addEventListener("theme-changed", (e: any) => {
-      if (e.detail.theme === 'light') {
-        hoverOverlay.classList.remove("group-hover:opacity-100");
-        trigger.style.cursor = "default";
-        toggleText.setAttribute("disabled", "true");
-      } else {
-        hoverOverlay.classList.add("group-hover:opacity-100");
-        trigger.style.cursor = "pointer";
-        toggleText.removeAttribute("disabled");
-      }
+      syncLightModeState(e.detail.theme === 'light');
     });
 
     // Check if already in light mode on load
     if (!html.classList.contains("dark")) {
-      hoverOverlay.classList.remove("group-hover:opacity-100");
-      trigger.style.cursor = "default";
-      toggleText.setAttribute("disabled", "true");
+      syncLightModeState(true);
       return;
     }
 
-    trigger.addEventListener("click", switchToLight);
+    syncLightModeState(false);
+
     toggleText.addEventListener("click", (e) => {
       e.stopPropagation();
       switchToLight(e);
