@@ -436,17 +436,20 @@ const {
 
       function initCustomScrollbars(): void {
         const pageScrollbar = document.getElementById('page-scrollbar');
-        if (pageScrollbar) {
+        if (pageScrollbar && pageScrollbar.dataset.scrollbarAttached !== 'true') {
+          pageScrollbar.dataset.scrollbarAttached = 'true';
           attachScrollbar(window, pageScrollbar, 'vertical');
         }
 
         const scrollbars = Array.from(document.querySelectorAll<HTMLElement>('[data-scrollbar-for]'));
         scrollbars.forEach((root) => {
+          if (root.dataset.scrollbarAttached === 'true') return;
           const targetId = root.dataset.scrollbarFor;
           if (!targetId) return;
           const target = document.getElementById(targetId);
           if (!target) return;
           const orientation = root.dataset.scrollbarOrientation === 'horizontal' ? 'horizontal' : 'vertical';
+          root.dataset.scrollbarAttached = 'true';
           attachScrollbar(target, root, orientation);
         });
       }
@@ -454,6 +457,7 @@ const {
       initCursor();
       initSectionBackground();
       initCustomScrollbars();
+      (window as any).refreshCustomScrollbars = initCustomScrollbars;
 
       // Global Theme Toggle with Native View Transitions
       (window as any).toggleTheme = function(e: MouseEvent, nextTheme: string) {

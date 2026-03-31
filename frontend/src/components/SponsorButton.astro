@@ -6,14 +6,281 @@
   SPONSOR_ME
 </button>
 
+<div id="sponsor-dialog-shell" class="sponsor-dialog-shell fixed inset-0 z-[9000] hidden items-center justify-center overflow-hidden bg-black/75 p-4 text-left text-foreground backdrop-blur-sm">
+  <div id="sponsor-dialog" class="sponsor-dialog flex h-[min(42rem,calc(100svh-2rem))] w-[min(62rem,calc(100vw-2rem))] max-w-none flex-col overflow-hidden border border-border bg-background shadow-[0_30px_90px_rgba(0,0,0,0.32)]">
+    <div class="flex items-center justify-between border-b border-border bg-muted px-5 py-3">
+      <div class="flex items-center gap-3">
+        <div class="flex gap-1.5">
+          <div class="h-2.5 w-2.5 bg-brand-red"></div>
+          <div class="h-2.5 w-2.5 bg-brand-orange"></div>
+          <div class="h-2.5 w-2.5 bg-brand-green"></div>
+        </div>
+        <span id="sponsor-dialog-title" class="text-[10px] font-mono uppercase tracking-[0.24em] text-muted-foreground">SPONSOR_PROTOCOL</span>
+      </div>
+    </div>
+
+    <div class="custom-scroll-host min-h-0 flex-1">
+      <div id="sponsor-dialog-content" class="app-scrollbar h-full min-h-0 overflow-y-auto p-5 pr-8 md:p-7 md:pr-10">
+        <div id="sponsor-status" class="min-h-[1.5rem] text-[10px] font-mono uppercase tracking-widest text-muted-foreground"></div>
+
+      <section data-panel="entry" class="space-y-6">
+        <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
+          <div class="space-y-4 border border-border bg-card p-5">
+            <div class="space-y-2">
+              <p class="text-[10px] font-mono uppercase tracking-[0.24em] text-muted-foreground">// RECIPIENT_NODE</p>
+              <h3 class="text-xl font-mono font-bold tracking-tight">ZR_SYSTEMS</h3>
+            </div>
+            <div class="space-y-3 text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
+              <div class="border-b border-border pb-2">ROLE // BACKEND_DEVELOPER</div>
+              <div class="border-b border-border pb-2">LOCATION // REMOTE_INDIA</div>
+              <div class="border-b border-border pb-2">CHANNEL // RAZORPAY_SECURE_CHECKOUT</div>
+              <div>DEFAULT_CONTRIBUTION // <span class="text-brand-green">₹500</span></div>
+            </div>
+            <p class="text-[11px] leading-relaxed text-muted-foreground">
+              Support backend systems, AI integrations, and continued improvements to the portfolio stack.
+            </p>
+          </div>
+
+          <form id="sponsor-form" class="space-y-5 border border-border bg-card p-5">
+            <div class="space-y-2">
+              <label for="sponsor-name" class="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">SPONSOR_NAME</label>
+              <input id="sponsor-name" name="sponsor_name" type="text" placeholder="ANONYMOUS_SPONSOR" class="w-full border-b border-border bg-transparent px-0 py-2 text-sm font-mono text-foreground placeholder:text-muted-foreground" />
+            </div>
+
+            <div class="space-y-2">
+              <label for="sponsor-email" class="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">SPONSOR_EMAIL</label>
+              <input id="sponsor-email" name="sponsor_email" type="email" placeholder="OPTIONAL_FOR_RECEIPT" class="w-full border-b border-border bg-transparent px-0 py-2 text-sm font-mono text-foreground placeholder:text-muted-foreground" />
+            </div>
+
+            <div class="space-y-2">
+              <label for="sponsor-amount" class="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">CONTRIBUTION_AMOUNT_INR</label>
+              <div class="grid grid-cols-[3rem_minmax(0,1fr)_3rem] border border-border bg-background">
+                <button id="sponsor-decrement" type="button" class="border-r border-border bg-card px-0 py-3 text-lg font-mono text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+                  -
+                </button>
+                <input id="sponsor-amount" name="amount" type="number" inputmode="decimal" min="0" step="1" value="500" class="w-full border-0 bg-transparent px-4 py-3 text-center text-2xl font-mono font-bold text-foreground placeholder:text-muted-foreground" />
+                <button id="sponsor-increment" type="button" class="border-l border-border bg-card px-0 py-3 text-lg font-mono text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+                  +
+                </button>
+              </div>
+              <p class="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">SET ANY AMOUNT ABOVE ₹0</p>
+            </div>
+
+            <div class="border border-border bg-background p-4">
+              <div class="mb-3 flex items-center justify-between gap-4 border-b border-border pb-2">
+                <span class="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">PAYMENT_SUMMARY</span>
+                <span id="sponsor-amount-preview" class="text-sm font-mono font-bold text-brand-green">₹500.00</span>
+              </div>
+              <div class="space-y-2 text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                <div class="flex items-center justify-between gap-4">
+                  <span>MODE</span>
+                  <span class="text-foreground">ONE_TIME_SUPPORT</span>
+                </div>
+                <div class="flex items-center justify-between gap-4">
+                  <span>CURRENCY</span>
+                  <span class="text-foreground">INR</span>
+                </div>
+                <div class="flex items-center justify-between gap-4">
+                  <span>CHECKOUT</span>
+                  <span class="text-foreground">RAZORPAY_MODAL</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap gap-3">
+              <button id="sponsor-pay" type="submit" class="border border-border bg-foreground px-5 py-2 text-[10px] font-mono font-bold uppercase tracking-[0.24em] text-background transition-all enabled:hover:bg-brand-green enabled:hover:text-white disabled:cursor-not-allowed disabled:opacity-50">
+                PAY_NOW
+              </button>
+              <button id="sponsor-cancel-entry" type="button" class="border border-border px-5 py-2 text-[10px] font-mono uppercase tracking-[0.24em] text-muted-foreground transition-all hover:border-brand-red hover:bg-brand-red hover:text-white">
+                CANCEL
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section data-panel="processing" class="hidden space-y-5 border border-border bg-card p-6">
+        <p class="text-[10px] font-mono uppercase tracking-[0.24em] text-muted-foreground">// CHECKOUT_ACTIVE</p>
+        <h3 class="text-2xl font-mono font-bold tracking-tight">SECURE_PAYMENT_WINDOW_LAUNCHED</h3>
+        <p class="max-w-xl text-sm font-mono leading-relaxed text-muted-foreground">
+          Complete the payment in the Razorpay overlay. This terminal will wait for the success or failure response and update the receipt panel automatically.
+        </p>
+      </section>
+
+      <section data-panel="success" class="hidden space-y-6">
+        <div class="border border-border bg-card p-5">
+          <div class="mb-5 flex items-start justify-between gap-4 border-b border-border pb-4">
+            <div class="space-y-2">
+              <p class="text-[10px] font-mono uppercase tracking-[0.24em] text-muted-foreground">// PAYMENT_RECEIPT</p>
+              <h3 class="text-2xl font-mono font-bold tracking-tight">CONTRIBUTION_CONFIRMED</h3>
+            </div>
+            <div class="text-right text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+              <div>STATUS</div>
+              <div class="mt-1 text-brand-green">SUCCESS</div>
+            </div>
+          </div>
+
+          <div id="receipt-card" class="space-y-5 border border-border bg-background p-5">
+            <div class="grid gap-4 md:grid-cols-2">
+              <div class="space-y-2">
+                <div class="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">RECEIPT_NO</div>
+                <div id="receipt-number" class="text-sm font-mono text-foreground">-</div>
+              </div>
+              <div class="space-y-2">
+                <div class="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">ISSUED_AT</div>
+                <div id="receipt-issued-at" class="text-sm font-mono text-foreground">-</div>
+              </div>
+            </div>
+
+            <div class="grid gap-px bg-border md:grid-cols-2">
+              <div class="space-y-2 bg-card p-4">
+                <div class="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">PAID_BY</div>
+                <div id="receipt-sponsor-name" class="text-sm font-mono text-foreground">-</div>
+                <div id="receipt-sponsor-email" class="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">-</div>
+              </div>
+              <div class="space-y-2 bg-card p-4">
+                <div class="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">PAID_TO</div>
+                <div id="receipt-recipient-name" class="text-sm font-mono text-foreground">-</div>
+                <div id="receipt-recipient-role" class="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">-</div>
+              </div>
+            </div>
+
+            <div class="grid gap-4 md:grid-cols-3">
+              <div class="border border-border p-4">
+                <div class="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">AMOUNT</div>
+                <div id="receipt-amount" class="mt-2 text-xl font-mono font-bold text-brand-green">-</div>
+              </div>
+              <div class="border border-border p-4">
+                <div class="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">ORDER_ID</div>
+                <div id="receipt-order-id" class="mt-2 break-all text-[11px] font-mono text-foreground">-</div>
+              </div>
+              <div class="border border-border p-4">
+                <div class="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">PAYMENT_ID</div>
+                <div id="receipt-payment-id" class="mt-2 break-all text-[11px] font-mono text-foreground">-</div>
+              </div>
+            </div>
+
+            <div id="receipt-message" class="border-l border-brand-green pl-4 text-sm font-mono leading-relaxed text-muted-foreground">
+              -
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+          <button id="receipt-download" type="button" class="border border-border bg-foreground px-5 py-2 text-[10px] font-mono font-bold uppercase tracking-[0.24em] text-background transition-all hover:bg-brand-green hover:text-white">
+            DOWNLOAD_RECEIPT_PDF
+          </button>
+          <button id="receipt-close" type="button" class="border border-border px-5 py-2 text-[10px] font-mono uppercase tracking-[0.24em] text-muted-foreground transition-all hover:border-brand-red hover:bg-brand-red hover:text-white">
+            CLOSE_DIALOG
+          </button>
+        </div>
+      </section>
+
+      <section data-panel="failure" class="hidden space-y-6 border border-border bg-card p-6">
+        <div class="space-y-2">
+          <p class="text-[10px] font-mono uppercase tracking-[0.24em] text-brand-red">// PAYMENT_UNSUCCESSFUL</p>
+          <h3 class="text-2xl font-mono font-bold tracking-tight">TRANSACTION_DID_NOT_COMPLETE</h3>
+        </div>
+        <p id="sponsor-failure-message" class="max-w-xl text-sm font-mono leading-relaxed text-muted-foreground">
+          Payment was unsuccessful. You can retry the same amount or close this dialog.
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <button id="sponsor-retry" type="button" class="border border-border bg-foreground px-5 py-2 text-[10px] font-mono font-bold uppercase tracking-[0.24em] text-background transition-all hover:bg-brand-green hover:text-white">
+            RETRY_PAYMENT
+          </button>
+          <button id="sponsor-failure-close" type="button" class="border border-border px-5 py-2 text-[10px] font-mono uppercase tracking-[0.24em] text-muted-foreground transition-all hover:border-brand-red hover:bg-brand-red hover:text-white">
+            NOT_IN_THE_MOOD
+          </button>
+        </div>
+      </section>
+      </div>
+      <div class="custom-scrollbar custom-scrollbar-vertical" data-scrollbar-for="sponsor-dialog-content" data-scrollbar-orientation="vertical">
+        <div class="custom-scrollbar-track">
+          <div class="custom-scrollbar-thumb"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  #sponsor-dialog-shell.is-open {
+    display: flex;
+  }
+
+  :global(body.sponsor-dialog-open) {
+    overflow: hidden;
+  }
+
+  .sponsor-dialog,
+  .sponsor-dialog * {
+    cursor: none !important;
+  }
+
+  .sponsor-dialog input[type="number"] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+  }
+
+  .sponsor-dialog input[type="number"]::-webkit-outer-spin-button,
+  .sponsor-dialog input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .sponsor-dialog-shell,
+  .sponsor-dialog-shell * {
+    overscroll-behavior: contain;
+  }
+
+  .sponsor-dialog {
+    min-height: 0;
+  }
+</style>
+
 <script>
   import { apiUrl } from "../lib/public-api";
 
+  interface RazorpaySuccessResponse {
+    razorpay_order_id: string;
+    razorpay_payment_id: string;
+    razorpay_signature: string;
+  }
+
+  interface RazorpayFailureResponse {
+    error?: {
+      description?: string;
+      reason?: string;
+      source?: string;
+      step?: string;
+    };
+  }
+
+  interface RazorpayInstance {
+    open: () => void;
+    on?: (event: string, handler: (response: RazorpayFailureResponse) => void) => void;
+  }
+
+  interface ReceiptData {
+    receipt_number: string;
+    sponsor_name: string;
+    sponsor_email?: string;
+    recipient_name: string;
+    recipient_role: string;
+    recipient_location: string;
+    amount: number;
+    currency: string;
+    status: string;
+    razorpay_order_id: string;
+    razorpay_payment_id: string;
+    issued_at: string;
+    message: string;
+  }
+
   declare global {
     interface Window {
-      Razorpay?: new (options: Record<string, unknown>) => {
-        open: () => void;
-      };
+      Razorpay?: new (options: Record<string, unknown>) => RazorpayInstance;
+      refreshCustomScrollbars?: () => void;
     }
   }
 
@@ -21,16 +288,10 @@
     if (window.Razorpay) return;
 
     await new Promise<void>((resolve, reject) => {
-      const existing = document.querySelector<HTMLScriptElement>(
-        'script[data-razorpay-checkout="true"]',
-      );
+      const existing = document.querySelector<HTMLScriptElement>('script[data-razorpay-checkout="true"]');
       if (existing) {
         existing.addEventListener("load", () => resolve(), { once: true });
-        existing.addEventListener(
-          "error",
-          () => reject(new Error("RAZORPAY_SCRIPT_LOAD_FAILED")),
-          { once: true },
-        );
+        existing.addEventListener("error", () => reject(new Error("RAZORPAY_SCRIPT_LOAD_FAILED")), { once: true });
         return;
       }
 
@@ -39,25 +300,300 @@
       script.async = true;
       script.dataset.razorpayCheckout = "true";
       script.addEventListener("load", () => resolve(), { once: true });
-      script.addEventListener(
-        "error",
-        () => reject(new Error("RAZORPAY_SCRIPT_LOAD_FAILED")),
-        { once: true },
-      );
+      script.addEventListener("error", () => reject(new Error("RAZORPAY_SCRIPT_LOAD_FAILED")), { once: true });
       document.head.appendChild(script);
     });
   }
 
   function initSponsorButton(): void {
     const button = document.getElementById("sponsor-button") as HTMLButtonElement | null;
-    if (!button || button.dataset.initialized === "true") return;
+    const dialogShell = document.getElementById("sponsor-dialog-shell") as HTMLDivElement | null;
+    const dialog = document.getElementById("sponsor-dialog") as HTMLDivElement | null;
+    const form = document.getElementById("sponsor-form") as HTMLFormElement | null;
+    const amountInput = document.getElementById("sponsor-amount") as HTMLInputElement | null;
+    const nameInput = document.getElementById("sponsor-name") as HTMLInputElement | null;
+    const emailInput = document.getElementById("sponsor-email") as HTMLInputElement | null;
+    const payButton = document.getElementById("sponsor-pay") as HTMLButtonElement | null;
+    const decrementButton = document.getElementById("sponsor-decrement") as HTMLButtonElement | null;
+    const incrementButton = document.getElementById("sponsor-increment") as HTMLButtonElement | null;
+    const amountPreview = document.getElementById("sponsor-amount-preview");
+    const statusEl = document.getElementById("sponsor-status");
+    const dialogTitle = document.getElementById("sponsor-dialog-title");
+    const failureMessage = document.getElementById("sponsor-failure-message");
+    const downloadButton = document.getElementById("receipt-download") as HTMLButtonElement | null;
+    const entryCancel = document.getElementById("sponsor-cancel-entry");
+    const successClose = document.getElementById("receipt-close");
+    const failureClose = document.getElementById("sponsor-failure-close");
+    const retryButton = document.getElementById("sponsor-retry");
+    const body = document.body;
 
+    if (
+      !button ||
+      !dialogShell ||
+      !dialog ||
+      !form ||
+      !amountInput ||
+      !nameInput ||
+      !emailInput ||
+      !payButton ||
+      !decrementButton ||
+      !incrementButton ||
+      !amountPreview ||
+      !statusEl ||
+      !dialogTitle ||
+      !failureMessage ||
+      !downloadButton
+    ) {
+      return;
+    }
+    if (button.dataset.initialized === "true") return;
     button.dataset.initialized = "true";
+    if (dialogShell.parentElement !== document.body) {
+      document.body.appendChild(dialogShell);
+    }
+    window.refreshCustomScrollbars?.();
 
-    button.addEventListener("click", async () => {
-      const originalText = button.innerText;
-      button.disabled = true;
-      button.innerText = "INITIALIZING...";
+    const panels = Array.from(dialog.querySelectorAll<HTMLElement>("[data-panel]"));
+    let activePanel: "entry" | "processing" | "success" | "failure" = "entry";
+    let receiptData: ReceiptData | null = null;
+    let isBusy = false;
+
+    const formatMoney = (amount: number, currency = "INR"): string =>
+      new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency,
+        maximumFractionDigits: 2,
+      }).format(amount);
+
+    const formatTimestamp = (isoDate: string): string =>
+      new Intl.DateTimeFormat("en-IN", {
+        dateStyle: "medium",
+        timeStyle: "short",
+      }).format(new Date(isoDate));
+
+    const getAmount = (): number => {
+      const parsed = Number(amountInput.value);
+      return Number.isFinite(parsed) ? parsed : 0;
+    };
+
+    const setStatus = (message: string, tone: "muted" | "orange" | "green" | "red" = "muted"): void => {
+      statusEl.textContent = message;
+      const colorClass =
+        tone === "green"
+          ? "text-brand-green"
+          : tone === "orange"
+            ? "text-brand-orange"
+            : tone === "red"
+              ? "text-brand-red"
+              : "text-muted-foreground";
+      statusEl.className = `min-h-[1.5rem] text-[10px] font-mono uppercase tracking-widest ${colorClass}`;
+    };
+
+    const setPanel = (panelName: typeof activePanel): void => {
+      activePanel = panelName;
+      panels.forEach((panel) => {
+        panel.classList.toggle("hidden", panel.dataset.panel !== panelName);
+      });
+
+      dialogTitle.textContent =
+        panelName === "success"
+          ? "SPONSOR_RECEIPT"
+          : panelName === "failure"
+            ? "PAYMENT_REVIEW"
+            : panelName === "processing"
+              ? "CHECKOUT_IN_PROGRESS"
+              : "SPONSOR_PROTOCOL";
+    };
+
+    const syncAmountPreview = (): void => {
+      const amount = getAmount();
+      amountPreview.textContent = formatMoney(Math.max(amount, 0), "INR");
+      payButton.disabled = isBusy || amount <= 0;
+      payButton.classList.toggle("opacity-50", payButton.disabled);
+    };
+
+    const stepAmount = (delta: number): void => {
+      const nextAmount = Math.max(0, getAmount() + delta);
+      amountInput.value = String(nextAmount);
+      if (activePanel === "entry") {
+        setStatus("READY_TO_INITIALIZE_PAYMENT", "muted");
+      }
+      syncAmountPreview();
+    };
+
+    const openDialog = (): void => {
+      dialogShell.classList.add("is-open");
+      dialogShell.classList.remove("hidden");
+      body.classList.add("sponsor-dialog-open");
+      const content = document.getElementById("sponsor-dialog-content");
+      if (content) content.scrollTop = 0;
+      window.refreshCustomScrollbars?.();
+      setPanel("entry");
+      setStatus("READY_TO_INITIALIZE_PAYMENT", "muted");
+      syncAmountPreview();
+    };
+
+    const closeDialog = (): void => {
+      dialogShell.classList.remove("is-open");
+      dialogShell.classList.add("hidden");
+      body.classList.remove("sponsor-dialog-open");
+      setPanel("entry");
+      setStatus("", "muted");
+      isBusy = false;
+      receiptData = null;
+      syncAmountPreview();
+    };
+
+    const updateReceiptView = (receipt: ReceiptData): void => {
+      const text = (id: string, value: string): void => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+      };
+
+      text("receipt-number", receipt.receipt_number);
+      text("receipt-issued-at", formatTimestamp(receipt.issued_at));
+      text("receipt-sponsor-name", receipt.sponsor_name);
+      text("receipt-sponsor-email", receipt.sponsor_email || "EMAIL_NOT_PROVIDED");
+      text("receipt-recipient-name", receipt.recipient_name);
+      text("receipt-recipient-role", `${receipt.recipient_role} // ${receipt.recipient_location}`);
+      text("receipt-amount", formatMoney(receipt.amount, receipt.currency));
+      text("receipt-order-id", receipt.razorpay_order_id);
+      text("receipt-payment-id", receipt.razorpay_payment_id);
+      text("receipt-message", receipt.message);
+    };
+
+    const escapePdf = (value: string): string =>
+      value
+        .replace(/\\/g, "\\\\")
+        .replace(/\(/g, "\\(")
+        .replace(/\)/g, "\\)")
+        .replace(/\r?\n/g, " ");
+
+    const buildReceiptPdf = (receipt: ReceiptData): Blob => {
+      const lines: Array<[string, number, number, "F1" | "F2", number]> = [
+        ["ZR_SYSTEMS // PAYMENT_RECEIPT", 36, 752, "F2", 18],
+        ["Contribution confirmed for the smart portfolio platform.", 36, 730, "F1", 10],
+        [`Receipt: ${receipt.receipt_number}`, 36, 688, "F2", 12],
+        [`Issued: ${formatTimestamp(receipt.issued_at)}`, 320, 688, "F1", 11],
+        [`Paid by: ${receipt.sponsor_name}`, 36, 640, "F2", 12],
+        [`Email: ${receipt.sponsor_email || "Not provided"}`, 36, 620, "F1", 11],
+        [`Paid to: ${receipt.recipient_name}`, 320, 640, "F2", 12],
+        [`Role: ${receipt.recipient_role} / ${receipt.recipient_location}`, 320, 620, "F1", 11],
+        [`Amount: ${formatMoney(receipt.amount, receipt.currency)}`, 36, 566, "F2", 16],
+        [`Status: ${receipt.status}`, 320, 566, "F2", 14],
+        [`Order ID: ${receipt.razorpay_order_id}`, 36, 520, "F1", 10],
+        [`Payment ID: ${receipt.razorpay_payment_id}`, 36, 500, "F1", 10],
+        [receipt.message, 36, 450, "F1", 11],
+        ["Built with the same terminal visual language as the portfolio.", 36, 92, "F1", 10],
+      ];
+
+      const streamParts = [
+        "0 0 0 rg 0 690 612 102 re f",
+        "1 1 1 rg 0 0 612 792 re f",
+        "0 0 0 rg 0 690 612 102 re f",
+        "1 0.549 0 rg 36 675 540 3 re f",
+        "0 0.639 0.329 rg 36 664 220 2 re f",
+        "0.09 0.09 0.11 rg 36 600 250 64 re f",
+        "0.09 0.09 0.11 rg 306 600 270 64 re f",
+        "0.09 0.09 0.11 rg 36 540 250 42 re f",
+        "0.09 0.09 0.11 rg 306 540 270 42 re f",
+        "0 0 0 RG 36 36 540 720 re S",
+      ];
+
+      for (const [text, x, y, font, size] of lines) {
+        streamParts.push(`BT /${font} ${size} Tf 1 0 0 1 ${x} ${y} Tm (${escapePdf(text)}) Tj ET`);
+      }
+
+      const stream = streamParts.join("\n");
+      const objects = [
+        "<< /Type /Catalog /Pages 2 0 R >>",
+        "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+        "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>",
+        `<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`,
+        "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
+        "<< /Type /Font /Subtype /Type1 /BaseFont /Courier-Bold >>",
+      ];
+
+      let pdf = "%PDF-1.4\n";
+      const xref: number[] = [0];
+
+      objects.forEach((object, index) => {
+        xref.push(pdf.length);
+        pdf += `${index + 1} 0 obj\n${object}\nendobj\n`;
+      });
+
+      const xrefStart = pdf.length;
+      pdf += `xref\n0 ${objects.length + 1}\n`;
+      pdf += "0000000000 65535 f \n";
+      for (let i = 1; i < xref.length; i += 1) {
+        pdf += `${String(xref[i]).padStart(10, "0")} 00000 n \n`;
+      }
+      pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xrefStart}\n%%EOF`;
+
+      return new Blob([pdf], { type: "application/pdf" });
+    };
+
+    const downloadReceipt = (): void => {
+      if (!receiptData) return;
+      const url = URL.createObjectURL(buildReceiptPdf(receiptData));
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = `${receiptData.receipt_number}.pdf`;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    };
+
+    const showFailure = (message: string): void => {
+      isBusy = false;
+      syncAmountPreview();
+      failureMessage.textContent = message;
+      setPanel("failure");
+      setStatus("PAYMENT_UNSUCCESSFUL", "red");
+    };
+
+    const verifyPayment = async (payload: RazorpaySuccessResponse): Promise<void> => {
+      const amount = getAmount();
+      const response = await fetch(apiUrl("/api/payments/verify-payment"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          razorpay_order_id: payload.razorpay_order_id,
+          razorpay_payment_id: payload.razorpay_payment_id,
+          razorpay_signature: payload.razorpay_signature,
+          sponsor_name: nameInput.value.trim(),
+          sponsor_email: emailInput.value.trim(),
+          amount,
+          currency: "INR",
+        }),
+      });
+
+      const envelope = await response.json();
+      if (!response.ok || !envelope?.success || !envelope.data) {
+        throw new Error(envelope?.error?.message || "PAYMENT_VERIFICATION_FAILED");
+      }
+
+      receiptData = envelope.data as ReceiptData;
+      updateReceiptView(receiptData);
+      isBusy = false;
+      syncAmountPreview();
+      setPanel("success");
+      setStatus("PAYMENT_SUCCESSFUL // RECEIPT_READY", "green");
+    };
+
+    const launchPayment = async (): Promise<void> => {
+      const amount = getAmount();
+      if (amount <= 0) {
+        setStatus("ENTER_AMOUNT_ABOVE_ZERO_TO_CONTINUE", "orange");
+        syncAmountPreview();
+        return;
+      }
+
+      isBusy = true;
+      syncAmountPreview();
+      setPanel("processing");
+      setStatus("INITIALIZING_RAZORPAY_ORDER", "orange");
 
       try {
         await ensureRazorpayLoaded();
@@ -65,41 +601,99 @@
         const response = await fetch(apiUrl("/api/payments/create-order"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ amount: 500, currency: "INR" }),
+          body: JSON.stringify({
+            amount,
+            currency: "INR",
+            sponsor_name: nameInput.value.trim(),
+            sponsor_email: emailInput.value.trim(),
+          }),
         });
-
-        if (!response.ok) {
-          throw new Error("API_ERROR");
-        }
 
         const envelope = await response.json();
         const data = envelope?.data;
-        if (!envelope?.success || !data?.id || !data?.key_id) {
-          throw new Error("RAZORPAY_CONFIG_MISSING");
+        if (!response.ok || !envelope?.success || !data?.id || !data?.key_id) {
+          throw new Error(envelope?.error?.message || "RAZORPAY_ORDER_CREATION_FAILED");
         }
 
+        let checkoutSettled = false;
         const razorpay = new window.Razorpay!({
           key: data.key_id,
           amount: data.amount,
           currency: data.currency,
-          name: "ZR_SPONSOR_HUB",
+          name: "ZR_SYSTEMS",
           description: "SYSTEM_CONTRIBUTION_V1",
           order_id: data.id,
-          handler() {
-            alert("CONTRIBUTION_RECEIVED_SUCCESSFULLY. THANK_YOU.");
+          notes: data.notes,
+          prefill: {
+            name: nameInput.value.trim(),
+            email: emailInput.value.trim(),
           },
-          theme: { color: "#ec4899" },
+          modal: {
+            ondismiss: () => {
+              if (!checkoutSettled) {
+                showFailure("PAYMENT_WINDOW_CLOSED_BEFORE_COMPLETION. RETRY IF YOU STILL WANT TO SUPPORT.");
+              }
+            },
+          },
+          handler: (payload: RazorpaySuccessResponse) => {
+            checkoutSettled = true;
+            setStatus("VERIFYING_PAYMENT_AND_GENERATING_RECEIPT", "orange");
+            void verifyPayment(payload).catch((error) => {
+              console.error(error);
+              showFailure("PAYMENT_REACHED_CHECKOUT_SUCCESS_BUT RECEIPT_VERIFICATION_FAILED. RETRY OR CONTACT_DIRECTLY.");
+            });
+          },
+          theme: { color: "#00a354" },
         });
 
+        razorpay.on?.("payment.failed", (failure: RazorpayFailureResponse) => {
+          checkoutSettled = true;
+          const reason = failure.error?.description || failure.error?.reason || "PAYMENT_UNSUCCESSFUL";
+          showFailure(reason);
+        });
+
+        setStatus("RAZORPAY_DIALOG_OPENED_ON_CURRENT_PAGE", "orange");
         razorpay.open();
       } catch (error) {
         console.error(error);
-        alert("GATEWAY_FAILED_RETRY_LATER");
-      } finally {
-        button.disabled = false;
-        button.innerText = originalText;
+        showFailure("UNABLE_TO_INITIALIZE_PAYMENT_FLOW. CHECK CREDENTIALS OR TRY AGAIN LATER.");
+      }
+    };
+
+    button.addEventListener("click", openDialog);
+    amountInput.addEventListener("input", () => {
+      if (activePanel === "entry") {
+        setStatus("READY_TO_INITIALIZE_PAYMENT", "muted");
+      }
+      syncAmountPreview();
+    });
+    decrementButton.addEventListener("click", () => stepAmount(-100));
+    incrementButton.addEventListener("click", () => stepAmount(100));
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      void launchPayment();
+    });
+
+    entryCancel?.addEventListener("click", closeDialog);
+    successClose?.addEventListener("click", closeDialog);
+    failureClose?.addEventListener("click", closeDialog);
+    dialogShell.addEventListener("click", (event) => {
+      if (event.target === dialogShell && !isBusy) {
+        closeDialog();
       }
     });
+    retryButton?.addEventListener("click", () => {
+      void launchPayment();
+    });
+    downloadButton.addEventListener("click", downloadReceipt);
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && dialogShell.classList.contains("is-open") && !isBusy) {
+        closeDialog();
+      }
+    });
+
+    syncAmountPreview();
   }
 
   initSponsorButton();
