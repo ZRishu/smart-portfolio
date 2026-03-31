@@ -84,6 +84,10 @@ const {
         z-index: 9999;
         transition: transform 0.16s ease-out, opacity 0.3s ease, border-color 0.3s ease;
       }
+
+      #custom-cursor-follower.is-direct-tracking {
+        transition: opacity 0.3s ease, border-color 0.3s ease;
+      }
     </style>
     <script is:inline>
       const theme = (() => {
@@ -151,22 +155,59 @@ const {
 
         let posX = 0, posY = 0;
         let mouseX = 0, mouseY = 0;
+        let isPointerDown = false;
+
+        const updatePrimaryCursor = (x: number, y: number) => {
+          cursor.style.transform = `translate3d(${x - (cursor.offsetWidth / 2)}px, ${y - (cursor.offsetHeight / 2)}px, 0)`;
+        };
+
+        const updateFollowerCursor = (x: number, y: number) => {
+          follower.style.transform = `translate3d(${x - (follower.offsetWidth / 2)}px, ${y - (follower.offsetHeight / 2)}px, 0)`;
+        };
 
         const updateCursorPosition = (e: MouseEvent | PointerEvent) => {
           mouseX = e.clientX;
           mouseY = e.clientY;
-          cursor.style.transform = `translate3d(${mouseX - (cursor.offsetWidth / 2)}px, ${mouseY - (cursor.offsetHeight / 2)}px, 0)`;
+          updatePrimaryCursor(mouseX, mouseY);
+
+          if (isPointerDown) {
+            posX = mouseX;
+            posY = mouseY;
+            updateFollowerCursor(posX, posY);
+          }
+        };
+
+        const setDirectTracking = (active: boolean) => {
+          isPointerDown = active;
+          follower.classList.toggle('is-direct-tracking', active);
+
+          if (active) {
+            posX = mouseX;
+            posY = mouseY;
+            updateFollowerCursor(posX, posY);
+          }
         };
 
         window.addEventListener('mousemove', updateCursorPosition);
         window.addEventListener('pointermove', updateCursorPosition);
+        window.addEventListener('pointerdown', (e) => {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+          updatePrimaryCursor(mouseX, mouseY);
+          setDirectTracking(true);
+        });
+        window.addEventListener('pointerup', () => setDirectTracking(false));
+        window.addEventListener('pointercancel', () => setDirectTracking(false));
+        window.addEventListener('blur', () => setDirectTracking(false));
 
         function animate() {
           if (!follower) return;
-          posX += (mouseX - posX) * 0.15;
-          posY += (mouseY - posY) * 0.15;
-          
-          follower.style.transform = `translate3d(${posX - (follower.offsetWidth / 2)}px, ${posY - (follower.offsetHeight / 2)}px, 0)`;
+          if (!isPointerDown) {
+            posX += (mouseX - posX) * 0.15;
+            posY += (mouseY - posY) * 0.15;
+            updateFollowerCursor(posX, posY);
+          }
+
           requestAnimationFrame(animate);
         }
         animate();

@@ -41,7 +41,7 @@ const fallbackAchievements = [
         </div>
 
         <div class="custom-scroll-host pb-4">
-          <ProjectsGrid client:load />
+          <ProjectsGrid client:visible />
           <div class="custom-scrollbar custom-scrollbar-horizontal" data-scrollbar-for="projects-grid" data-scrollbar-orientation="horizontal">
             <div class="custom-scrollbar-track">
               <div class="custom-scrollbar-thumb"></div>
@@ -62,7 +62,7 @@ const fallbackAchievements = [
         </div>
 
         <div class="custom-scroll-host pr-4">
-          <AchievementsGrid client:load items={fallbackAchievements} />
+          <AchievementsGrid client:visible items={fallbackAchievements} />
           <div class="custom-scrollbar custom-scrollbar-vertical" data-scrollbar-for="achievement-grid" data-scrollbar-orientation="vertical">
             <div class="custom-scrollbar-track">
               <div class="custom-scrollbar-thumb"></div>

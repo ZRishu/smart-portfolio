@@ -1,6 +1,6 @@
 ---
-import MotionLink from "./react/MotionLink";
-import SponsorButton from "./react/SponsorButton";
+import MotionLink from "./MotionLink.astro";
+import SponsorButton from "./SponsorButton.astro";
 
 interface Props {
   showSectionNav?: boolean;
@@ -37,10 +37,9 @@ const { showSectionNav = true } = Astro.props;
     </div>
 
     <div class="flex items-center gap-4">
-      <SponsorButton client:load />
+      <SponsorButton />
       {showSectionNav ? (
         <MotionLink
-          client:load
           href="#chat"
           className="px-4 py-1.5 bg-foreground text-background font-mono text-[10px] font-bold tracking-widest hover:bg-brand-green hover:text-white transition-all uppercase"
         >
@@ -48,7 +47,6 @@ const { showSectionNav = true } = Astro.props;
         </MotionLink>
       ) : (
         <MotionLink
-          client:load
           href="/"
           className="px-4 py-1.5 bg-foreground text-background font-mono text-[10px] font-bold tracking-widest hover:bg-brand-green hover:text-white transition-all uppercase"
         >

@@ -15,13 +15,27 @@ const techStack = [
             id="profile-trigger"
             class="w-40 h-40 md:w-48 md:h-48 border border-border bg-muted mb-6 md:mb-8 flex items-center justify-center grayscale relative cursor-pointer group overflow-hidden"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-500 group-hover:opacity-0 transition-opacity"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            
-            <!-- Hover Overlay -->
-            <div id="hover-overlay" class="absolute inset-0 bg-brand-green opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-4 text-center">
-              <span id="toggle-text" class="text-[10px] font-mono text-black font-bold tracking-tighter uppercase leading-tight">
+            <img
+              src="/image.webp"
+              alt="Profile image"
+              class="absolute inset-0 h-full w-full object-cover transition-all duration-500 ease-out group-hover:scale-105 group-hover:opacity-0"
+            />
+            <img
+              src="/jesus.webp"
+              alt="Hover image"
+              class="absolute inset-0 h-full w-full object-cover opacity-0 transition-all duration-500 ease-out group-hover:opacity-100 group-hover:scale-110 group-hover:-rotate-6 group-hover:translate-x-1 group-hover:-translate-y-1"
+            />
+
+            <div id="hover-overlay" class="absolute inset-0 bg-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+              <button
+                id="toggle-text"
+                type="button"
+                class="pointer-events-auto absolute right-2 top-3 max-w-[8rem] -translate-y-1 rounded-full border border-black/20 bg-brand-green px-3 py-2 text-[10px] font-mono font-bold tracking-tighter uppercase leading-tight text-black shadow-[0_10px_30px_rgba(0,163,84,0.25)] transition-all duration-300 ease-out group-hover:-translate-y-2 group-hover:rotate-3 animate-[thoughtFloat_2.2s_ease-in-out_infinite]"
+              >
                 LET_THERE_BE_LIGHT
-              </span>
+              </button>
+              <span class="absolute right-8 top-[3.9rem] h-3 w-3 rounded-full bg-brand-green transition-all duration-300 group-hover:right-9 group-hover:top-[4.1rem]"></span>
+              <span class="absolute right-5 top-[4.9rem] h-2 w-2 rounded-full bg-brand-green/80 transition-all duration-300 group-hover:right-6 group-hover:top-[5.05rem]"></span>
             </div>
           </div>
 
@@ -76,6 +90,17 @@ const techStack = [
   </div>
 </section>
 
+<style>
+  @keyframes thoughtFloat {
+    0%, 100% {
+      transform: translateY(-0.35rem) rotate(2deg);
+    }
+    50% {
+      transform: translateY(-0.6rem) rotate(4deg);
+    }
+  }
+</style>
+
 <script>
   import { apiUrl } from "../lib/public-api";
 
@@ -84,33 +109,39 @@ const techStack = [
     const taglineEl = document.getElementById("hero-tagline");
     if (!nameEl || !taglineEl) return;
 
-    try {
+    const clampWords = (text: string, maxWords: number): string => {
+      const words = text.trim().split(/\s+/).filter(Boolean);
+      return words.slice(0, maxWords).join(" ");
+    };
+
+    const requestAnswer = async (question: string, maxWords?: number): Promise<string | null> => {
       const res = await fetch(apiUrl("/api/chat"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          question: "What is the full name of the person in this resume? Reply with ONLY the name, nothing else.",
+          question,
+          ...(maxWords ? { max_words: maxWords } : {}),
         }),
       });
 
       const envelope = await res.json();
-      if (envelope.success && envelope.data) {
-        nameEl.textContent = envelope.data.answer.trim();
+      return envelope.success && envelope.data?.answer
+        ? clampWords(envelope.data.answer, maxWords ?? Number.MAX_SAFE_INTEGER)
+        : null;
+    };
+
+    try {
+      const [name, tagline] = await Promise.all([
+        requestAnswer("What is the full name of the person in this resume? Reply with ONLY the name, nothing else."),
+        requestAnswer("Write a brief professional summary in under 30 words of the person in this resume. Write in first person. Do not use markdown, keep it as plain text. Focus only on core technical expertise.", 30),
+      ]);
+
+      if (name) {
+        nameEl.textContent = name;
       }
-    } catch {}
 
-    try {
-      const res = await fetch(apiUrl("/api/chat"), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          question: "Write a brief professional summary in under 30 words of the person in this resume. Write in first person. Do not use markdown, keep it as plain text. Focus only on core technical expertise.",
-        }),
-      });
-
-      const envelope = await res.json();
-      if (envelope.success && envelope.data) {
-        taglineEl.innerHTML = `<span class="text-brand-orange">></span> ${envelope.data.answer.trim()}<span class="inline-block w-2 h-5 bg-foreground animate-pulse align-middle ml-1"></span>`;
+      if (tagline) {
+        taglineEl.innerHTML = `<span class="text-brand-orange">></span> ${tagline}<span class="inline-block w-2 h-5 bg-foreground animate-pulse align-middle ml-1"></span>`;
       }
     } catch {
       taglineEl.innerHTML = `<span class="text-brand-orange">></span> I am a Backend Developer specializing in Java, focusing on building high-performance scalable systems and microservices architectures.<span class="inline-block w-2 h-5 bg-foreground animate-pulse align-middle ml-1"></span>`;
@@ -120,18 +151,28 @@ const techStack = [
   function initModeToggle(): void {
     const trigger = document.getElementById("profile-trigger");
     const hoverOverlay = document.getElementById("hover-overlay");
+    const toggleText = document.getElementById("toggle-text");
     const html = document.documentElement;
 
-    if (!trigger || !hoverOverlay) return;
+    if (!trigger || !hoverOverlay || !toggleText) return;
+
+    const switchToLight = (e: Event): void => {
+      if (!html.classList.contains("dark")) return;
+      if (typeof (window as any).toggleTheme === 'function') {
+        (window as any).toggleTheme(e as MouseEvent, "light");
+      }
+    };
 
     // Listen for global theme changes to update UI
     document.addEventListener("theme-changed", (e: any) => {
       if (e.detail.theme === 'light') {
         hoverOverlay.classList.remove("group-hover:opacity-100");
         trigger.style.cursor = "default";
+        toggleText.setAttribute("disabled", "true");
       } else {
         hoverOverlay.classList.add("group-hover:opacity-100");
         trigger.style.cursor = "pointer";
+        toggleText.removeAttribute("disabled");
       }
     });
 
@@ -139,14 +180,14 @@ const techStack = [
     if (!html.classList.contains("dark")) {
       hoverOverlay.classList.remove("group-hover:opacity-100");
       trigger.style.cursor = "default";
+      toggleText.setAttribute("disabled", "true");
       return;
     }
 
-    trigger.addEventListener("click", (e) => {
-      if (!html.classList.contains("dark")) return;
-      if (typeof (window as any).toggleTheme === 'function') {
-        (window as any).toggleTheme(e, "light");
-      }
+    trigger.addEventListener("click", switchToLight);
+    toggleText.addEventListener("click", (e) => {
+      e.stopPropagation();
+      switchToLight(e);
     });
   }
 

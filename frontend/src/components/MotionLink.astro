@@ -1,0 +1,18 @@
+---
+interface Props {
+  href: string;
+  className?: string;
+}
+
+const { href, className = "" } = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={[
+    className,
+    "inline-flex transition-transform duration-150 ease-out hover:-translate-y-px hover:scale-[1.01] active:scale-[0.99]",
+  ]}
+>
+  <slot />
+</a>

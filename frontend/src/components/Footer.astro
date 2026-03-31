@@ -1,5 +1,4 @@
 ---
-const currentYear = new Date().getFullYear();
 const buildStamp = new Date().toLocaleString('en-GB', {
   year: 'numeric',
   month: '2-digit',
@@ -15,7 +14,7 @@ const buildStamp = new Date().toLocaleString('en-GB', {
     <div class="flex flex-col md:flex-row justify-between items-center gap-8">
       <div class="flex flex-col items-center md:items-start gap-2">
         <span class="font-mono font-bold text-sm tracking-tighter">ZR_SYSTEMS</span>
-        <span class="text-[9px] font-mono text-muted-foreground uppercase tracking-[0.2em]">ALL_RIGHTS_RESERVED // {currentYear}</span>
+        <span class="text-[9px] font-mono text-muted-foreground uppercase tracking-[0.2em]">ALL_RIGHTS_RESERVED // <span id="copyright-year">{new Date().getFullYear()}</span></span>
       </div>
       
       <div class="flex gap-8">
@@ -40,7 +39,12 @@ const buildStamp = new Date().toLocaleString('en-GB', {
 <script>
   function initDarkModeRestore(): void {
     const stamp = document.getElementById("build-stamp");
+    const yearEl = document.getElementById("copyright-year");
     const html = document.documentElement;
+
+    if (yearEl) {
+      yearEl.textContent = String(new Date().getFullYear());
+    }
 
     if (!stamp) return;
 
