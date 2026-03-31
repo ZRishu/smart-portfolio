@@ -2,6 +2,7 @@ package dto
 
 import (
 	"fmt"
+	"math"
 	"strings"
 	"time"
 
@@ -19,6 +20,9 @@ type CreateOrderRequest struct {
 func (r CreateOrderRequest) Validate() error {
 	if r.Amount <= 0 {
 		return fmt.Errorf("validation failed: amount must be greater than zero")
+	}
+	if !hasAtMostTwoDecimals(r.Amount) {
+		return fmt.Errorf("validation failed: amount must have at most two decimal places")
 	}
 	if strings.TrimSpace(r.Currency) == "" {
 		return fmt.Errorf("validation failed: currency is required")
@@ -60,10 +64,22 @@ func (r VerifyPaymentRequest) Validate() error {
 	if r.Amount <= 0 {
 		return fmt.Errorf("validation failed: amount must be greater than zero")
 	}
+	if !hasAtMostTwoDecimals(r.Amount) {
+		return fmt.Errorf("validation failed: amount must have at most two decimal places")
+	}
 	if strings.TrimSpace(r.Currency) == "" {
 		return fmt.Errorf("validation failed: currency is required")
 	}
 	return nil
+}
+
+func hasAtMostTwoDecimals(value float64) bool {
+	if value < 0 {
+		return false
+	}
+
+	scaled := value * 100
+	return math.Abs(scaled-math.Round(scaled)) < 1e-9
 }
 
 // PaymentReceiptResponse is returned after checkout verification succeeds.

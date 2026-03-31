@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"math"
 	"net/http"
 	"strings"
 	"time"
@@ -283,7 +284,7 @@ func (s *paymentService) CreateRazorpayOrder(req dto.CreateOrderRequest) (*dto.C
 	url := "https://api.razorpay.com/v1/orders"
 
 	// Razorpay requires amount in paise
-	amountInPaise := int(req.Amount * 100)
+	amountInPaise := int(math.Round(req.Amount * 100))
 	receipt := "txn_" + strings.ReplaceAll(uuid.New().String(), "-", "")[:8]
 	notes := map[string]string{}
 	if strings.TrimSpace(req.SponsorName) != "" {

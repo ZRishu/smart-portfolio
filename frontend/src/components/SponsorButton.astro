@@ -44,22 +44,22 @@
           <form id="sponsor-form" class="space-y-5 border border-border bg-card p-5">
             <div class="space-y-2">
               <label for="sponsor-name" class="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">SPONSOR_NAME</label>
-              <input id="sponsor-name" name="sponsor_name" type="text" placeholder="ANONYMOUS_SPONSOR" class="w-full border-b border-border bg-transparent px-0 py-2 text-sm font-mono text-foreground placeholder:text-muted-foreground" />
+              <input id="sponsor-name" name="sponsor_name" type="text" placeholder="ANONYMOUS_SPONSOR" class="w-full border-b border-border bg-transparent px-2 py-2 text-sm font-mono text-foreground placeholder:text-muted-foreground" />
             </div>
 
             <div class="space-y-2">
               <label for="sponsor-email" class="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">SPONSOR_EMAIL</label>
-              <input id="sponsor-email" name="sponsor_email" type="email" placeholder="OPTIONAL_FOR_RECEIPT" class="w-full border-b border-border bg-transparent px-0 py-2 text-sm font-mono text-foreground placeholder:text-muted-foreground" />
+              <input id="sponsor-email" name="sponsor_email" type="email" placeholder="OPTIONAL_FOR_RECEIPT" class="w-full border-b border-border bg-transparent px-2 py-2 text-sm font-mono text-foreground placeholder:text-muted-foreground" />
             </div>
 
             <div class="space-y-2">
               <label for="sponsor-amount" class="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">CONTRIBUTION_AMOUNT_INR</label>
               <div class="grid grid-cols-[3rem_minmax(0,1fr)_3rem] border border-border bg-background">
-                <button id="sponsor-decrement" type="button" class="border-r border-border bg-card px-0 py-3 text-lg font-mono text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+                <button id="sponsor-decrement" type="button" class="border-r border-border bg-card px-0 py-2 text-lg font-mono text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
                   -
                 </button>
-                <input id="sponsor-amount" name="amount" type="number" inputmode="decimal" min="0" step="1" value="500" class="w-full border-0 bg-transparent px-4 py-3 text-center text-2xl font-mono font-bold text-foreground placeholder:text-muted-foreground" />
-                <button id="sponsor-increment" type="button" class="border-l border-border bg-card px-0 py-3 text-lg font-mono text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+                <input id="sponsor-amount" name="amount" type="text" inputmode="decimal" value="500.00" class="w-full border-0 bg-transparent px-3 py-2 text-center text-2xl font-mono font-bold text-foreground placeholder:text-muted-foreground" />
+                <button id="sponsor-increment" type="button" class="border-l border-border bg-card px-0 py-2 text-lg font-mono text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
                   +
                 </button>
               </div>
@@ -357,6 +357,7 @@
     let activePanel: "entry" | "processing" | "success" | "failure" = "entry";
     let receiptData: ReceiptData | null = null;
     let isBusy = false;
+    let amountInputHasError = false;
 
     const formatMoney = (amount: number, currency = "INR"): string =>
       new Intl.NumberFormat("en-IN", {
@@ -371,9 +372,23 @@
         timeStyle: "short",
       }).format(new Date(isoDate));
 
+    const amountPattern = /^(?:0|[1-9]\d*)(?:\.\d{0,2})?$/;
+
+    const parseAmountInput = (value: string): number | null => {
+      const normalized = value.trim();
+      if (normalized === "") return null;
+      if (!amountPattern.test(normalized)) return null;
+
+      const parsed = Number(normalized);
+      if (!Number.isFinite(parsed) || parsed < 0) return null;
+      return parsed;
+    };
+
+    const formatAmountInput = (value: number): string => value.toFixed(2);
+
     const getAmount = (): number => {
-      const parsed = Number(amountInput.value);
-      return Number.isFinite(parsed) ? parsed : 0;
+      const parsed = parseAmountInput(amountInput.value);
+      return parsed ?? 0;
     };
 
     const setStatus = (message: string, tone: "muted" | "orange" | "green" | "red" = "muted"): void => {
@@ -408,13 +423,43 @@
     const syncAmountPreview = (): void => {
       const amount = getAmount();
       amountPreview.textContent = formatMoney(Math.max(amount, 0), "INR");
-      payButton.disabled = isBusy || amount <= 0;
+      payButton.disabled = isBusy || amount <= 0 || amountInputHasError;
       payButton.classList.toggle("opacity-50", payButton.disabled);
     };
 
     const stepAmount = (delta: number): void => {
-      const nextAmount = Math.max(0, getAmount() + delta);
-      amountInput.value = String(nextAmount);
+      const currentAmount = parseAmountInput(amountInput.value) ?? 0;
+      const nextAmount = Math.max(0, Math.round((currentAmount + delta) * 100) / 100);
+      amountInput.value = formatAmountInput(nextAmount);
+      amountInputHasError = false;
+      if (activePanel === "entry") {
+        setStatus("READY_TO_INITIALIZE_PAYMENT", "muted");
+      }
+      syncAmountPreview();
+    };
+
+    const validateAmountInput = (finalize: boolean): void => {
+      const raw = amountInput.value.trim();
+      const parsed = parseAmountInput(raw);
+
+      if (raw === "") {
+        amountInputHasError = true;
+        setStatus("ENTER_AMOUNT_ABOVE_ZERO_TO_CONTINUE", "orange");
+        syncAmountPreview();
+        return;
+      }
+
+      if (parsed === null) {
+        amountInputHasError = true;
+        setStatus("AMOUNT_MUST_BE_POSITIVE_AND_USE_AT_MOST_TWO_DECIMALS", "red");
+        syncAmountPreview();
+        return;
+      }
+
+      amountInputHasError = false;
+      if (finalize) {
+        amountInput.value = formatAmountInput(parsed);
+      }
       if (activePanel === "entry") {
         setStatus("READY_TO_INITIALIZE_PAYMENT", "muted");
       }
@@ -662,11 +707,9 @@
 
     button.addEventListener("click", openDialog);
     amountInput.addEventListener("input", () => {
-      if (activePanel === "entry") {
-        setStatus("READY_TO_INITIALIZE_PAYMENT", "muted");
-      }
-      syncAmountPreview();
+      validateAmountInput(false);
     });
+    amountInput.addEventListener("blur", () => validateAmountInput(true));
     decrementButton.addEventListener("click", () => stepAmount(-100));
     incrementButton.addEventListener("click", () => stepAmount(100));
 
