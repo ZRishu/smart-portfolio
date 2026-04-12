@@ -22,7 +22,7 @@ permissions:
 env:
   GO_VERSION: "1.26"
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository_owner }}/smart-portfolio
+  IMAGE_REPOSITORY: smart-portfolio
 
 defaults:
   run:
@@ -76,6 +76,13 @@ jobs:
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Building version: $TAG ($VERSION)"
+
+      - name: Normalize image owner
+        id: image-owner
+        run: |
+          OWNER_LOWER="$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')"
+          echo "owner=$OWNER_LOWER" >> "$GITHUB_OUTPUT"
+          echo "Using image owner: $OWNER_LOWER"
 
       # ── Build static binaries ─────────────────────────────────────────
       - name: Build linux/amd64 binary
@@ -141,7 +148,7 @@ jobs:
         id: docker-meta
         uses: docker/metadata-action@v6
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ steps.image-owner.outputs.owner }}/${{ env.IMAGE_REPOSITORY }}
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
@@ -185,7 +192,7 @@ jobs:
             ## Docker Image
 
             ```bash
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}
+            docker pull ${{ env.REGISTRY }}/${{ steps.image-owner.outputs.owner }}/${{ env.IMAGE_REPOSITORY }}:${{ steps.meta.outputs.version }}
             ```
 
             ## Binaries
