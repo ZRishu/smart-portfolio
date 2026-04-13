@@ -1,4 +1,3 @@
-/** @jsxImportSource solid-js */
 import { For, createSignal, onMount } from "solid-js";
 import { apiUrl } from "../../lib/public-api";
 

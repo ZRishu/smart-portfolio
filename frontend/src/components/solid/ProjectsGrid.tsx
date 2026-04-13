@@ -1,4 +1,3 @@
-/** @jsxImportSource solid-js */
 import { For, Show, createSignal, onCleanup, onMount } from "solid-js";
 import { getWorkHighlights } from "../../lib/api";
 import type { WorkHighlights } from "../../lib/types";
