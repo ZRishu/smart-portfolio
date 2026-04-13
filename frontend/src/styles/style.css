@@ -15,6 +15,14 @@ body {
   scroll-behavior: smooth;
 }
 
+#projects-grid {
+  touch-action: pan-y;
+}
+
+#projects-grid.is-pointer-dragging {
+  scroll-behavior: auto;
+}
+
 @theme {
   --animate-cursor-blink: blink 1s step-end infinite;
 

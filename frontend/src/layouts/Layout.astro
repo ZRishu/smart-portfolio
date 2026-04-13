@@ -257,6 +257,7 @@ const {
         let suppressTrackClick = false;
         let restoreScrollBehavior = '';
         let restoreSnapType = '';
+        let restoreElementSnapType = '';
         let resizeObserver: ResizeObserver | null = null;
         let mutationObserver: MutationObserver | null = null;
 
@@ -348,6 +349,9 @@ const {
           const scrollTargetElement = isWindowTarget ? html : (scrollable as HTMLElement);
           scrollTargetElement.style.scrollBehavior = restoreScrollBehavior;
           body.style.scrollSnapType = restoreSnapType;
+          if (!isWindowTarget) {
+            (scrollable as HTMLElement).style.scrollSnapType = restoreElementSnapType;
+          }
           
           window.removeEventListener('pointermove', onPointerMove);
           window.removeEventListener('pointerup', stopDrag);
@@ -378,9 +382,13 @@ const {
           const scrollTargetElement = isWindowTarget ? html : (scrollable as HTMLElement);
           restoreScrollBehavior = scrollTargetElement.style.scrollBehavior;
           restoreSnapType = body.style.scrollSnapType;
+          restoreElementSnapType = isWindowTarget ? '' : (scrollable as HTMLElement).style.scrollSnapType;
           
           scrollTargetElement.style.scrollBehavior = 'auto';
           body.style.scrollSnapType = 'none';
+          if (!isWindowTarget) {
+            (scrollable as HTMLElement).style.scrollSnapType = 'none';
+          }
           
           thumb.classList.add('is-dragging');
           thumb.setPointerCapture(event.pointerId);

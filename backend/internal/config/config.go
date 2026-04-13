@@ -15,6 +15,7 @@ type Config struct {
 	Database  DatabaseConfig
 	AI        AIConfig
 	Embedding EmbeddingConfig
+	GitHub    GitHubConfig
 	Discord   DiscordConfig
 	Razorpay  RazorpayConfig
 	Frontend  FrontendConfig
@@ -47,6 +48,15 @@ type EmbeddingConfig struct {
 	BaseURL    string
 	Model      string
 	Dimensions int
+}
+
+type GitHubConfig struct {
+	Username       string
+	Token          string
+	SyncInterval   time.Duration
+	ProjectsLimit  int
+	CandidateLimit int
+	Timeout        time.Duration
 }
 
 type DiscordConfig struct {
@@ -116,6 +126,14 @@ func Load() (*Config, error) {
 	cfg.Embedding.BaseURL = envOrDefault("JINA_BASE_URL", "https://api.jina.ai/v1")
 	cfg.Embedding.Model = envOrDefault("EMBEDDING_MODEL", "jina-embeddings-v2-base-en")
 	cfg.Embedding.Dimensions = envIntOrDefault("EMBEDDING_DIMENSIONS", 768)
+
+	// ── GitHub sync (optional) ──────────────────────────────────────────
+	cfg.GitHub.Username = envOrDefault("GITHUB_USERNAME", "")
+	cfg.GitHub.Token = envOrDefault("GITHUB_API_TOKEN", "")
+	cfg.GitHub.SyncInterval = time.Duration(envIntOrDefault("GITHUB_SYNC_INTERVAL_HOURS", 24)) * time.Hour
+	cfg.GitHub.ProjectsLimit = envIntOrDefault("GITHUB_PROJECTS_LIMIT", 6)
+	cfg.GitHub.CandidateLimit = envIntOrDefault("GITHUB_PROJECTS_CANDIDATE_LIMIT", 40)
+	cfg.GitHub.Timeout = time.Duration(envIntOrDefault("GITHUB_API_TIMEOUT_SEC", 20)) * time.Second
 
 	// ── Discord ──────────────────────────────────────────────────────────
 	cfg.Discord.WebhookURL = envOrDefault("DISCORD_WEBHOOK_URL", "")

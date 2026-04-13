@@ -1,6 +1,7 @@
 import type {
   APIResponse,
   Project,
+  WorkHighlights,
   ContactRequest,
   ContactMessageResponse,
   ChatResponse,
@@ -24,6 +25,8 @@ async function fetchAPI<T>(
 }
 
 export const getProjects = () => fetchAPI<Project[]>("/api/projects");
+export const getWorkHighlights = () =>
+  fetchAPI<WorkHighlights>("/api/projects/highlights");
 
 export const getProject = (id: string) =>
   fetchAPI<Project>(`/api/projects/${id}`);

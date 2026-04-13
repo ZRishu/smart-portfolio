@@ -14,6 +14,33 @@ export interface Project {
   created_at: string;
 }
 
+export interface WorkItem {
+  id: string;
+  title: string;
+  description: string;
+  tech_stack?: string;
+  github_url?: string;
+  live_url?: string;
+  source: "github" | "manual";
+  stars?: number;
+  is_pinned?: boolean;
+  updated_at?: string;
+  created_at: string;
+}
+
+export interface GitHubProfile {
+  username: string;
+  display_name?: string;
+  profile_url: string;
+  repositories_url: string;
+  avatar_url?: string;
+}
+
+export interface WorkHighlights {
+  items: WorkItem[];
+  github?: GitHubProfile;
+}
+
 export interface ContactRequest {
   sender_name: string;
   sender_email: string;

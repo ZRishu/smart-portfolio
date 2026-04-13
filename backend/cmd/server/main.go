@@ -20,6 +20,7 @@ import (
 	contenthandler "github.com/ZRishu/smart-portfolio/internal/modules/content/handler"
 	contentrepository "github.com/ZRishu/smart-portfolio/internal/modules/content/repository"
 	contentservice "github.com/ZRishu/smart-portfolio/internal/modules/content/service"
+	contentworker "github.com/ZRishu/smart-portfolio/internal/modules/content/worker"
 	notifservice "github.com/ZRishu/smart-portfolio/internal/modules/notification/service"
 	paymenthandler "github.com/ZRishu/smart-portfolio/internal/modules/payment/handler"
 	paymentrepository "github.com/ZRishu/smart-portfolio/internal/modules/payment/repository"
@@ -98,12 +99,12 @@ func main() {
 	// 7. Content module (projects + contact messages)
 	// ─────────────────────────────────────────────────────────────────────
 	projectRepo := contentrepository.NewProjectRepository(pg.Pool)
+	githubProfileRepo := contentrepository.NewGitHubProfileRepository(pg.Pool)
+	githubRepoRepo := contentrepository.NewGitHubRepositoryRepository(pg.Pool)
 	contactRepo := contentrepository.NewContactRepository(pg.Pool)
 
-	projectSvc := contentservice.NewProjectService(projectRepo, appCache)
+	projectSvc := contentservice.NewProjectService(projectRepo, githubRepoRepo, githubProfileRepo, appCache)
 	contactSvc := contentservice.NewContactMessageService(contactRepo, discordService)
-
-	projectHandler := contenthandler.NewProjectHandler(projectSvc)
 	contactHandler := contenthandler.NewContactHandler(contactSvc, cfg.Admin.APIKey)
 
 	log.Info().Msg("content module: initialized (projects + contact messages)")
@@ -118,11 +119,26 @@ func main() {
 
 	semanticCacheRepo := airepository.NewSemanticCacheRepository(pg.Pool)
 	vectorStoreRepo := airepository.NewVectorStoreRepository(pg.Pool, cfg.Embedding.Dimensions)
+	githubEmbeddingRepo := airepository.NewGitHubEmbeddingRepository(pg.Pool, cfg.Embedding.Dimensions)
 
 	ragSvc := aiservice.NewRAGService(embeddingSvc, semanticCacheRepo, vectorStoreRepo, cfg.AI)
 	ingestionSvc := aiservice.NewIngestionService(embeddingSvc, vectorStoreRepo)
+	githubSyncSvc := contentservice.NewGitHubSyncService(
+		cfg.GitHub,
+		githubProfileRepo,
+		githubRepoRepo,
+		githubEmbeddingRepo,
+		embeddingSvc,
+		contentservice.InvalidateProjectCaches(appCache),
+	)
 
 	aiHandler := aihandler.NewAIHandler(ragSvc, ingestionSvc)
+	projectHandler := contenthandler.NewProjectHandler(
+		projectSvc,
+		githubSyncSvc,
+		githubSyncSvc.Username(),
+		cfg.GitHub.ProjectsLimit,
+	)
 
 	log.Info().Msg("ai module: initialized (embeddings + RAG + ingestion)")
 
@@ -142,10 +158,12 @@ func main() {
 	adminH := adminhandler.NewAdminHandler(
 		pg,
 		projectRepo,
+		githubRepoRepo,
 		contactRepo,
 		paymentRepo,
 		vectorStoreRepo,
 		semanticCacheRepo,
+		githubSyncSvc,
 	)
 
 	log.Info().Msg("admin module: initialized (stats + sponsors + deep health)")
@@ -196,6 +214,8 @@ func main() {
 	// ─────────────────────────────────────────────────────────────────────
 	outboxPoller := worker.NewOutboxPoller(paymentRepo, bus, cfg.Outbox.PollInterval, 50)
 	outboxPoller.Start(rootCtx)
+	githubSyncWorker := contentworker.NewGitHubSyncWorker(githubSyncSvc, cfg.GitHub.SyncInterval)
+	githubSyncWorker.Start(rootCtx)
 
 	log.Info().
 		Dur("interval", cfg.Outbox.PollInterval).
